@@ -1,18 +1,24 @@
 {
   "manifest_version": 3,
-  "name": "Pocket Mentor+",
-  "version": "1.0",
-  "description": "AI-powered study assistant for summarizing, simplifying, and quizzing text offline.",
-  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "name": "Pocket Mentor+ 🎓✨",
+  "description": "Your AI-powered study and writing assistant. Summarize, translate, proofread, and rewrite — right inside Chrome.",
+  "version": "1.0.0",
   "action": {
-    "default_popup": "notebook.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
   },
   "icons": {
     "16": "assets/icon16.png",
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
-  }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ]
 }
