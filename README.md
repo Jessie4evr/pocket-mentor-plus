@@ -19,7 +19,9 @@ Built to run **client-side with Gemini Nano**, ensuring:
 - ✅ Privacy-first (no user data leaves the device)  
 - ✅ Offline-ready (works without internet)  
 - ✅ Cost-efficient (no server or quota costs)  
-
+✅ Dark/Light themes – Switch with a single click.
+✅ Integrated notebook – Save, organize, and revisit AI-processed notes.
+✅ Context menus – Right-click selected text to summarize, simplify, or quiz.
 ---
 
 ## Demo Video
@@ -38,3 +40,65 @@ Built to run **client-side with Gemini Nano**, ensuring:
    ```bash
    git clone https://github.com/your-username/pocket-mentor-plus.git
    cd pocket-mentor-plus
+
+
+Pocket-Mentor-Plus/
+│
+├── assets/                 # Logos & icons
+├── background/             # Context menu + AI API handlers
+├── popup/                  # Popup UI & scripts
+├── notebook/               # Notebook UI & scripts
+├── content/                # Optional content scripts
+├── api/                    # AI wrapper functions
+├── manifest.json           # Chrome extension configuration
+└── README.md               # Documentation
+
+Installation
+
+Clone or download this repository.
+
+Open Chrome → chrome://extensions/
+
+Enable Developer Mode.
+
+Click Load unpacked → Select Pocket-Mentor-Plus/ folder.
+
+Pin the extension to your toolbar for quick access.
+
+Usage
+
+Popup:
+
+Click the Pocket Mentor+ icon.
+
+Paste or type text.
+
+Use action buttons: Summarize, Translate, Rewrite, Proofread.
+
+Toggle Dark/Light mode if needed.
+
+Notebook:
+
+Open the notebook from the extension.
+
+Input text and select actions like Summarize, Explain, Rewrite, Proofread.
+
+Select a target language for translations.
+
+View results in the output panel and save them locally.
+
+Context Menu:
+
+Highlight text on any webpage → Right-click → Choose: Summarize, Simplify, Quiz.
+
+Results are automatically saved to your notebook.
+
+AI Integration
+
+Gemini Nano APIs via window.ai.
+
+Client-side only — No external servers required.
+
+Supports Summarizer, Translator, Rewriter, Proofreader, and Prompt endpoints.
+
+Can be extended for additional AI tasks in api/api.js.
