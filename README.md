@@ -71,13 +71,10 @@ Popup:
 
 Notebook:
 
-Open the notebook from the extension.
-
-Input text and select actions like Summarize, Explain, Rewrite, Proofread.
-
-Select a target language for translations.
-
-View results in the output panel and save them locally.
+1. Open the notebook from the extension.
+2. Input text and select actions like Summarize, Explain, Rewrite, Proofread.
+3. Select a target language for translations.
+4. View results in the output panel and save them locally.
 
 Context Menu:
 
