@@ -1,12 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pocket Mentor+ Notebook</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Mentor+ 🎓✨</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <h1>Pocket Mentor+</h1>
-  <div id="notes"></div>
+<body class="light-theme">
+  <header class="app-header">
+    <img src="assets/logo.png" alt="Pocket Mentor+ Logo" class="logo">
+    <h1>Pocket Mentor+ 🎓✨</h1>
+  </header>
+
+  <main class="app-container">
+    <!-- Input Section -->
+    <section class="input-panel">
+      <label for="inputBox">Enter your text:</label>
+      <textarea id="inputBox" placeholder="Paste text here..."></textarea>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="button-panel">
+      <button id="summarizeBtn" class="primary-btn">📝 Summarize</button>
+      <button id="explainBtn" class="secondary-btn">💡 Explain</button>
+      <button id="rewriteBtn" class="secondary-btn">✏️ Rewrite</button>
+      <button id="proofreadBtn" class="secondary-btn">🖊️ Proofread</button>
+      <button id="translateBtn" class="secondary-btn">🌐 Translate</button>
+      <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+    </section>
+
+    <!-- Output Section -->
+    <section class="output-panel">
+      <h2>Results:</h2>
+      <pre id="outputBox">✨ Your results will appear here...</pre>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Built with ❤️ for the Chrome Built-in AI Challenge 2025</p>
+  </footer>
+
   <script src="notebook.js"></script>
 </body>
 </html>
