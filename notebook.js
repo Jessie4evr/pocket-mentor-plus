@@ -141,3 +141,13 @@ document.addEventListener("DOMContentLoaded", () => {
     runTranslate(input, "es"); // default → Spanish (you can add dropdown later)
   });
 });
+
+  const languageSelect = document.getElementById("languageSelect");
+
+  translateBtn.addEventListener("click", () => {
+    const input = textarea.value.trim();
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+
+    const targetLang = languageSelect.value; // user choice
+    runTranslate(input, targetLang);
+  });
