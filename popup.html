@@ -1,8 +1,38 @@
-"action": {
-  "default_popup": "popup.html",
-  "default_icon": {
-    "16": "assets/icon16.png",
-    "48": "assets/icon48.png",
-    "128": "assets/icon128.png"
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pocket Mentor+</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Logo -->
+    <header>
+      <img src="assets/logo.png" alt="Pocket Mentor+ Logo" class="logo" />
+      <h1>Pocket Mentor+ 🎓✨</h1>
+      <p>Your AI-powered study and writing assistant</p>
+    </header>
+
+    <!-- Text Input -->
+    <textarea id="userInput" placeholder="Paste or type your text here..."></textarea>
+
+    <!-- Action Buttons -->
+    <div class="buttons">
+      <button id="summarizeBtn">📝 Summarize</button>
+      <button id="translateBtn">🌐 Translate</button>
+      <button id="proofreadBtn">🔤 Proofread</button>
+      <button id="rewriteBtn">✏️ Rewrite</button>
+    </div>
+
+    <!-- Output -->
+    <section class="output">
+      <h2>Results</h2>
+      <div id="outputBox">Your AI-enhanced text will appear here.</div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
