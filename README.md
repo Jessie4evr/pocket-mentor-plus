@@ -55,27 +55,19 @@ Pocket-Mentor-Plus/
 
 Installation
 
-Clone or download this repository.
-
-Open Chrome → chrome://extensions/
-
-Enable Developer Mode.
-
-Click Load unpacked → Select Pocket-Mentor-Plus/ folder.
-
-Pin the extension to your toolbar for quick access.
+1. Clone or download this repository.
+2. Open Chrome → chrome://extensions/
+3. Enable Developer Mode.
+4. Click Load unpacked → Select Pocket-Mentor-Plus/ folder.
+5. Pin the extension to your toolbar for quick access.
 
 Usage
 
 Popup:
-
-Click the Pocket Mentor+ icon.
-
-Paste or type text.
-
-Use action buttons: Summarize, Translate, Rewrite, Proofread.
-
-Toggle Dark/Light mode if needed.
+1. Click the Pocket Mentor+ icon.
+2. Paste or type text.
+3. Use action buttons: Summarize, Translate, Rewrite, Proofread.
+4. Toggle Dark/Light mode if needed.
 
 Notebook:
 
@@ -90,15 +82,11 @@ View results in the output panel and save them locally.
 Context Menu:
 
 Highlight text on any webpage → Right-click → Choose: Summarize, Simplify, Quiz.
-
 Results are automatically saved to your notebook.
 
 AI Integration
 
 Gemini Nano APIs via window.ai.
-
 Client-side only — No external servers required.
-
 Supports Summarizer, Translator, Rewriter, Proofreader, and Prompt endpoints.
-
 Can be extended for additional AI tasks in api/api.js.
