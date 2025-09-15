@@ -1,0 +1,140 @@
+/* ===== Pocket Mentor+ Base Styles ===== */
+
+body {
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f7fb;
+  color: #222;
+  width: 360px;
+  height: auto;
+}
+
+.container {
+  padding: 16px;
+}
+
+/* Logo + Header */
+header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 8px;
+}
+h1 {
+  font-size: 1.3rem;
+  margin: 4px 0;
+  color: #1a73e8;
+}
+p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Text Input */
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  resize: none;
+  background: #fff;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Buttons Grid */
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #1a73e8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+button:hover {
+  background: #1558b0;
+  transform: translateY(-1px);
+}
+button:active {
+  background: #0d47a1;
+  transform: translateY(0);
+}
+
+/* Output Section */
+.output {
+  background: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.output h2 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+  color: #1a1a1a;
+}
+#outputBox {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #333;
+  min-height: 60px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* ===== Dark Mode Styles ===== */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #121212;
+    color: #e4e6eb;
+  }
+
+  textarea {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    color: #e4e6eb;
+  }
+
+  .output {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .output h2 {
+    color: #fff;
+  }
+
+  #outputBox {
+    color: #ddd;
+  }
+
+  button {
+    background: #1a73e8;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  button:hover {
+    background: #3b82f6;
+  }
+  button:active {
+    background: #2563eb;
+  }
+}
