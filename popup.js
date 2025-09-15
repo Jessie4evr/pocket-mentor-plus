@@ -55,3 +55,26 @@ function processText(action) {
     outputBox.innerText = result;
   }, 1000);
 }
+
+// Theme toggle button
+const themeToggle = document.getElementById("themeToggle");
+
+// Load saved theme
+chrome.storage.sync.get("theme", (data) => {
+  const currentTheme = data.theme || "light";
+  setTheme(currentTheme);
+});
+
+// Toggle theme on click
+themeToggle.addEventListener("click", () => {
+  const newTheme = document.body.classList.contains("dark-theme") ? "light" : "dark";
+  setTheme(newTheme);
+  chrome.storage.sync.set({ theme: newTheme });
+});
+
+// Function to apply theme
+function setTheme(mode) {
+  document.body.classList.remove("light-theme", "dark-theme");
+  document.body.classList.add(`${mode}-theme`);
+  themeToggle.textContent = mode === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
