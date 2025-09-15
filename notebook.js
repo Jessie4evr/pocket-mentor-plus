@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Buttons
   const summarizeBtn = document.getElementById("summarizeBtn");
   const explainBtn = document.getElementById("explainBtn");
+  const rewriteBtn = document.getElementById("rewriteBtn");
+  const proofreadBtn = document.getElementById("proofreadBtn");
+  const translateBtn = document.getElementById("translateBtn");
 
   /* === Theme Toggle === */
   themeBtn.addEventListener("click", () => {
@@ -28,44 +31,113 @@ document.addEventListener("DOMContentLoaded", () => {
     outputBox.textContent = text;
   }
 
-  /* === Call Chrome Built-in AI Prompt API === */
-  async function runAI(task, inputText) {
-    if (!window.ai || !window.ai.prompt) {
-      updateOutput("⚠️ Built-in AI not available in this environment.");
+  /* === AI Wrappers === */
+  async function runSummarizer(input) {
+    if (!window.ai || !window.ai.summarizer) {
+      updateOutput("⚠️ Summarizer API not available.");
       return;
     }
-
     try {
-      const session = await window.ai.prompt.create({
-        model: "gemini-nano", // lightweight client-side model
-      });
-
-      const result = await session.prompt(`${task} the following text:\n\n${inputText}`);
+      const session = await window.ai.summarizer.create({ model: "gemini-nano" });
+      const result = await session.summarize(input);
       updateOutput(result);
-
       await session.destroy();
     } catch (err) {
-      updateOutput("❌ Error: " + err.message);
+      updateOutput("❌ Summarizer Error: " + err.message);
     }
   }
 
-  /* === Summarize Button === */
+  async function runExplain(input) {
+    if (!window.ai || !window.ai.prompt) {
+      updateOutput("⚠️ Prompt API not available.");
+      return;
+    }
+    try {
+      const session = await window.ai.prompt.create({ model: "gemini-nano" });
+      const result = await session.prompt("Explain in simple terms:\n\n" + input);
+      updateOutput(result);
+      await session.destroy();
+    } catch (err) {
+      updateOutput("❌ Explain Error: " + err.message);
+    }
+  }
+
+  async function runRewrite(input) {
+    if (!window.ai || !window.ai.rewriter) {
+      updateOutput("⚠️ Rewriter API not available.");
+      return;
+    }
+    try {
+      const session = await window.ai.rewriter.create({ model: "gemini-nano" });
+      const result = await session.rewrite(input);
+      updateOutput(result);
+      await session.destroy();
+    } catch (err) {
+      updateOutput("❌ Rewriter Error: " + err.message);
+    }
+  }
+
+  async function runProofread(input) {
+    if (!window.ai || !window.ai.proofreader) {
+      updateOutput("⚠️ Proofreader API not available.");
+      return;
+    }
+    try {
+      const session = await window.ai.proofreader.create({ model: "gemini-nano" });
+      const result = await session.proofread(input);
+      updateOutput(result);
+      await session.destroy();
+    } catch (err) {
+      updateOutput("❌ Proofreader Error: " + err.message);
+    }
+  }
+
+  async function runTranslate(input, targetLang = "es") {
+    if (!window.ai || !window.ai.translator) {
+      updateOutput("⚠️ Translator API not available.");
+      return;
+    }
+    try {
+      const session = await window.ai.translator.create({
+        model: "gemini-nano",
+        targetLanguage: targetLang
+      });
+      const result = await session.translate(input);
+      updateOutput(result);
+      await session.destroy();
+    } catch (err) {
+      updateOutput("❌ Translator Error: " + err.message);
+    }
+  }
+
+  /* === Event Listeners === */
   summarizeBtn.addEventListener("click", () => {
     const input = textarea.value.trim();
-    if (!input) {
-      updateOutput("⚠️ Please enter some text first.");
-      return;
-    }
-    runAI("Summarize", input);
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+    runSummarizer(input);
   });
 
-  /* === Explain Button === */
   explainBtn.addEventListener("click", () => {
     const input = textarea.value.trim();
-    if (!input) {
-      updateOutput("⚠️ Please enter some text first.");
-      return;
-    }
-    runAI("Explain in simple terms", input);
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+    runExplain(input);
+  });
+
+  rewriteBtn.addEventListener("click", () => {
+    const input = textarea.value.trim();
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+    runRewrite(input);
+  });
+
+  proofreadBtn.addEventListener("click", () => {
+    const input = textarea.value.trim();
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+    runProofread(input);
+  });
+
+  translateBtn.addEventListener("click", () => {
+    const input = textarea.value.trim();
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
+    runTranslate(input, "es"); // default → Spanish (you can add dropdown later)
   });
 });
