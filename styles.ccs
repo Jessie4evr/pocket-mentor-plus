@@ -98,3 +98,49 @@ button:active {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+/* Theme Toggle Button */
+.theme-btn {
+  margin-top: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #e5e7eb;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.theme-btn:hover {
+  background: #d1d5db;
+}
+.theme-btn:active {
+  background: #9ca3af;
+}
+
+/* Default (Light Theme) */
+body.light-theme {
+  background: #f5f7fb;
+  color: #222;
+}
+body.light-theme textarea,
+body.light-theme .output {
+  background: #fff;
+  border: 1px solid #d0d7de;
+  color: #222;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background: #121212;
+  color: #e4e6eb;
+}
+body.dark-theme textarea,
+body.dark-theme .output {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: #e4e6eb;
+}
+body.dark-theme .output h2 {
+  color: #fff;
+}
