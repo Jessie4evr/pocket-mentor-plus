@@ -1,0 +1,22 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build output
+dist/
+build/
+*.zip
+
+# Editor settings
+.vscode/
+.idea/
+
+# Env files (if you add API keys later)
+.env
