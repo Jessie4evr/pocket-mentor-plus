@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Pocket Mentor+",
   "version": "1.0",
-  "description": "Summarize, simplify, and quiz selected text with Pocket Mentor+, your AI-powered study and writing assistant.",
+  "description": "Summarize, simplify, translate, and quiz selected text with Pocket Mentor+.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -14,25 +14,26 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_popup": "popup.html",
+    "default_popup": "notebook.html",
     "default_title": "Pocket Mentor+"
   },
   "permissions": [
-    "storage",
     "contextMenus",
-    "activeTab"
+    "activeTab",
+    "scripting",
+    "storage",
+    "notifications"
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "web_accessible_resources": [
+  "content_scripts": [
     {
-      "resources": [
-        "assets/logo.png",
-        "assets/paper-light.png",
-        "assets/paper-dark.png"
-      ],
-      "matches": ["<all_urls>"]
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
     }
+  ],
+  "host_permissions": [
+    "<all_urls>"
   ]
 }
