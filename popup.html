@@ -102,20 +102,27 @@
     </header>
 
     <!-- Text Input -->
-    <textarea id="userInput" placeholder="Paste or type your text here..."></textarea>
+   <label for="userInput" class="sr-only">Enter text to process</label>
+    <textarea 
+      id="userInput" 
+      placeholder="Paste or type your text here..." 
+      aria-label="Text input area"
+    ></textarea>
 
     <!-- Action Buttons -->
-    <div class="buttons">
-      <button id="summarizeBtn">📝 Summarize</button>
-      <button id="translateBtn">🌐 Translate</button>
-      <button id="proofreadBtn">🔤 Proofread</button>
-      <button id="rewriteBtn">✏️ Rewrite</button>
+    <div class="buttons" role="group" aria-label="AI action buttons">
+      <button id="summarizeBtn" aria-label="Summarize text">📝 Summarize</button>
+      <button id="translateBtn" aria-label="Translate text">🌐 Translate</button>
+      <button id="proofreadBtn" aria-label="Proofread text">🔤 Proofread</button>
+      <button id="rewriteBtn" aria-label="Rewrite text">✏️ Rewrite</button>
     </div>
 
     <!-- Output -->
-    <section class="output">
+    <section class="output" aria-live="polite">
       <h2>Results</h2>
-      <div id="outputBox">Your AI-enhanced text will appear here.</div>
+      <div id="outputBox" tabindex="0">
+        Your AI-enhanced text will appear here.
+      </div>
     </section>
   </div>
 
