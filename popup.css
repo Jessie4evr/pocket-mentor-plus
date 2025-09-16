@@ -1,143 +1,159 @@
-/* ===== Pocket Mentor+ Popup Styles ===== */
+:root {
+  --primary-color: #1a73e8;
+  --gold: #b8860b;
+  --text-light: #222;
+  --text-dark: #e4e6eb;
+  --bg-light: #f5f7fb;
+  --bg-dark: #121212;
+  --textarea-light: #fff;
+  --textarea-dark: #1e1e1e;
+  --output-light: rgba(255, 255, 255, 0.9);
+  --output-dark: rgba(30, 30, 30, 0.9);
+}
+
 body {
   font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  padding: 16px;
   width: 360px;
-  background: #f5f7fb;
-  color: #222;
+  background: var(--bg-light);
+  color: var(--text-light);
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 .container {
-  padding: 16px;
-  box-sizing: border-box;
+  max-width: 420px;
+  margin: auto;
 }
 
-/* Header + Logo */
 header {
   text-align: center;
   margin-bottom: 16px;
 }
+
 .logo {
   width: 56px;
   height: 56px;
   margin-bottom: 8px;
 }
+
 h1 {
   font-size: 1.3rem;
   margin: 4px 0;
-  color: #1a73e8;
+  color: var(--primary-color);
 }
+
 p {
   font-size: 0.9rem;
   color: #555;
   margin: 0;
 }
 
-/* Text Input */
 textarea {
   width: 100%;
-  height: 100px;
+  height: 110px;
   padding: 12px;
-  margin: 12px 0;
-  border: 1px solid #d0d7de;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  resize: none;
-  background: #fff;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1px solid #c2bca6;
+  resize: vertical;
+  margin-bottom: 16px;
+  background: var(--textarea-light);
+  transition: background 0.3s, border-color 0.3s;
 }
 
-/* Buttons */
+textarea:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
 .buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  margin-bottom: 16px;
-}
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #1a73e8;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-button:hover {
-  background: #1558b0;
-  transform: translateY(-1px);
-}
-button:active {
-  background: #0d47a1;
-  transform: translateY(0);
+  margin-bottom: 18px;
 }
 
-/* Output Section */
-.output {
-  background: #fff;
-  border: 1px solid #e1e4e8;
-  border-radius: 12px;
+button {
   padding: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-.output h2 {
-  font-size: 1rem;
-  margin: 0 0 8px;
-  color: #1a1a1a;
-}
-#outputBox {
   font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--gold);
+  color: #fffdf7;
+  transition: background 0.25s, transform 0.1s, box-shadow 0.2s;
+}
+
+button:hover {
+  background: #996515;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: scale(0.98);
+  background: #7a5211;
+}
+
+.output {
+  background: var(--output-light);
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  min-height: 90px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+#outputBox {
+  font-size: 0.95rem;
   line-height: 1.4;
   color: #333;
-  min-height: 60px;
+  animation: fadeInResult 0.5s ease-in-out;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
-/* Theme Toggle */
 .theme-btn {
   margin-top: 8px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  border-radius: 10px;
   border: none;
-  border-radius: 6px;
-  background: #e5e7eb;
-  color: #333;
   cursor: pointer;
+  background: #ece6d6;
+  color: #222;
   transition: all 0.2s ease-in-out;
 }
+
 .theme-btn:hover {
-  background: #d1d5db;
-}
-.theme-btn:active {
-  background: #9ca3af;
+  background: #e0dac8;
 }
 
-/* Light & Dark Themes */
-body.light-theme {
-  background: #f5f7fb;
-  color: #222;
-}
-body.light-theme textarea,
-body.light-theme .output {
-  background: #fff;
-  border: 1px solid #d0d7de;
-  color: #222;
-}
-
+/* Dark Theme */
 body.dark-theme {
-  background: #121212;
-  color: #e4e6eb;
+  background: var(--bg-dark);
+  color: var(--text-dark);
 }
-body.dark-theme textarea,
+
+body.dark-theme textarea {
+  background: var(--textarea-dark);
+  color: var(--text-dark);
+  border-color: #444;
+}
+
 body.dark-theme .output {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  color: #e4e6eb;
+  background: var(--output-dark);
+  border-color: #555;
 }
-body.dark-theme .output h2 {
-  color: #fff;
+
+body.dark-theme .theme-btn {
+  background: #33322f;
+  color: #f3f3f3;
+}
+
+@keyframes fadeInResult {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
