@@ -7,28 +7,31 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="light-theme">
+  <!-- Header -->
   <header class="app-header">
     <img src="assets/logo.png" alt="Pocket Mentor+ Logo" class="logo">
     <h1>Pocket Mentor+ 🎓✨</h1>
+    <p class="tagline">Your AI-powered study and writing assistant</p>
   </header>
 
+  <!-- Main App Container -->
   <main class="app-container">
     <!-- Input Section -->
-    <section class="input-panel">
+    <section class="input-panel" aria-label="Text Input">
       <label for="inputBox">Enter your text:</label>
-      <textarea id="inputBox" placeholder="Paste text here..."></textarea>
+      <textarea id="inputBox" placeholder="Paste text here..." aria-label="Text input area"></textarea>
     </section>
 
     <!-- Action Buttons -->
-    <section class="button-panel">
+    <section class="button-panel" role="group" aria-label="AI actions">
       <button id="summarizeBtn" class="primary-btn">📝 Summarize</button>
       <button id="explainBtn" class="secondary-btn">💡 Explain</button>
       <button id="rewriteBtn" class="secondary-btn">✏️ Rewrite</button>
       <button id="proofreadBtn" class="secondary-btn">🖊️ Proofread</button>
 
-      <!-- Translate Section -->
-      <div class="translate-controls">
-        <select id="languageSelect">
+      <!-- Translate Controls -->
+      <div class="translate-controls" aria-label="Translate text">
+        <select id="languageSelect" aria-label="Select target language">
           <option value="es">Spanish 🇪🇸</option>
           <option value="fr">French 🇫🇷</option>
           <option value="de">German 🇩🇪</option>
@@ -39,16 +42,18 @@
         <button id="translateBtn" class="secondary-btn">🌐 Translate</button>
       </div>
 
-      <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+      <!-- Theme Toggle -->
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle light/dark theme">🌙 Dark Mode</button>
     </section>
 
     <!-- Output Section -->
-    <section class="output-panel">
+    <section class="output-panel" aria-live="polite" aria-label="AI Results">
       <h2>Results:</h2>
-      <pre id="outputBox">✨ Your results will appear here...</pre>
+      <pre id="outputBox" tabindex="0">✨ Your results will appear here...</pre>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="app-footer">
     <p>Built with ❤️ for the Chrome Built-in AI Challenge 2025</p>
   </footer>
