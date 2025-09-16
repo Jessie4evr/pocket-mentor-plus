@@ -5,149 +5,111 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeBtn = document.getElementById("themeToggle");
   const textarea = document.getElementById("inputBox");
   const outputBox = document.getElementById("outputBox");
+  const languageSelect = document.getElementById("languageSelect");
 
   // Buttons
-  const summarizeBtn = document.getElementById("summarizeBtn");
-  const explainBtn = document.getElementById("explainBtn");
-  const rewriteBtn = document.getElementById("rewriteBtn");
-  const proofreadBtn = document.getElementById("proofreadBtn");
-  const translateBtn = document.getElementById("translateBtn");
+  const buttons = {
+    summarize: document.getElementById("summarizeBtn"),
+    explain: document.getElementById("explainBtn"),
+    rewrite: document.getElementById("rewriteBtn"),
+    proofread: document.getElementById("proofreadBtn"),
+    translate: document.getElementById("translateBtn")
+  };
 
-  /* === Theme Toggle === */
+  /* === Theme Handling === */
+  function setTheme(mode) {
+    body.classList.remove("light-theme", "dark-theme");
+    body.classList.add(`${mode}-theme`);
+    themeBtn.textContent = mode === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+    chrome.storage.sync.set({ theme: mode });
+  }
+
+  // Load saved theme
+  chrome.storage.sync.get("theme", (data) => setTheme(data.theme || "light"));
+
   themeBtn.addEventListener("click", () => {
-    if (body.classList.contains("light-theme")) {
-      body.classList.remove("light-theme");
-      body.classList.add("dark-theme");
-      themeBtn.textContent = "☀️ Light Mode";
-    } else {
-      body.classList.remove("dark-theme");
-      body.classList.add("light-theme");
-      themeBtn.textContent = "🌙 Dark Mode";
-    }
+    const newMode = body.classList.contains("dark-theme") ? "light" : "dark";
+    setTheme(newMode);
   });
 
-  /* === Utility: Update Output === */
+  /* === Output Utility === */
   function updateOutput(text) {
     outputBox.textContent = text;
+    outputBox.focus();
+    outputBox.style.animation = "none";
+    void outputBox.offsetWidth; // force reflow
+    outputBox.style.animation = "fadeInResult 0.5s ease-in-out";
   }
 
   /* === AI Wrappers === */
-  async function runSummarizer(input) {
-    if (!window.ai || !window.ai.summarizer) {
-      updateOutput("⚠️ Summarizer API not available.");
+  async function runAI(api, input, options = {}) {
+    if (!window.ai || !window.ai[api]) {
+      updateOutput(`⚠️ ${api.charAt(0).toUpperCase() + api.slice(1)} API not available.`);
       return;
     }
+
     try {
-      const session = await window.ai.summarizer.create({ model: "gemini-nano" });
-      const result = await session.summarize(input);
+      const session = await window.ai[api].create({ model: "gemini-nano", ...options });
+      let result;
+
+      switch (api) {
+        case "summarizer":
+          result = await session.summarize(input);
+          break;
+        case "prompt":
+          result = await session.prompt(`Explain in simple terms:\n\n${input}`);
+          break;
+        case "rewriter":
+          result = await session.rewrite(input);
+          break;
+        case "proofreader":
+          result = await session.proofread(input);
+          break;
+        case "translator":
+          result = await session.translate(input);
+          break;
+        default:
+          result = "⚠️ Unknown AI action.";
+      }
+
       updateOutput(result);
       await session.destroy();
     } catch (err) {
-      updateOutput("❌ Summarizer Error: " + err.message);
+      updateOutput(`❌ ${api.charAt(0).toUpperCase() + api.slice(1)} Error: ${err.message}`);
     }
   }
 
-  async function runExplain(input) {
-    if (!window.ai || !window.ai.prompt) {
-      updateOutput("⚠️ Prompt API not available.");
-      return;
-    }
-    try {
-      const session = await window.ai.prompt.create({ model: "gemini-nano" });
-      const result = await session.prompt("Explain in simple terms:\n\n" + input);
-      updateOutput(result);
-      await session.destroy();
-    } catch (err) {
-      updateOutput("❌ Explain Error: " + err.message);
-    }
-  }
-
-  async function runRewrite(input) {
-    if (!window.ai || !window.ai.rewriter) {
-      updateOutput("⚠️ Rewriter API not available.");
-      return;
-    }
-    try {
-      const session = await window.ai.rewriter.create({ model: "gemini-nano" });
-      const result = await session.rewrite(input);
-      updateOutput(result);
-      await session.destroy();
-    } catch (err) {
-      updateOutput("❌ Rewriter Error: " + err.message);
-    }
-  }
-
-  async function runProofread(input) {
-    if (!window.ai || !window.ai.proofreader) {
-      updateOutput("⚠️ Proofreader API not available.");
-      return;
-    }
-    try {
-      const session = await window.ai.proofreader.create({ model: "gemini-nano" });
-      const result = await session.proofread(input);
-      updateOutput(result);
-      await session.destroy();
-    } catch (err) {
-      updateOutput("❌ Proofreader Error: " + err.message);
-    }
-  }
-
-  async function runTranslate(input, targetLang = "es") {
-    if (!window.ai || !window.ai.translator) {
-      updateOutput("⚠️ Translator API not available.");
-      return;
-    }
-    try {
-      const session = await window.ai.translator.create({
-        model: "gemini-nano",
-        targetLanguage: targetLang
-      });
-      const result = await session.translate(input);
-      updateOutput(result);
-      await session.destroy();
-    } catch (err) {
-      updateOutput("❌ Translator Error: " + err.message);
-    }
-  }
-
-  /* === Event Listeners === */
-  summarizeBtn.addEventListener("click", () => {
+  /* === Event Listeners for Buttons === */
+  buttons.summarize.addEventListener("click", () => {
     const input = textarea.value.trim();
     if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runSummarizer(input);
+    runAI("summarizer", input);
   });
 
-  explainBtn.addEventListener("click", () => {
+  buttons.explain.addEventListener("click", () => {
     const input = textarea.value.trim();
     if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runExplain(input);
+    runAI("prompt", input);
   });
 
-  rewriteBtn.addEventListener("click", () => {
+  buttons.rewrite.addEventListener("click", () => {
     const input = textarea.value.trim();
     if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runRewrite(input);
+    runAI("rewriter", input);
   });
 
-  proofreadBtn.addEventListener("click", () => {
+  buttons.proofread.addEventListener("click", () => {
     const input = textarea.value.trim();
     if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runProofread(input);
+    runAI("proofreader", input);
   });
 
-  translateBtn.addEventListener("click", () => {
+  buttons.translate.addEventListener("click", () => {
     const input = textarea.value.trim();
     if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runTranslate(input, "es"); // default → Spanish (you can add dropdown later)
+
+    const targetLang = languageSelect.value || "es";
+    runAI("translator", input, { targetLanguage: targetLang });
   });
 });
 
-  const languageSelect = document.getElementById("languageSelect");
-
-  translateBtn.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-
-    const targetLang = languageSelect.value; // user choice
-    runTranslate(input, targetLang);
-  });
