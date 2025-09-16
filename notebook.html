@@ -19,18 +19,24 @@
     <!-- Input Section -->
     <section class="input-panel" aria-label="Text Input">
       <label for="inputBox">Enter your text:</label>
-      <textarea id="inputBox" placeholder="Paste text here..." aria-label="Text input area"></textarea>
+      <textarea 
+        id="inputBox" 
+        placeholder="Paste or type your text here..." 
+        aria-label="Text input area"
+        rows="6">
+      </textarea>
     </section>
 
     <!-- Action Buttons -->
     <section class="button-panel" role="group" aria-label="AI actions">
-      <button id="summarizeBtn" class="primary-btn">📝 Summarize</button>
-      <button id="explainBtn" class="secondary-btn">💡 Explain</button>
-      <button id="rewriteBtn" class="secondary-btn">✏️ Rewrite</button>
-      <button id="proofreadBtn" class="secondary-btn">🖊️ Proofread</button>
+      <button id="summarizeBtn" class="primary-btn" aria-label="Summarize text">📝 Summarize</button>
+      <button id="explainBtn" class="secondary-btn" aria-label="Explain text">💡 Explain</button>
+      <button id="rewriteBtn" class="secondary-btn" aria-label="Rewrite text">✏️ Rewrite</button>
+      <button id="proofreadBtn" class="secondary-btn" aria-label="Proofread text">🖊️ Proofread</button>
 
       <!-- Translate Controls -->
       <div class="translate-controls" aria-label="Translate text">
+        <label for="languageSelect" class="sr-only">Select target language</label>
         <select id="languageSelect" aria-label="Select target language">
           <option value="es">Spanish 🇪🇸</option>
           <option value="fr">French 🇫🇷</option>
@@ -39,7 +45,7 @@
           <option value="ja">Japanese 🇯🇵</option>
           <option value="hi">Hindi 🇮🇳</option>
         </select>
-        <button id="translateBtn" class="secondary-btn">🌐 Translate</button>
+        <button id="translateBtn" class="secondary-btn" aria-label="Translate text">🌐 Translate</button>
       </div>
 
       <!-- Theme Toggle -->
@@ -58,6 +64,8 @@
     <p>Built with ❤️ for the Chrome Built-in AI Challenge 2025</p>
   </footer>
 
+  <!-- Script -->
   <script src="notebook.js"></script>
 </body>
 </html>
+
