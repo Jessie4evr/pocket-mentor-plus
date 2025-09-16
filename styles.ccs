@@ -1,146 +1,135 @@
-/* ===== Pocket Mentor+ Redesigned Styles ===== */
-
-body {
-  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+/* === General Reset === */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: #f5f7fb;
-  color: #222;
-  width: 360px;
-  height: auto;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.container {
+body {
+  width: 360px; /* Good size for Chrome popup */
+  min-height: 520px;
   padding: 16px;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: background 0.3s, color 0.3s;
 }
 
-/* Logo + Header */
+/* === Dark Mode === */
+body.dark-mode {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+/* === Header === */
 header {
   text-align: center;
   margin-bottom: 16px;
 }
+
 .logo {
-  width: 56px;
-  height: 56px;
+  width: 72px;
+  height: 72px;
   margin-bottom: 8px;
 }
+
 h1 {
-  font-size: 1.3rem;
-  margin: 4px 0;
-  color: #1a73e8;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+  color: inherit;
 }
-p {
+
+header p {
   font-size: 0.9rem;
-  color: #555;
-  margin: 0;
+  opacity: 0.85;
 }
 
-/* Text Input */
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 12px;
-  margin: 12px 0;
-  border: 1px solid #d0d7de;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  resize: none;
-  background: #fff;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-}
-
-/* Buttons Grid */
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  background: #1a73e8;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-button:hover {
-  background: #1558b0;
-  transform: translateY(-1px);
-}
-button:active {
-  background: #0d47a1;
-  transform: translateY(0);
-}
-
-/* Output Section */
-.output {
-  background: #fff;
-  border: 1px solid #e1e4e8;
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-.output h2 {
-  font-size: 1rem;
-  margin: 0 0 8px;
-  color: #1a1a1a;
-}
-#outputBox {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: #333;
-  min-height: 60px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* Theme Toggle Button */
 .theme-btn {
-  margin-top: 8px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
+  margin-top: 10px;
+  padding: 6px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #e5e7eb;
-  color: #333;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  font-size: 0.85rem;
+  transition: background 0.2s;
 }
+
+body.dark-mode .theme-btn {
+  background: #374151;
+  color: #f9fafb;
+}
+
 .theme-btn:hover {
   background: #d1d5db;
 }
-.theme-btn:active {
-  background: #9ca3af;
+body.dark-mode .theme-btn:hover {
+  background: #4b5563;
 }
 
-/* Default (Light Theme) */
-body.light-theme {
-  background: #f5f7fb;
-  color: #222;
-}
-body.light-theme textarea,
-body.light-theme .output {
-  background: #fff;
-  border: 1px solid #d0d7de;
-  color: #222;
+/* === Input Area === */
+textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
 }
 
-/* Dark Theme */
-body.dark-theme {
-  background: #121212;
-  color: #e4e6eb;
+body.dark-mode textarea {
+  background: #111827;
+  border: 1px solid #374151;
+  color: #f9fafb;
 }
-body.dark-theme textarea,
-body.dark-theme .output {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  color: #e4e6eb;
+
+/* === Action Buttons === */
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
-body.dark-theme .output h2 {
+
+.buttons button {
+  padding: 10px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  background: #3b82f6;
   color: #fff;
+}
+
+.buttons button:hover {
+  background: #2563eb;
+  transform: scale(1.03);
+}
+
+body.dark-mode .buttons button {
+  background: #2563eb;
+}
+
+/* === Output Box === */
+.output h2 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+#outputBox {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-height: 100px;
+  font-size: 0.95rem;
+  background: #f3f4f6;
+  overflow-y: auto;
+}
+
+body.dark-mode #outputBox {
+  background: #111827;
+  border: 1px solid #374151;
 }
