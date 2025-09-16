@@ -64,3 +64,4 @@ function setTheme(mode) {
   document.body.classList.add(`${mode}-theme`);
   themeToggle.textContent = mode === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
 }
+
