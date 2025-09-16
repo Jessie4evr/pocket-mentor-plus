@@ -42,8 +42,33 @@ attachButton("proofreadBtn", "proofread");
 attachButton("rewriteBtn", "rewrite");
 
 // ===== Theme Toggle with Persistence =====
-const themeToggle = document.getElementById("themeToggle");
+// 🌙 Theme toggle
+const themeToggleBtn = document.getElementById("themeToggle");
+themeToggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
 
+  const isDark = document.body.classList.contains("dark-mode");
+  themeToggleBtn.innerHTML = isDark
+    ? "<span>☀️</span> Light Mode"
+    : "<span>🌙</span> Dark Mode";
+
+  // Add animation class
+  themeToggleBtn.classList.add("animate");
+  function showResult(text) {
+  const box = document.getElementById("outputBox");
+  box.textContent = text;
+
+  // Restart animation
+  box.style.animation = "none";
+  void box.offsetWidth; // force reflow
+  box.style.animation = "fadeSlideUp 0.4s ease both";
+}
+
+  // Remove class after animation ends
+  setTimeout(() => {
+    themeToggleBtn.classList.remove("animate");
+  }, 600);
+});
 // Load saved theme
 chrome.storage.sync.get("theme", (data) => {
   const currentTheme = data.theme || "light";
