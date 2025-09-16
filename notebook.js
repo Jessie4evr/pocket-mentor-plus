@@ -1,5 +1,13 @@
 /* ===== Pocket Mentor+ 🎓✨ Notebook Script ===== */
 
+import {
+  summarizeText,
+  translateText,
+  proofreadText,
+  rewriteText,
+  explainText
+} from "./api.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
   const themeBtn = document.getElementById("themeToggle");
@@ -7,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const outputBox = document.getElementById("outputBox");
   const languageSelect = document.getElementById("languageSelect");
 
-  // Buttons
   const buttons = {
     summarize: document.getElementById("summarizeBtn"),
     explain: document.getElementById("explainBtn"),
@@ -41,75 +48,28 @@ document.addEventListener("DOMContentLoaded", () => {
     outputBox.style.animation = "fadeInResult 0.5s ease-in-out";
   }
 
-  /* === AI Wrappers === */
-  async function runAI(api, input, options = {}) {
-    if (!window.ai || !window.ai[api]) {
-      updateOutput(`⚠️ ${api.charAt(0).toUpperCase() + api.slice(1)} API not available.`);
-      return;
-    }
+  /* === Generic Handler === */
+  async function handleAI(actionFn, ...args) {
+    const input = textarea.value.trim();
+    if (!input) return updateOutput("⚠️ Please enter some text first.");
 
     try {
-      const session = await window.ai[api].create({ model: "gemini-nano", ...options });
-      let result;
-
-      switch (api) {
-        case "summarizer":
-          result = await session.summarize(input);
-          break;
-        case "prompt":
-          result = await session.prompt(`Explain in simple terms:\n\n${input}`);
-          break;
-        case "rewriter":
-          result = await session.rewrite(input);
-          break;
-        case "proofreader":
-          result = await session.proofread(input);
-          break;
-        case "translator":
-          result = await session.translate(input);
-          break;
-        default:
-          result = "⚠️ Unknown AI action.";
-      }
-
+      updateOutput("⏳ Processing...");
+      const result = await actionFn(input, ...args);
       updateOutput(result);
-      await session.destroy();
     } catch (err) {
-      updateOutput(`❌ ${api.charAt(0).toUpperCase() + api.slice(1)} Error: ${err.message}`);
+      updateOutput(`❌ Error: ${err.message}`);
     }
   }
 
-  /* === Event Listeners for Buttons === */
-  buttons.summarize.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runAI("summarizer", input);
-  });
-
-  buttons.explain.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runAI("prompt", input);
-  });
-
-  buttons.rewrite.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runAI("rewriter", input);
-  });
-
-  buttons.proofread.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-    runAI("proofreader", input);
-  });
-
+  /* === Button Event Listeners === */
+  buttons.summarize.addEventListener("click", () => handleAI(summarizeText));
+  buttons.explain.addEventListener("click", () => handleAI(explainText));
+  buttons.rewrite.addEventListener("click", () => handleAI(rewriteText));
+  buttons.proofread.addEventListener("click", () => handleAI(proofreadText));
   buttons.translate.addEventListener("click", () => {
-    const input = textarea.value.trim();
-    if (!input) return updateOutput("⚠️ Please enter some text first.");
-
     const targetLang = languageSelect.value || "es";
-    runAI("translator", input, { targetLanguage: targetLang });
+    handleAI(translateText, targetLang);
   });
 });
 
