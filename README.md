@@ -1,44 +1,55 @@
 # Pocket Mentor+ 🎓✨
-Your AI-powered learning & productivity assistant, built with Chrome’s Built-in AI Challenge 2025 APIs.
+Your AI-powered study and writing assistant, built with Chrome's Built-in AI Challenge 2025 APIs.
+
+Transform any webpage into your personal tutor with privacy-first, offline-ready AI processing.
 
 ---
 
-## Overview
-Pocket Mentor+ is a **Chrome Extension** that transforms any webpage into a personal tutor and productivity coach.  
-It combines **summarization, translation, rewriting, and proofing** into one seamless interface — helping students, professionals, and lifelong learners work smarter, not harder.  
+## 🌟 Overview
+
+Pocket Mentor+ is a **Chrome Extension** that leverages Chrome's built-in AI capabilities to provide intelligent text processing directly in your browser. Whether you're a student, researcher, or professional, this extension helps you understand, process, and learn from any text on the web.
+
+**🔥 Key Highlights:**
+- ✅ **Privacy-First**: All processing happens locally on your device
+- ✅ **Offline-Ready**: Works without internet connection after initial setup
+- ✅ **Zero Cost**: No API fees or subscriptions required
+- ✅ **Fast & Efficient**: Powered by Chrome's optimized Gemini Nano model
+- ✅ **Universal**: Works on any webpage with text
 
 ---
 
-## Key Features
-- 📝 **Summarizer API** – Condense long articles, research, or notes into concise, clear insights.  
-- 🌐 **Translator API** – Translate text instantly into multiple languages for global learning.  
-- ✏️ **Writer & Rewriter APIs** – Draft original ideas or polish existing text.  
-- 🔤 **Proofreader API** – Check grammar and improve clarity on the fly.  
-- 💡 **Prompt API** – Multimodal AI prompting (supports text input, with future support for images/audio).  
+## 🚀 Features
 
-Built to run **entirely client-side with Gemini Nano**, ensuring:  
-- ✅ Privacy-first (no user data leaves the device)  
-- ✅ Offline-ready (works without internet)  
-- ✅ Cost-efficient (no server or quota costs)  
-- ✅ Dark/Light themes – toggle with one click  
-- ✅ Integrated notebook – save, organize, and revisit AI-processed notes  
-- ✅ Context menus – right-click selected text to summarize, simplify, or quiz  
+### Core AI Capabilities
+- 📝 **Smart Summarization** – Condense articles, papers, and documents into key insights
+- 💡 **Simple Explanations** – Get complex concepts explained in easy-to-understand language
+- 🌐 **Instant Translation** – Translate text into 10+ languages (Spanish, French, German, Chinese, Japanese, Hindi, Italian, Portuguese, Russian, Arabic)
+- ✏️ **AI Proofreading** – Fix grammar, improve clarity, and enhance writing style
+- 🔄 **Text Rewriting** – Polish and restructure text for better readability
+- ❓ **Quiz Generation** – Create interactive quizzes from any text for studying
+- 📚 **Study Notes** – Generate comprehensive study notes automatically
 
----
-
-## Demo Video
-📺 [Watch on YouTube](https://your-demo-link-here.com)  
-*(3-minute demo showcasing features & workflow)*  
-
----
-
-## Screenshots
-*(Add screenshots of the extension here, e.g., popup, notebook, context menu)*  
+### User Experience
+- 🎯 **Context Menu Integration** – Right-click any selected text for instant processing
+- ⌨️ **Keyboard Shortcuts** – Quick actions with Alt+S, Alt+E, Alt+T, Alt+P
+- 📱 **Dual Interface** – Quick popup for fast actions + full notebook for comprehensive work
+- 🌙 **Dark/Light Themes** – Toggle between themes with one click
+- 💾 **Smart Notes Management** – Automatically save, organize, and search your processed content
+- 📊 **Study Statistics** – Track your learning progress and usage patterns
+- 📥 **Export Functionality** – Export notes as JSON for backup or sharing
 
 ---
 
-## Installation
-1. Clone or download this repository:
+## 📥 Installation
+
+### Prerequisites
+- **Chrome 127+** with experimental AI features
+- **8GB+ RAM** recommended for optimal performance
+- **Developer Mode** enabled for unpacked extension loading
+
+### Step-by-Step Installation
+
+1. **Download the Extension**
    ```bash
    git clone https://github.com/your-username/pocket-mentor-plus.git
    cd pocket-mentor-plus
