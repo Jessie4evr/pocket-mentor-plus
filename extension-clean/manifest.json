@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Pocket Mentor+",
+  "version": "1.0.0",
+  "description": "Your AI-powered study and writing assistant, built with Chrome's on-device AI. Summarize, translate, proofread, and learn, all in your browser.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "Pocket Mentor+"
+  },
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "scripting",
+    "storage",
+    "notifications"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["*.png", "*.css", "*.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Mentor+</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <img src="icon48.png" alt="Pocket Mentor+ Logo" class="logo">
+      <h1 class="app-title">Pocket Mentor+ 🎓✨</h1>
+      <p class="tagline">Your AI-powered study assistant</p>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+    </header>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions" aria-label="Quick Actions">
+      <h3>Quick Actions</h3>
+      <div class="popup-buttons">
+        <button id="openNotebook" class="primary-btn" aria-label="Open full notebook">
+          📚 Open Notebook
+        </button>
+        <button id="checkCapabilities" class="secondary-btn" aria-label="Check AI status">
+          🔍 Check AI Status
+        </button>
+      </div>
+    </section>
+
+    <!-- Text Input -->
+    <section class="input-section" aria-label="Text Input">
+      <label for="quickInput" class="sr-only">Enter text for quick processing</label>
+      <textarea 
+        id="quickInput" 
+        placeholder="Paste text here for quick AI processing..."
+        aria-label="Quick text input"
+        rows="4"
+      ></textarea>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="action-buttons" aria-label="AI Actions">
+      <div class="popup-buttons">
+        <button id="quickSummarize" class="primary-btn" aria-label="Quick summarize">
+          📝 Summarize
+        </button>
+        <button id="quickExplain" class="secondary-btn" aria-label="Quick explain">
+          💡 Explain
+        </button>
+        <button id="quickTranslate" class="secondary-btn" aria-label="Quick translate">
+          🌐 Translate
+        </button>
+        <button id="quickProofread" class="secondary-btn" aria-label="Quick proofread">
+          ✏️ Proofread
+        </button>
+      </div>
+    </section>
+
+    <!-- Output -->
+    <section class="output-section" aria-live="polite" aria-label="Results">
+      <div class="output-panel">
+        <h3>Quick Result</h3>
+        <div id="quickOutput">
+          Select text on any webpage and right-click for instant AI processing, or paste text above for quick actions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Notes Preview -->
+    <section class="recent-notes" aria-label="Recent Notes">
+      <div class="notes-header">
+        <h3>Recent Notes</h3>
+        <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
+      </div>
+      <div id="recentNotesList" class="recent-notes-list">
+        <p>No recent notes. Start by processing some text!</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <p style="font-size: 0.8rem; text-align: center; opacity: 0.7; margin-top: 15px;">
+        Built with Chrome's on-device AI
+      </p>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
