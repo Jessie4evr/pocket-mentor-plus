@@ -69,7 +69,10 @@ class PocketMentorExtensionTester:
                 self.log_test(f"Manifest Field: {field}", False, f"Expected string, got {type(manifest[field])}")
                 continue
             
-            type_name = "integer" if expected_type == int else expected_type.__name__
+            if expected_type == int:
+                type_name = "integer"
+            else:
+                type_name = expected_type.__name__
             self.log_test(f"Manifest Field: {field}", True, f"Valid {type_name}")
         
         # Check permissions
