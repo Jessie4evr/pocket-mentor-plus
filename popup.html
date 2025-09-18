@@ -1,132 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pocket Mentor+</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 15px;
-      width: 320px;
-      background: #f9f9f9;
-      color: #222;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    .logo {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 8px;
-    }
-    h1 {
-      font-size: 18px;
-      margin: 5px 0;
-    }
-    p {
-      font-size: 14px;
-      margin: 0 0 10px;
-      color: #555;
-    }
-    .theme-btn {
-      padding: 6px 10px;
-      font-size: 14px;
-      border: none;
-      border-radius: 6px;
-      background: #007bff;
-      color: #fff;
-      cursor: pointer;
-    }
-    .theme-btn:hover {
-      background: #0056b3;
-    }
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      padding: 10px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-bottom: 12px;
-      resize: vertical;
-    }
-    .buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    button {
-      padding: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #007bff;
-      color: #fff;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .output {
-      background: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
-    .output h2 {
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-    #outputBox {
-      font-size: 14px;
-      color: #333;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="container">
-    <!-- Logo + Header -->
-    <header>
-      <img src="assets/logo.png" alt="Pocket Mentor+ Logo" class="logo" />
-      <h1>Pocket Mentor+ 🎓✨</h1>
-      <p>Your AI-powered study and writing assistant</p>
-      <!-- Theme Toggle -->
-      <button id="themeToggle" class="theme-btn">🌙 Dark Mode</button>
+<body class="light-theme">
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <img src="icon48.png" alt="Pocket Mentor+ Logo" class="logo">
+      <h1 class="app-title">Pocket Mentor+ 🎓✨</h1>
+      <p class="tagline">Your AI-powered study assistant</p>
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
     </header>
 
-    <!-- Text Input -->
-   <label for="userInput" class="sr-only">Enter text to process</label>
-    <textarea 
-      id="userInput" 
-      placeholder="Paste or type your text here..." 
-      aria-label="Text input area"
-    ></textarea>
-
-    <!-- Action Buttons -->
-    <div class="buttons" role="group" aria-label="AI action buttons">
-      <button id="summarizeBtn" aria-label="Summarize text">📝 Summarize</button>
-      <button id="translateBtn" aria-label="Translate text">🌐 Translate</button>
-      <button id="proofreadBtn" aria-label="Proofread text">🔤 Proofread</button>
-      <button id="rewriteBtn" aria-label="Rewrite text">✏️ Rewrite</button>
-    </div>
-
-    <!-- Output -->
-    <section class="output" aria-live="polite">
-      <h2>Results</h2>
-      <div id="outputBox" tabindex="0">
-        Your AI-enhanced text will appear here.
+    <!-- Quick Actions -->
+    <section class="quick-actions" aria-label="Quick Actions">
+      <h3>Quick Actions</h3>
+      <div class="popup-buttons">
+        <button id="openNotebook" class="primary-btn" aria-label="Open full notebook">
+          📚 Open Notebook
+        </button>
+        <button id="checkCapabilities" class="secondary-btn" aria-label="Check AI status">
+          🔍 Check AI Status
+        </button>
       </div>
     </section>
+
+    <!-- Text Input -->
+    <section class="input-section" aria-label="Text Input">
+      <label for="quickInput" class="sr-only">Enter text for quick processing</label>
+      <textarea 
+        id="quickInput" 
+        placeholder="Paste text here for quick AI processing..."
+        aria-label="Quick text input"
+        rows="4"
+      ></textarea>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="action-buttons" aria-label="AI Actions">
+      <div class="popup-buttons">
+        <button id="quickSummarize" class="primary-btn" aria-label="Quick summarize">
+          📝 Summarize
+        </button>
+        <button id="quickExplain" class="secondary-btn" aria-label="Quick explain">
+          💡 Explain
+        </button>
+        <button id="quickTranslate" class="secondary-btn" aria-label="Quick translate">
+          🌐 Translate
+        </button>
+        <button id="quickProofread" class="secondary-btn" aria-label="Quick proofread">
+          ✏️ Proofread
+        </button>
+      </div>
+    </section>
+
+    <!-- Output -->
+    <section class="output-section" aria-live="polite" aria-label="Results">
+      <div class="output-panel">
+        <h3>Quick Result</h3>
+        <div id="quickOutput">
+          Select text on any webpage and right-click for instant AI processing, or paste text above for quick actions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Notes Preview -->
+    <section class="recent-notes" aria-label="Recent Notes">
+      <div class="notes-header">
+        <h3>Recent Notes</h3>
+        <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
+      </div>
+      <div id="recentNotesList" class="recent-notes-list">
+        <p>No recent notes. Start by processing some text!</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <p style="font-size: 0.8rem; text-align: center; opacity: 0.7; margin-top: 15px;">
+        Built with Chrome's on-device AI
+      </p>
+    </footer>
   </div>
 
-  <script src="popup.js"></script>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>
-
