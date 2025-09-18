@@ -62,14 +62,15 @@ class PocketMentorExtensionTester:
                 self.log_test(f"Manifest Field: {field}", False, f"Missing required field")
                 continue
             
-            if expected_type == int and manifest[field] != expected_type:
+            if field == 'manifest_version' and manifest[field] != expected_type:
                 self.log_test(f"Manifest Field: {field}", False, f"Expected {expected_type}, got {manifest[field]}")
                 continue
             elif expected_type == str and not isinstance(manifest[field], str):
                 self.log_test(f"Manifest Field: {field}", False, f"Expected string, got {type(manifest[field])}")
                 continue
             
-            self.log_test(f"Manifest Field: {field}", True, f"Valid {expected_type.__name__}")
+            type_name = "integer" if expected_type == int else expected_type.__name__
+            self.log_test(f"Manifest Field: {field}", True, f"Valid {type_name}")
         
         # Check permissions
         required_permissions = ['contextMenus', 'activeTab', 'scripting', 'storage', 'notifications']
