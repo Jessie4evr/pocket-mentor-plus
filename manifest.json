@@ -1,20 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Pocket Mentor+",
-  "version": "1.0",
-  "description": "Summarize, simplify, translate, and quiz selected text with Pocket Mentor+.",
+  "version": "1.0.0",
+  "description": "Your AI-powered study and writing assistant, built with Chrome's on-device AI. Summarize, translate, proofread, and learn, all in your browser.",
   "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   },
   "action": {
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
     },
-    "default_popup": "notebook.html",
+    "default_popup": "popup.html",
     "default_title": "Pocket Mentor+"
   },
   "permissions": [
@@ -25,7 +25,8 @@
     "notifications"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -35,5 +36,11 @@
   ],
   "host_permissions": [
     "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["*.png", "*.css", "*.js"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }

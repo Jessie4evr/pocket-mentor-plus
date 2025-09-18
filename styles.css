@@ -1,0 +1,464 @@
+/* ===== Pocket Mentor+ Styles 🎓✨ ===== */
+
+:root {
+  --primary-gold: #b8860b;
+  --dark-gold: #996515;
+  --light-bg: #fafafa;
+  --dark-bg: #1a1a1a;
+  --text-light: #2c2c2c;
+  --text-dark: #f3f3f3;
+  --border-light: #e0e0e0;
+  --border-dark: #404040;
+  --accent-blue: #007bff;
+  --success-green: #28a745;
+  --warning-orange: #ffc107;
+  --error-red: #dc3545;
+}
+
+/* === Base Styles === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+  min-width: 320px;
+}
+
+/* Light Theme */
+body.light-theme {
+  background: var(--light-bg);
+  color: var(--text-light);
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background: var(--dark-bg);
+  color: var(--text-dark);
+}
+
+/* === Popup Styles === */
+.popup-container {
+  width: 360px;
+  padding: 20px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.popup-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--primary-gold);
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--primary-gold);
+}
+
+.tagline {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+/* === Notebook Styles === */
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.app-header {
+  text-align: center;
+  padding: 30px 0;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(184, 134, 11, 0.3);
+}
+
+.app-header .logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 15px;
+}
+
+.app-header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.app-header .tagline {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* === Form Elements === */
+.input-panel {
+  margin-bottom: 25px;
+}
+
+.input-panel label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--primary-gold);
+}
+
+textarea, input, select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.dark-theme textarea,
+.dark-theme input,
+.dark-theme select {
+  background: #2a2a2a;
+  border-color: var(--border-dark);
+  color: var(--text-dark);
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+/* === Buttons === */
+.button-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.popup-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primary-btn {
+  background: var(--primary-gold);
+  color: white;
+}
+
+.primary-btn:hover {
+  background: var(--dark-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+}
+
+.secondary-btn {
+  background: var(--accent-blue);
+  color: white;
+}
+
+.secondary-btn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.theme-btn {
+  background: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+.theme-btn:hover {
+  background: #5a6268;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* === Output Section === */
+.output-panel {
+  background: white;
+  border: 2px solid var(--border-light);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .output-panel {
+  background: #2a2a2a;
+  border-color: var(--border-dark);
+}
+
+.output-panel h2 {
+  color: var(--primary-gold);
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+#outputBox {
+  font-size: 1rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  min-height: 100px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.dark-theme #outputBox {
+  background: #1e1e1e;
+  border-color: var(--border-dark);
+}
+
+/* === Translate Controls === */
+.translate-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.translate-controls select {
+  flex: 1;
+  min-width: 120px;
+}
+
+.translate-controls button {
+  flex-shrink: 0;
+}
+
+/* === Notes Section === */
+.notes-section {
+  margin-top: 40px;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.note-card {
+  background: white;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dark-theme .note-card {
+  background: #2a2a2a;
+  border-color: var(--border-dark);
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.note-type {
+  background: var(--primary-gold);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.note-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.note-content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* === Loading States === */
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* === Status Messages === */
+.status-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.status-success {
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--success-green);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.status-warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #856404;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-error {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--error-red);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* === Footer === */
+.app-footer {
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 50px;
+  border-top: 1px solid var(--border-light);
+  opacity: 0.7;
+}
+
+.dark-theme .app-footer {
+  border-color: var(--border-dark);
+}
+
+/* === Responsive Design === */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 15px;
+  }
+  
+  .button-panel {
+    grid-template-columns: 1fr;
+  }
+  
+  .popup-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .translate-controls {
+    flex-direction: column;
+  }
+  
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Accessibility === */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
