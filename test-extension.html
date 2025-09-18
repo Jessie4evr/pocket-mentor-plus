@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Pocket Mentor+ Extension</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .test-content {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      border: 2px dashed #b8860b;
+    }
+    .instructions {
+      background: #e3f2fd;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .highlight {
+      background: yellow;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎓 Test Pocket Mentor+ Extension</h1>
+  
+  <div class="instructions">
+    <h2>📋 Testing Instructions</h2>
+    <ol>
+      <li><strong>Load the Extension:</strong>
+        <ul>
+          <li>Open Chrome and go to <code>chrome://extensions/</code></li>
+          <li>Enable "Developer mode" in the top right</li>
+          <li>Click "Load unpacked" and select the <code>/app</code> folder</li>
+        </ul>
+      </li>
+      <li><strong>Enable AI Features:</strong>
+        <ul>
+          <li>Go to <code>chrome://flags/#optimization-guide-on-device-model</code></li>
+          <li>Set to "Enabled BypassPerfRequirement"</li>
+          <li>Go to <code>chrome://flags/#prompt-api-for-gemini-nano</code></li>
+          <li>Set to "Enabled"</li>
+          <li>Restart Chrome</li>
+        </ul>
+      </li>
+      <li><strong>Test the Extension:</strong>
+        <ul>
+          <li>Look for the Pocket Mentor+ icon in the toolbar</li>
+          <li>Click the icon to open the popup</li>
+          <li>Select text below and right-click for context menu</li>
+          <li>Try keyboard shortcuts (Alt+S, Alt+E, Alt+T, Alt+P)</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <div class="test-content">
+    <h2>🧪 Sample Text for Testing</h2>
+    <p>
+      <strong>Select this text to test the extension:</strong> 
+      Artificial Intelligence (AI) has revolutionized numerous industries and aspects of human life. 
+      From healthcare diagnosis to autonomous vehicles, AI technologies are transforming how we work, 
+      learn, and interact with the world. Machine learning algorithms can now analyze vast amounts 
+      of data to identify patterns, make predictions, and automate complex decision-making processes. 
+      Natural Language Processing (NLP) enables computers to understand and generate human language, 
+      leading to advances in translation services, chatbots, and content creation tools.
+    </p>
+    
+    <p>
+      The integration of AI in education has opened new possibilities for personalized learning experiences. 
+      <span class="highlight">Adaptive learning platforms can adjust to individual student needs</span>, 
+      providing customized content and pacing. AI-powered tutoring systems offer 24/7 support, 
+      helping students with homework, answering questions, and providing explanations in multiple languages. 
+      These technologies are making quality education more accessible and effective for learners worldwide.
+    </p>
+
+    <blockquote style="border-left: 4px solid #b8860b; padding-left: 1rem; margin: 1rem 0; font-style: italic;">
+      "The development of full artificial intelligence could spell the end of the human race... 
+      It would take off on its own, and re-design itself at an ever-increasing rate. 
+      Humans, who are limited by slow biological evolution, couldn't compete, and would be superseded." 
+      - Stephen Hawking
+    </blockquote>
+
+    <h3>📚 Complex Concept to Explain:</h3>
+    <p>
+      Quantum computing leverages the principles of quantum mechanics to process information in ways 
+      that classical computers cannot. Unlike classical bits that exist in states of 0 or 1, 
+      quantum bits (qubits) can exist in superposition, being both 0 and 1 simultaneously. 
+      This property, combined with quantum entanglement and interference, allows quantum computers 
+      to perform certain calculations exponentially faster than traditional computers.
+    </p>
+
+    <h3>🌐 Text for Translation:</h3>
+    <p>
+      Hello, welcome to our AI-powered study assistant! This extension helps you learn faster 
+      and understand complex topics with ease. Try translating this text into different languages 
+      using the context menu or extension popup.
+    </p>
+
+    <h3>✏️ Text to Proofread:</h3>
+    <p>
+      This sentence contain some grammatical errors and could be improve for better clarity and readability. 
+      The AI proofreader should identifying these issues and suggest corrections to make the text more professional.
+    </p>
+  </div>
+
+  <div class="instructions">
+    <h2>🔍 What to Test</h2>
+    <ul>
+      <li><strong>📝 Summarization:</strong> Select long paragraphs and summarize them</li>
+      <li><strong>💡 Explanation:</strong> Select complex terms and get simple explanations</li>
+      <li><strong>🌐 Translation:</strong> Translate text into different languages</li>
+      <li><strong>✏️ Proofreading:</strong> Fix grammar and improve text quality</li>
+      <li><strong>❓ Quiz Generation:</strong> Create quiz questions from any text</li>
+      <li><strong>📚 Study Notes:</strong> Generate comprehensive study notes</li>
+      <li><strong>🎯 Context Menu:</strong> Right-click selected text for quick actions</li>
+      <li><strong>⌨️ Keyboard Shortcuts:</strong> Alt+S, Alt+E, Alt+T, Alt+P</li>
+      <li><strong>📱 Popup Interface:</strong> Quick actions and recent notes</li>
+      <li><strong>📖 Notebook:</strong> Full-featured workspace with notes management</li>
+    </ul>
+  </div>
+
+  <div class="test-content">
+    <h2>🚀 Expected Results</h2>
+    <p>When working correctly, you should see:</p>
+    <ul>
+      <li>✅ Extension icon appears in Chrome toolbar</li>
+      <li>✅ Popup opens with AI status and quick actions</li>
+      <li>✅ Context menu shows Pocket Mentor+ options on text selection</li>
+      <li>✅ AI processing works for all features (summarize, explain, translate, etc.)</li>
+      <li>✅ Notebook interface opens with full functionality</li>
+      <li>✅ Notes are saved and can be exported</li>
+      <li>✅ Dark/light theme toggle works</li>
+      <li>✅ Keyboard shortcuts trigger AI actions</li>
+    </ul>
+  </div>
+
+  <script>
+    // Add some interactivity for testing
+    document.addEventListener('DOMContentLoaded', function() {
+      // Highlight text on selection for easier testing
+      document.addEventListener('mouseup', function() {
+        const selection = window.getSelection();
+        if (selection.toString().length > 0) {
+          console.log('Text selected:', selection.toString());
+          
+          // Add a temporary highlight
+          const range = selection.getRangeAt(0);
+          const span = document.createElement('span');
+          span.style.background = 'rgba(184, 134, 11, 0.3)';
+          span.style.transition = 'background 2s ease';
+          
+          try {
+            range.surroundContents(span);
+            setTimeout(() => {
+              span.style.background = 'transparent';
+              setTimeout(() => {
+                if (span.parentNode) {
+                  span.outerHTML = span.innerHTML;
+                }
+              }, 2000);
+            }, 100);
+          } catch (e) {
+            // Selection spans multiple elements, ignore highlighting
+          }
+        }
+      });
+
+      // Log when extension actions are detected
+      window.addEventListener('message', function(event) {
+        if (event.data.type === 'POCKET_MENTOR_RESPONSE') {
+          console.log('Pocket Mentor+ response:', event.data);
+        }
+      });
+    });
+  </script>
+</body>
+</html></content>
+<parameter name="check_services">false
