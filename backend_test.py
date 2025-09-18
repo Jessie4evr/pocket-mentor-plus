@@ -158,7 +158,7 @@ class PocketMentorExtensionTester:
                 else:
                     self.log_test(f"HTML: {html_file} DOCTYPE", True, "Valid DOCTYPE")
                 
-                required_tags = ['<html', '<head>', '<body>', '</html>']
+                required_tags = ['<html', '<head>', '<body', '</html>']
                 for tag in required_tags:
                     if tag not in content:
                         self.log_test(f"HTML: {html_file} {tag}", False, f"Missing {tag} tag")
