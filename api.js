@@ -259,16 +259,34 @@ class PocketMentorAPI {
       return await this.geminiApiCall('quiz', text, { ...options, questionCount });
     }
 
-    const prompt = `Create ${questionCount} multiple-choice questions based on the following text. Format as:
+    const prompt = `Create ${questionCount} multiple-choice questions based on the following text. 
 
-Q1: [Question]
-A) [Option A]
-B) [Option B]  
-C) [Option C]
-D) [Option D]
-Correct: [Letter]
+IMPORTANT: Format EXACTLY as shown below:
 
-Text: ${text}`;
+**QUIZ: [Topic Name]**
+
+**Question 1:** [Clear, specific question]
+A) [First option]
+B) [Second option]  
+C) [Third option]
+D) [Fourth option]
+**Correct Answer:** A) [Repeat the correct option]
+
+**Question 2:** [Clear, specific question]
+A) [First option]
+B) [Second option]
+C) [Third option]
+D) [Fourth option]
+**Correct Answer:** B) [Repeat the correct option]
+
+Continue this format for all ${questionCount} questions.
+
+**ANSWER KEY:**
+1. A) [Brief explanation why this is correct]
+2. B) [Brief explanation why this is correct]
+3. C) [Brief explanation why this is correct]
+
+Text to create quiz from: ${text}`;
     
     return await this.generateWithPrompt(prompt, options);
   }
