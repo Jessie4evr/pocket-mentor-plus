@@ -63,7 +63,7 @@ class GeminiAPIConfig {
           translate: this.generateMockTranslation(prompt, options.targetLanguage),
           rewrite: this.generateMockRewrite(prompt),
           explain: this.generateMockExplanation(prompt),
-          quiz: this.generateMockQuiz(prompt),
+          quiz: this.generateMockQuiz(prompt, options.questionCount || 5),
           default: this.generateMockResponse(prompt)
         };
 
