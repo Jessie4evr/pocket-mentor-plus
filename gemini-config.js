@@ -199,36 +199,85 @@ Let me break this down in simple terms:
 *Explained using AI fallback mode - API key configuration enables more detailed explanations*`;
   }
 
-  generateMockQuiz(text) {
-    return `❓ **QUIZ: Study Material Assessment**
+  generateMockQuiz(text, questionCount = 5) {
+    const topic = this.extractTopic(text);
+    const keyPhrases = this.extractKeyPhrases(text);
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20).slice(0, 10);
+    
+    let quiz = `❓ **QUIZ: ${topic} Assessment**\n\n`;
+    const answers = [];
+    
+    // Generate questions based on the actual text content
+    for (let i = 1; i <= questionCount; i++) {
+      const questionPhrase = keyPhrases[Math.min(i-1, keyPhrases.length-1)] || 'the main concept';
+      const correctSentence = sentences[Math.min(i-1, sentences.length-1)] || text.substring(0, 100);
+      
+      quiz += `**Question ${i}:** What is the primary focus regarding ${questionPhrase} in the text?\n`;
+      
+      // Generate 4 options with one correct answer
+      const correctLetter = ['A', 'B', 'C', 'D'][i % 4];
+      const options = this.generateQuizOptions(correctSentence, keyPhrases, i);
+      
+      // Assign correct answer to the chosen letter
+      const correctIndex = ['A', 'B', 'C', 'D'].indexOf(correctLetter);
+      const shuffledOptions = [...options];
+      shuffledOptions[correctIndex] = options[0]; // Put correct answer in chosen position
+      shuffledOptions[0] = options[correctIndex]; // Swap
+      
+      quiz += `A) ${shuffledOptions[0]}\n`;
+      quiz += `B) ${shuffledOptions[1]}\n`;
+      quiz += `C) ${shuffledOptions[2]}\n`;
+      quiz += `D) ${shuffledOptions[3]}\n`;
+      quiz += `**Correct Answer:** ${correctLetter}) ${shuffledOptions[correctIndex]}\n\n`;
+      
+      answers.push({
+        question: i,
+        answer: correctLetter,
+        explanation: `This is correct based on the text content about ${questionPhrase}`
+      });
+    }
+    
+    // Add answer key section
+    quiz += `**ANSWER KEY:**\n`;
+    answers.forEach(answer => {
+      quiz += `${answer.question}. ${answer.answer}) ${answer.explanation}\n`;
+    });
+    
+    quiz += `\n*Quiz generated using AI fallback mode - Enhanced questions available with API key*`;
+    
+    return quiz;
+  }
 
-**Question 1:** What is the main topic discussed in the text?
-A) Basic concepts and definitions
-B) Advanced theoretical frameworks  
-C) Practical applications and examples
-D) All of the above
-**Correct Answer:** D) All of the above
+  generateQuizOptions(correctSentence, keyPhrases, questionIndex) {
+    // Generate plausible options based on the text content
+    const correctOption = this.createCorrectOption(correctSentence, keyPhrases);
+    const wrongOptions = [
+      this.createWrongOption(keyPhrases, 'general'),
+      this.createWrongOption(keyPhrases, 'opposite'),
+      this.createWrongOption(keyPhrases, 'related')
+    ];
+    
+    return [correctOption, ...wrongOptions];
+  }
 
-**Question 2:** Which approach is most effective for understanding complex topics?
-A) Memorizing all details
-B) Breaking concepts into simpler parts
-C) Ignoring difficult sections
-D) Reading only once
-**Correct Answer:** B) Breaking concepts into simpler parts
+  createCorrectOption(sentence, keyPhrases) {
+    const cleanSentence = sentence.trim().replace(/^\w+\s/, '').substring(0, 80);
+    const keyPhrase = keyPhrases[0] || 'the main topic';
+    return `It focuses on ${keyPhrase} as described in the content`;
+  }
 
-**Question 3:** What is the key benefit of this learning approach?
-A) Faster completion
-B) Better retention and understanding
-C) Less effort required
-D) More impressive to others
-**Correct Answer:** B) Better retention and understanding
-
-**ANSWER KEY:**
-1. D) All of the above - The text typically covers multiple aspects including concepts, frameworks, and applications
-2. B) Breaking concepts into simpler parts - This is a proven learning strategy for comprehension
-3. B) Better retention and understanding - The primary goal of effective learning methods
-
-*Quiz generated using AI fallback mode - Enhanced questions available with API key*`;
+  createWrongOption(keyPhrases, type) {
+    const phrase = keyPhrases[Math.floor(Math.random() * keyPhrases.length)] || 'general concepts';
+    
+    switch(type) {
+      case 'opposite':
+        return `It completely ignores ${phrase} and related topics`;
+      case 'related':
+        return `It briefly mentions ${phrase} but focuses on other aspects`;
+      case 'general':
+      default:
+        return `It provides general information without specific focus on ${phrase}`;
+    }
   }
 
   generateMockResponse(prompt) {
