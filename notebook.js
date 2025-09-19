@@ -348,10 +348,21 @@ class PocketMentorNotebook {
     this.showLoading(`${this.capitalizeFirst(action)}ing your text...`);
     
     try {
+      let questionCount = 5; // default
+      
+      // Ask for question count if generating quiz
+      if (action === 'generateQuiz') {
+        const userChoice = prompt('How many questions would you like? Enter 10 or 25 (default: 10)', '10');
+        questionCount = parseInt(userChoice) || 10;
+        if (questionCount !== 10 && questionCount !== 25) {
+          questionCount = 10; // default to 10 if invalid input
+        }
+      }
+      
       const response = await chrome.runtime.sendMessage({
         action: action,
         text: text,
-        questionCount: action === 'generateQuiz' ? 5 : undefined,
+        questionCount: questionCount,
         options: { 
           format: 'markdown',
           temperature: 0.7
