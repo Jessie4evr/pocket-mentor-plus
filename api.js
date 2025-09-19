@@ -142,6 +142,16 @@ class PocketMentorAPI {
         return await this.geminiApiCall('summarize', text, options);
       }
 
+      const enhancedPrompt = `Summarize the following text focusing on the main topics, key concepts, and important details. Make the summary relevant and informative:
+
+Text: "${text}"
+
+Requirements:
+- Focus on the actual content and main ideas
+- Include specific details and examples from the text
+- Make it comprehensive but concise
+- Structure it with clear headings and bullet points`;
+
       const session = await this.createSession('summarizer', {
         model: 'gemini-nano',
         type: options.type || 'key-points',
@@ -149,7 +159,7 @@ class PocketMentorAPI {
         length: options.length || 'medium'
       });
       
-      const result = await session.summarize(text);
+      const result = await session.summarize(enhancedPrompt);
       await session.destroy();
       
       return result || "Unable to generate summary.";
