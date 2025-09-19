@@ -79,8 +79,11 @@ class PocketMentorNotebook {
   }
 
   attachEventListeners() {
-    // Theme toggle
+    // Theme controls
     this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
+    this.elements.themesBtn.addEventListener('click', () => this.toggleThemesPanel());
+    this.elements.closeThemesPanel.addEventListener('click', () => this.closeThemesPanel());
+    this.elements.videoSummaryBtn.addEventListener('click', () => this.analyzeVideo());
 
     // API Configuration
     this.elements.saveApiKey.addEventListener('click', () => this.saveApiKey());
