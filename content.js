@@ -1,12 +1,15 @@
 // ===== Pocket Mentor+ Content Script 🎓✨ =====
 // Handles webpage interaction and text selection processing
 
+import videoAnalyzer from './video-analyzer.js';
+
 console.log('✅ Pocket Mentor+ content script loaded on:', window.location.href);
 
 class PocketMentorContent {
   constructor() {
     this.selectedText = '';
     this.isProcessing = false;
+    this.videoAnalyzer = videoAnalyzer;
     this.init();
   }
 
@@ -33,6 +36,12 @@ class PocketMentorContent {
         
         case 'processSelectedText':
           this.processSelectedText(request.aiAction)
+            .then(result => sendResponse({ success: true, result }))
+            .catch(error => sendResponse({ success: false, error: error.message }));
+          return true; // Keep message channel open for async response
+        
+        case 'analyzeVideo':
+          this.analyzeCurrentVideo(request.options)
             .then(result => sendResponse({ success: true, result }))
             .catch(error => sendResponse({ success: false, error: error.message }));
           return true; // Keep message channel open for async response
@@ -74,6 +83,17 @@ class PocketMentorContent {
           });
       }
     });
+  }
+
+  async analyzeCurrentVideo(options = {}) {
+    try {
+      // Use the video analyzer to find and analyze videos
+      await this.videoAnalyzer.analyzeCurrentVideo();
+      return 'Video analysis initiated. Check for summary modal or notifications.';
+    } catch (error) {
+      console.error('Video analysis failed:', error);
+      throw new Error('No video found to analyze or analysis failed');
+    }
   }
 
   setupSelectionTracking() {
