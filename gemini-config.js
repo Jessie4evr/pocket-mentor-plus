@@ -86,19 +86,23 @@ class GeminiAPIConfig {
   generateMockSummary(text) {
     const textPreview = text.substring(0, 200);
     const topic = this.extractTopic(text);
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20).slice(0, 3);
+    const keyPhrasesFromText = this.extractKeyPhrases(text);
+    
     return `📝 **AI Summary:**
 
 **Based on your text:** "${textPreview}${text.length > 200 ? '...' : ''}"
 
 **Key Points:**
-• Main concept: The text discusses ${topic} with specific focus on the provided content
-• Supporting details: Various examples and explanations help clarify the main ideas presented
-• Context: The content covers approximately ${Math.floor(text.length / 5)} words of relevant information
+• Main topic: ${topic}
+• Important themes: ${keyPhrasesFromText.slice(0, 2).join(', ')}
+• Content focus: ${sentences.length > 0 ? sentences[0].trim() + '...' : 'The provided content'}
+• Word count: Approximately ${Math.floor(text.length / 5)} words analyzed
 
 **Main Takeaways:**
-Your text covers essential information about ${topic}. Key themes include practical applications and theoretical foundations directly related to your specific content.
+${sentences.length > 1 ? sentences[1].trim() + '.' : 'The content provides valuable insights.'} ${keyPhrasesFromText.length > 2 ? 'Key concepts include ' + keyPhrasesFromText.slice(2, 4).join(' and ') + '.' : 'This information can be useful for understanding the subject matter.'}
 
-**Summary Length:** Original ${text.length} characters condensed to key insights
+**Summary:** The text primarily discusses ${topic}, covering ${keyPhrasesFromText.length > 0 ? keyPhrasesFromText[0] : 'relevant topics'} with supporting details and context.
 
 *Generated using AI fallback mode - Configure Gemini API key for enhanced, context-aware responses*`;
   }
