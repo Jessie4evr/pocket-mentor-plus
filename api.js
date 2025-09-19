@@ -175,15 +175,7 @@ class PocketMentorAPI {
     return languages[code] || code.toUpperCase();
   }
 
-  getMockTranslation(text, targetLang) {
-    const translations = {
-      'es': '🌐 **Traducción al Español:**\n\nEste es el texto traducido al español. La traducción mantiene el significado original mientras adapta el contenido al idioma objetivo.\n\n*Traducido con API de Gemini*',
-      'fr': '🌐 **Traduction en Français:**\n\nCeci est le texte traduit en français. La traduction conserve le sens original tout en adaptant le contenu à la langue cible.\n\n*Traduit avec l\'API Gemini*',
-      'de': '🌐 **Deutsche Übersetzung:**\n\nDies ist der ins Deutsche übersetzte Text. Die Übersetzung behält die ursprüngliche Bedeutung bei und passt den Inhalt an die Zielsprache an.\n\n*Übersetzt mit Gemini API*'
-    };
-    
-    return translations[targetLang] || `🌐 **Translation:**\n\nThis is the translated text. The translation maintains the original meaning while adapting the content to the target language.\n\n*Translated with Gemini API*`;
-  }
+
 
   async summarizeText(text, options = {}) {
     try {
