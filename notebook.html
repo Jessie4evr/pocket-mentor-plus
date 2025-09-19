@@ -19,10 +19,25 @@
     <!-- Header Controls -->
     <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
       <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+      <button id="themesBtn" class="theme-btn" aria-label="Choose themes">🎨 Themes</button>
+      <button id="videoSummaryBtn" class="theme-btn" aria-label="Analyze video" title="Alt+V">🎥 Video</button>
       <button id="exportNotes" class="theme-btn" aria-label="Export notes">📥 Export</button>
       <button id="clearAllNotes" class="theme-btn" aria-label="Clear all notes">🗑️ Clear All</button>
     </div>
   </header>
+
+  <!-- Themes Panel (Initially Hidden) -->
+  <div id="themesPanel" class="themes-panel-notebook" style="display: none;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 24px;">
+      <h2 style="text-align: center; color: var(--primary-gold); margin-bottom: 24px;">🎨 Choose Your Perfect Theme</h2>
+      <div id="themeGrid" class="theme-grid-notebook">
+        <!-- Theme options will be populated by JavaScript -->
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button id="closeThemesPanel" class="secondary-btn">Close Themes</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Main App Container -->
   <main class="app-container">
