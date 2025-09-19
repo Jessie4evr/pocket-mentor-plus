@@ -75,11 +75,15 @@ class GeminiAPIConfig {
 
   detectAction(prompt) {
     const lowerPrompt = prompt.toLowerCase();
-    if (lowerPrompt.includes('summarize') || lowerPrompt.includes('summary')) return 'summarize';
+    
+    // More specific detection patterns
+    if (lowerPrompt.includes('summarize') || lowerPrompt.includes('summary') || lowerPrompt.includes('main points')) return 'summarize';
     if (lowerPrompt.includes('translate') || lowerPrompt.includes('translation')) return 'translate';
-    if (lowerPrompt.includes('rewrite') || lowerPrompt.includes('proofread')) return 'rewrite';
-    if (lowerPrompt.includes('explain') || lowerPrompt.includes('simple')) return 'explain';
-    if (lowerPrompt.includes('quiz') || lowerPrompt.includes('question')) return 'quiz';
+    if (lowerPrompt.includes('rewrite') || lowerPrompt.includes('proofread') || lowerPrompt.includes('improve')) return 'rewrite';
+    if (lowerPrompt.includes('explain') || lowerPrompt.includes('simple') || lowerPrompt.includes('understand')) return 'explain';
+    if (lowerPrompt.includes('quiz') || lowerPrompt.includes('question') || lowerPrompt.includes('multiple-choice') || lowerPrompt.includes('A, B, C, D')) return 'quiz';
+    if (lowerPrompt.includes('study notes') || lowerPrompt.includes('notes')) return 'studyNotes';
+    
     return 'default';
   }
 
