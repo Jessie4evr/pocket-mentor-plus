@@ -286,6 +286,36 @@ Let me break this down in simple terms:
     }
   }
 
+  generateMockStudyNotes(text) {
+    const topic = this.extractTopic(text);
+    const keyPhrases = this.extractKeyPhrases(text);
+    
+    return `📚 **Study Notes: ${topic}**
+
+**📋 Main Topics:**
+• ${keyPhrases[0] || 'Primary concept from your text'}
+• ${keyPhrases[1] || 'Secondary concept discussed'}
+• ${keyPhrases[2] || 'Supporting information provided'}
+
+**🔑 Key Concepts:**
+Based on your text: "${text.substring(0, 150)}${text.length > 150 ? '...' : ''}"
+
+The content covers essential information about ${topic}. Important themes include practical applications and theoretical foundations directly related to your specific content.
+
+**💡 Study Tips:**
+• Review the main concepts multiple times
+• Focus on understanding ${keyPhrases[0] || 'the key topics'}
+• Practice applying these concepts
+• Connect ideas to real-world examples
+
+**❓ Study Questions:**
+1. What are the main points discussed in this content?
+2. How does ${keyPhrases[0] || 'the main concept'} relate to the overall topic?
+3. What are the practical applications mentioned?
+
+*Study notes generated using AI fallback mode*`;
+  }
+
   generateMockResponse(prompt) {
     return `🤖 **AI Response:**
 
