@@ -84,13 +84,60 @@ class PocketMentorContent {
 
   async analyzeCurrentVideo(options = {}) {
     try {
-      // Use the video analyzer to find and analyze videos
-      await this.videoAnalyzer.analyzeCurrentVideo();
-      return 'Video analysis initiated. Check for summary modal or notifications.';
+      // Simple video analysis for current page
+      const videos = document.querySelectorAll('video, iframe[src*="youtube"], iframe[src*="vimeo"]');
+      
+      if (videos.length === 0) {
+        throw new Error('No video found on this page');
+      }
+
+      // Get video information
+      const videoInfo = this.extractVideoInfo();
+      
+      // Send to background for AI processing
+      const response = await chrome.runtime.sendMessage({
+        action: 'generateStudyNotes',
+        text: `Video Analysis: ${videoInfo.title}\n\nDescription: ${videoInfo.description}\n\nDuration: ${videoInfo.duration}\n\nURL: ${window.location.href}`,
+        options: { context: 'video-analysis' }
+      });
+
+      if (response && response.success) {
+        return response.result;
+      } else {
+        throw new Error('Video analysis failed');
+      }
     } catch (error) {
       console.error('Video analysis failed:', error);
-      throw new Error('No video found to analyze or analysis failed');
+      throw error;
     }
+  }
+
+  extractVideoInfo() {
+    let title = 'Unknown Video';
+    let description = '';
+    let duration = 'Unknown';
+
+    // YouTube
+    if (window.location.hostname.includes('youtube.com')) {
+      title = document.querySelector('h1.ytd-watch-metadata')?.textContent || 
+              document.querySelector('title')?.textContent || 'YouTube Video';
+      description = document.querySelector('#description-text')?.textContent?.substring(0, 200) || 'YouTube video content';
+    }
+    // Vimeo  
+    else if (window.location.hostname.includes('vimeo.com')) {
+      title = document.querySelector('h1')?.textContent || 'Vimeo Video';
+      description = document.querySelector('.description')?.textContent?.substring(0, 200) || 'Vimeo video content';
+    }
+    // Generic video
+    else {
+      title = document.querySelector('title')?.textContent || 'Video Content';
+      const videoElement = document.querySelector('video');
+      if (videoElement && videoElement.duration) {
+        duration = Math.floor(videoElement.duration / 60) + ' minutes';
+      }
+    }
+
+    return { title, description, duration };
   }
 
   setupSelectionTracking() {
