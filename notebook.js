@@ -2,6 +2,7 @@
 
 import pocketMentorAPI from './api.js';
 import geminiConfig from './gemini-config.js';
+import themeManager from './theme-manager.js';
 
 class PocketMentorNotebook {
   constructor() {
@@ -23,12 +24,18 @@ class PocketMentorNotebook {
     await this.loadStats();
     await this.loadApiKey();
     this.setupCharCounter();
+    this.setupThemes();
   }
 
   bindElements() {
     this.elements = {
       // Theme and controls
       themeToggle: document.getElementById('themeToggle'),
+      themesBtn: document.getElementById('themesBtn'),
+      themesPanel: document.getElementById('themesPanel'),
+      themeGrid: document.getElementById('themeGrid'),
+      closeThemesPanel: document.getElementById('closeThemesPanel'),
+      videoSummaryBtn: document.getElementById('videoSummaryBtn'),
       aiStatusBanner: document.getElementById('aiStatusBanner'),
       
       // API Configuration
