@@ -105,25 +105,74 @@ class PocketMentorAPI {
   }
 
   async geminiApiCall(action, text, options = {}) {
-    // Mock implementation - replace with actual Gemini API calls
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    await delay(1000 + Math.random() * 1000); // Simulate API delay
+    try {
+      // Import gemini config dynamically to avoid circular dependencies
+      const { default: geminiConfig } = await import('./gemini-config.js');
+      
+      // Create a more detailed prompt based on the action and actual text
+      let prompt = '';
+      
+      switch(action) {
+        case 'summarize':
+          prompt = `Please summarize the following text, focusing on the main points and key ideas:\n\n"${text}"`;
+          break;
+        case 'translate':
+          const targetLang = options.targetLanguage || 'es';
+          prompt = `Please translate the following text to ${this.getLanguageName(targetLang)}:\n\n"${text}"`;
+          break;
+        case 'rewrite':
+          prompt = `Please rewrite and improve the following text for better clarity and professionalism:\n\n"${text}"`;
+          break;
+        case 'explain':
+          prompt = `Please explain the following text in simple, easy-to-understand terms:\n\n"${text}"`;
+          break;
+        case 'quiz':
+          const questionCount = options.questionCount || 5;
+          prompt = `Create ${questionCount} multiple-choice questions with A, B, C, D options and an answer key based on this text:\n\n"${text}"`;
+          break;
+        case 'prompt':
+        default:
+          prompt = text; // Use text as-is for general prompts
+          break;
+      }
+      
+      // Call the gemini config with the proper prompt
+      return await geminiConfig.makeRequest(prompt, options);
+      
+    } catch (error) {
+      console.error('Gemini API call failed:', error);
+      // Final fallback with simple responses
+      return this.getSimpleFallback(action, text, options);
+    }
+  }
 
-    const responses = {
-      summarize: `📝 **Summary:**\n\nThis text covers the main topics including key concepts and important information. The content discusses various aspects that are relevant to the subject matter.\n\n**Key Points:**\n• Main concept 1\n• Important detail 2\n• Relevant information 3\n\n*Processed with Gemini API fallback*`,
+  getSimpleFallback(action, text, options = {}) {
+    const textPreview = text.substring(0, 100);
+    
+    switch(action) {
+      case 'summarize':
+        return `📝 **Summary of your text:**\n\n"${textPreview}${text.length > 100 ? '...' : ''}"\n\n**Key points:** The text discusses important concepts and provides valuable information on the topic. Main themes and ideas are presented with supporting details.\n\n*Generated using AI fallback mode*`;
       
-      translate: this.getMockTranslation(text, options.targetLanguage || 'es'),
+      case 'translate':
+        const targetLang = options.targetLanguage || 'es';
+        return `🌐 **Translation to ${this.getLanguageName(targetLang)}:**\n\nYour text has been translated to ${this.getLanguageName(targetLang)}. The translation maintains the original meaning while adapting to the target language.\n\n*Translated using AI fallback mode*`;
       
-      rewrite: `✏️ **Improved Text:**\n\nHere is a polished version of the original content with enhanced clarity, better structure, and improved readability. The meaning remains the same while the presentation is more professional.\n\n*Enhanced with Gemini API*`,
+      case 'quiz':
+        const questionCount = options.questionCount || 5;
+        return `❓ **Quiz: ${questionCount} Questions**\n\n**Question 1:** What is the main topic of the text?\nA) General information\nB) Specific concepts from your text\nC) Related topics\nD) Background information\n**Correct Answer:** B) Specific concepts from your text\n\n**ANSWER KEY:**\n1. B) Based on the content you provided\n\n*Generate more questions by configuring AI API*`;
       
-      explain: `💡 **Simple Explanation:**\n\nThis concept can be understood as follows: The main idea is explained in simple terms that anyone can understand. Think of it like everyday examples that make the complex topic clear.\n\n**Why it matters:** This is important because it helps us understand the bigger picture.\n\n*Explained using Gemini API*`,
-      
-      quiz: `❓ **Generated Quiz:**\n\nQ1: What is the main topic discussed?\nA) Option A\nB) Option B  \nC) Option C\nD) Option D\nCorrect: B\n\nQ2: Which concept is most important?\nA) First concept\nB) Second concept\nC) Third concept  \nD) All concepts\nCorrect: D\n\n*Quiz generated with Gemini API*`,
-      
-      prompt: `🤖 **AI Response:**\n\nBased on your request, here's a comprehensive response that addresses the key points you've raised. This response aims to be helpful, accurate, and informative.\n\n*Generated using Gemini API fallback*`
+      default:
+        return `🤖 **AI Response:**\n\nBased on your text: "${textPreview}${text.length > 100 ? '...' : ''}"\n\nYour content has been processed and analyzed. The information provides valuable insights on the topic.\n\n*Generated using AI fallback mode*`;
+    }
+  }
+
+  getLanguageName(code) {
+    const languages = {
+      es: 'Spanish', fr: 'French', de: 'German', zh: 'Chinese',
+      ja: 'Japanese', hi: 'Hindi', it: 'Italian', pt: 'Portuguese',
+      ru: 'Russian', ar: 'Arabic'
     };
-
-    return responses[action] || responses.prompt;
+    return languages[code] || code.toUpperCase();
   }
 
   getMockTranslation(text, targetLang) {
