@@ -238,8 +238,69 @@ class PocketMentorNotebook {
         await pocketMentorAPI.setGeminiApiKey(result.geminiApiKey);
         console.log('🔑 Stored API key loaded');
       }
+  setupThemes() {
+    const themes = themeManager.getAvailableThemes();
+    const currentTheme = themeManager.getCurrentTheme();
+    
+    this.elements.themeGrid.innerHTML = '';
+    
+    themes.forEach(theme => {
+      const themePreview = themeManager.createThemePreview(theme.key);
+      
+      if (theme.key === currentTheme) {
+        themePreview.classList.add('active');
+        themePreview.style.borderColor = theme.colors.accent;
+        themePreview.style.borderWidth = '3px';
+      }
+      
+      themePreview.addEventListener('click', () => {
+        this.selectTheme(theme.key);
+      });
+      
+      this.elements.themeGrid.appendChild(themePreview);
+    });
+  }
+
+  async selectTheme(themeName) {
+    await themeManager.setTheme(themeName);
+    this.setupThemes(); // Refresh theme grid
+    this.closeThemesPanel();
+    this.showMessage(`✅ ${themeManager.themes[themeName].name} theme applied!`, 'success');
+  }
+
+  toggleThemesPanel() {
+    const isVisible = this.elements.themesPanel.style.display !== 'none';
+    this.elements.themesPanel.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+      this.setupThemes(); // Refresh when opening
+    }
+  }
+
+  closeThemesPanel() {
+    this.elements.themesPanel.style.display = 'none';
+  }
+
+  async analyzeVideo() {
+    this.showLoading('🎥 Looking for videos to analyze...');
+    
+    try {
+      // Send message to content script to analyze video
+      const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      
+      const response = await chrome.tabs.sendMessage(activeTab.id, {
+        action: 'analyzeVideo',
+        options: { source: 'notebook' }
+      });
+
+      if (response && response.success) {
+        this.showResult(response.result);
+      } else {
+        this.showMessage('⚠️ No video found to analyze. Try opening a YouTube video or video page in another tab.', 'warning');
+      }
     } catch (error) {
-      console.error('Failed to load API key:', error);
+      console.error('Video analysis failed:', error);
+      this.showMessage('❌ Video analysis failed. Make sure you have a video page open in another tab.', 'error');
     }
   }
 
