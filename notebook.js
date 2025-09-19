@@ -279,9 +279,11 @@ class PocketMentorNotebook {
 
   toggleThemesPanel() {
     const isVisible = this.elements.themesPanel.style.display !== 'none';
-    this.elements.themesPanel.style.display = isVisible ? 'none' : 'block';
     
-    if (!isVisible) {
+    if (isVisible) {
+      this.elements.themesPanel.style.display = 'none';
+    } else {
+      this.elements.themesPanel.style.display = 'block';
       this.setupThemes(); // Refresh when opening
     }
   }
