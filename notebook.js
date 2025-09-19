@@ -153,7 +153,7 @@ class PocketMentorNotebook {
         
         if (availableCount > 0) {
           this.elements.aiStatusBanner.className = 'status-message status-success';
-          this.elements.aiStatusBanner.textContent = `✅ ${availableCount} AI capabilities available and ready!`;
+          this.elements.aiStatusBanner.textContent = `✅ ${availableCount} Chrome AI capabilities available and ready!`;
           
           // Hide banner after 3 seconds
           setTimeout(() => {
@@ -165,15 +165,71 @@ class PocketMentorNotebook {
             ⚠️ Chrome Built-in AI not available. Using fallback Gemini API. 
             <button onclick="this.parentElement.style.display='none'" style="background: none; border: none; color: inherit; cursor: pointer; margin-left: 10px;">×</button>
           `;
+          
+          // Show API configuration panel
+          this.elements.apiConfigPanel.style.display = 'block';
         }
       } else {
         this.elements.aiStatusBanner.className = 'status-message status-error';
         this.elements.aiStatusBanner.textContent = '❌ Failed to check AI capabilities';
+        this.elements.apiConfigPanel.style.display = 'block';
       }
     } catch (error) {
       console.error('AI capability check failed:', error);
       this.elements.aiStatusBanner.className = 'status-message status-error';
       this.elements.aiStatusBanner.textContent = '❌ AI capability check failed';
+      this.elements.apiConfigPanel.style.display = 'block';
+    }
+  }
+
+  async saveApiKey() {
+    const apiKey = this.elements.geminiApiKey.value.trim();
+    
+    if (!apiKey) {
+      this.showMessage('⚠️ Please enter a valid API key', 'warning');
+      return;
+    }
+
+    try {
+      // Save to local storage
+      await chrome.storage.local.set({ geminiApiKey: apiKey });
+      
+      // Configure the API
+      await geminiConfig.setApiKey(apiKey);
+      await pocketMentorAPI.setGeminiApiKey(apiKey);
+      
+      this.showMessage('✅ API key saved successfully!', 'success');
+      
+      // Hide the configuration panel
+      this.elements.apiConfigPanel.style.display = 'none';
+      
+      // Update status banner
+      this.elements.aiStatusBanner.className = 'status-message status-success';
+      this.elements.aiStatusBanner.innerHTML = `
+        ✅ Gemini API configured and ready! 
+        <button onclick="document.getElementById('apiConfigPanel').style.display='block'" 
+                style="background: none; border: none; color: inherit; cursor: pointer; margin-left: 10px; text-decoration: underline;">
+          Change Key
+        </button>
+      `;
+      
+    } catch (error) {
+      console.error('Failed to save API key:', error);
+      this.showMessage('❌ Failed to save API key', 'error');
+    }
+  }
+
+  async loadApiKey() {
+    try {
+      const result = await chrome.storage.local.get('geminiApiKey');
+      if (result.geminiApiKey) {
+        this.elements.geminiApiKey.value = '••••••••••••••••'; // Masked display
+        await geminiConfig.setApiKey(result.geminiApiKey);
+        await pocketMentorAPI.setGeminiApiKey(result.geminiApiKey);
+        console.log('🔑 Stored API key loaded');
+      }
+    } catch (error) {
+      console.error('Failed to load API key:', error);
     }
   }
 
