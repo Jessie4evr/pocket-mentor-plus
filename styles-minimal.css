@@ -1,0 +1,114 @@
+/* ===== Pocket Mentor+ Minimal Theme 🎯✨ ===== */
+
+:root {
+  --minimal-white: #ffffff;
+  --minimal-black: #000000;
+  --minimal-gray: #666666;
+  --minimal-light-gray: #f5f5f5;
+  --minimal-accent: #0066cc;
+  --minimal-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Import base styles */
+@import url('styles.css');
+
+/* Override for Minimal Theme */
+body.minimal-theme {
+  background: var(--minimal-white);
+  color: var(--minimal-black);
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.minimal-theme .popup-container {
+  background: var(--minimal-white);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--minimal-shadow);
+  backdrop-filter: none;
+}
+
+.minimal-theme .popup-header {
+  background: var(--minimal-black);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.minimal-theme .popup-header::before {
+  display: none;
+}
+
+.minimal-theme button {
+  border-radius: 4px;
+  font-weight: 500;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.minimal-theme .primary-btn {
+  background: var(--minimal-black);
+  color: var(--minimal-white);
+}
+
+.minimal-theme .primary-btn:hover {
+  background: var(--minimal-gray);
+  box-shadow: none;
+  transform: none;
+}
+
+.minimal-theme .secondary-btn {
+  background: transparent;
+  color: var(--minimal-black);
+  border: 1px solid var(--minimal-black);
+}
+
+.minimal-theme .secondary-btn:hover {
+  background: var(--minimal-black);
+  color: var(--minimal-white);
+  box-shadow: none;
+  transform: none;
+}
+
+.minimal-theme .quick-actions,
+.minimal-theme .input-section,
+.minimal-theme .output-section,
+.minimal-theme .recent-notes {
+  background: var(--minimal-light-gray);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.minimal-theme textarea,
+.minimal-theme input {
+  background: var(--minimal-white);
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  backdrop-filter: none;
+}
+
+.minimal-theme textarea:focus,
+.minimal-theme input:focus {
+  border-color: var(--minimal-accent);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+  transform: none;
+}
+
+.minimal-theme #outputBox {
+  background: var(--minimal-white);
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+}
+
+.minimal-theme .note-card {
+  background: var(--minimal-white);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px var(--minimal-shadow);
+  backdrop-filter: none;
+}
+
+.minimal-theme .note-card:hover {
+  box-shadow: 0 4px 8px var(--minimal-shadow);
+  transform: none;
+}
