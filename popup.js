@@ -173,6 +173,42 @@ class PocketMentorPopup {
     this.elements.themeToggle.textContent = themeNames[theme] || '🌙 Dark Mode';
   }
 
+  getTypeIcon(type) {
+    const icons = {
+      summarize: '📝',
+      explain: '💡',
+      translate: '🌐',
+      rewrite: '✏️',
+      proofread: '🔤',
+      quiz: '❓',
+      generateQuiz: '❓',
+      generateStudyNotes: '📚',
+      'video-summary': '🎥',
+      saved: '💾'
+    };
+    return icons[type] || '📄';
+  }
+
+  formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) {
+      return 'Just now';
+    } else if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    } else {
+      return date.toLocaleDateString();
+    }
+  }
+
+  truncateText(text, maxLength) {
+    if (!text || text.length <= maxLength) return text || '';
+    return text.substring(0, maxLength) + '...';
+  }
+
   async loadTheme() {
     try {
       const result = await chrome.storage.sync.get('theme');
