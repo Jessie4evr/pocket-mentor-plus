@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Fallback Icon</title>
+</head>
+<body>
+  <canvas id="iconCanvas" width="128" height="128" style="border: 1px solid #ccc;"></canvas>
+  
+  <script>
+    // Create a fallback icon using canvas
+    const canvas = document.getElementById('iconCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 128, 128);
+    gradient.addColorStop(0, '#b8860b');
+    gradient.addColorStop(1, '#daa520');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 128, 128);
+    
+    // Add rounded corners effect
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.beginPath();
+    ctx.roundRect(0, 0, 128, 128, 16);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+    
+    // Add text
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('PM+', 64, 50);
+    
+    // Add emoji
+    ctx.font = '32px Arial';
+    ctx.fillText('🎓', 64, 90);
+    
+    // Convert to data URL and log it
+    const dataURL = canvas.toDataURL('image/png');
+    console.log('Fallback icon created:', dataURL.substring(0, 100) + '...');
+  </script>
+</body>
+</html>
