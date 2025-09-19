@@ -238,6 +238,11 @@ class PocketMentorNotebook {
         await pocketMentorAPI.setGeminiApiKey(result.geminiApiKey);
         console.log('🔑 Stored API key loaded');
       }
+    } catch (error) {
+      console.error('Failed to load API key:', error);
+    }
+  }
+
   setupThemes() {
     const themes = themeManager.getAvailableThemes();
     const currentTheme = themeManager.getCurrentTheme();
