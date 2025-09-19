@@ -64,10 +64,12 @@ class GeminiAPIConfig {
           rewrite: this.generateMockRewrite(prompt),
           explain: this.generateMockExplanation(prompt),
           quiz: this.generateMockQuiz(prompt, options.questionCount || 5),
+          studyNotes: this.generateMockStudyNotes(prompt),
           default: this.generateMockResponse(prompt)
         };
 
         const action = this.detectAction(prompt);
+        console.log(`🤖 Generating mock response for action: ${action}`);
         resolve(responses[action] || responses.default);
       }, 800 + Math.random() * 1200);
     });
