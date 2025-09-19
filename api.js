@@ -138,6 +138,10 @@ class PocketMentorAPI {
 
   async summarizeText(text, options = {}) {
     try {
+      if (this.fallbackMode) {
+        return await this.geminiApiCall('summarize', text, options);
+      }
+
       const session = await this.createSession('summarizer', {
         model: 'gemini-nano',
         type: options.type || 'key-points',
@@ -151,12 +155,21 @@ class PocketMentorAPI {
       return result || "Unable to generate summary.";
     } catch (error) {
       console.error('Summarization error:', error);
+      // Fallback to Gemini API
+      if (!this.fallbackMode) {
+        this.fallbackMode = true;
+        return await this.summarizeText(text, options);
+      }
       return `⚠️ Summarization failed: ${error.message}`;
     }
   }
 
   async translateText(text, targetLang = 'es', options = {}) {
     try {
+      if (this.fallbackMode) {
+        return await this.geminiApiCall('translate', text, { ...options, targetLanguage: targetLang });
+      }
+
       const session = await this.createSession('translator', {
         sourceLanguage: options.sourceLanguage || 'en',
         targetLanguage: targetLang
@@ -168,12 +181,21 @@ class PocketMentorAPI {
       return result || "Unable to translate text.";
     } catch (error) {
       console.error('Translation error:', error);
+      // Fallback to Gemini API
+      if (!this.fallbackMode) {
+        this.fallbackMode = true;
+        return await this.translateText(text, targetLang, options);
+      }
       return `⚠️ Translation failed: ${error.message}`;
     }
   }
 
   async proofreadText(text, options = {}) {
     try {
+      if (this.fallbackMode) {
+        return await this.geminiApiCall('rewrite', text, options);
+      }
+
       // Use rewriter API for proofreading
       const session = await this.createSession('rewriter', {
         tone: 'formal',
@@ -187,13 +209,21 @@ class PocketMentorAPI {
       return result || "Unable to proofread text.";
     } catch (error) {
       console.error('Proofreading error:', error);
-      // Fallback to prompt API
+      // Fallback to Gemini API
+      if (!this.fallbackMode) {
+        this.fallbackMode = true;
+        return await this.proofreadText(text, options);
+      }
       return await this.generateWithPrompt(`Proofread and correct this text, fixing grammar, spelling, and clarity issues:\n\n${text}`);
     }
   }
 
   async rewriteText(text, style = 'polished', options = {}) {
     try {
+      if (this.fallbackMode) {
+        return await this.geminiApiCall('rewrite', text, { ...options, style });
+      }
+
       const session = await this.createSession('rewriter', {
         tone: style,
         format: options.format || 'plain-text',
@@ -206,16 +236,29 @@ class PocketMentorAPI {
       return result || "Unable to rewrite text.";
     } catch (error) {
       console.error('Rewriting error:', error);
+      // Fallback to Gemini API
+      if (!this.fallbackMode) {
+        this.fallbackMode = true;
+        return await this.rewriteText(text, style, options);
+      }
       return `⚠️ Rewriting failed: ${error.message}`;
     }
   }
 
   async explainText(text, options = {}) {
+    if (this.fallbackMode) {
+      return await this.geminiApiCall('explain', text, options);
+    }
+
     const prompt = `Explain the following text in simple, clear terms that anyone can understand. Break down complex concepts and provide context where helpful:\n\n${text}`;
     return await this.generateWithPrompt(prompt, options);
   }
 
   async generateQuiz(text, questionCount = 3, options = {}) {
+    if (this.fallbackMode) {
+      return await this.geminiApiCall('quiz', text, { ...options, questionCount });
+    }
+
     const prompt = `Create ${questionCount} multiple-choice questions based on the following text. Format as:
 
 Q1: [Question]
@@ -231,6 +274,10 @@ Text: ${text}`;
   }
 
   async generateStudyNotes(text, options = {}) {
+    if (this.fallbackMode) {
+      return await this.geminiApiCall('prompt', text, { ...options, action: 'study-notes' });
+    }
+
     const prompt = `Create comprehensive study notes from this text. Include:
 - Key concepts and definitions
 - Important facts and figures  
@@ -244,6 +291,10 @@ Text: ${text}`;
 
   async generateWithPrompt(prompt, options = {}) {
     try {
+      if (this.fallbackMode) {
+        return await this.geminiApiCall('prompt', prompt, options);
+      }
+
       const session = await this.createSession('prompt', {
         model: 'gemini-nano',
         temperature: options.temperature || 0.7,
@@ -256,6 +307,11 @@ Text: ${text}`;
       return result || "Unable to generate response.";
     } catch (error) {
       console.error('Prompt generation error:', error);
+      // Fallback to Gemini API
+      if (!this.fallbackMode) {
+        this.fallbackMode = true;
+        return await this.generateWithPrompt(prompt, options);
+      }
       return `⚠️ AI generation failed: ${error.message}`;
     }
   }
