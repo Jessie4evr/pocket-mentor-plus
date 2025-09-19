@@ -274,7 +274,7 @@ Instructions:
     return await this.generateWithPrompt(prompt, options);
   }
 
-  async generateQuiz(text, questionCount = 3, options = {}) {
+  async generateQuiz(text, questionCount = 5, options = {}) {
     if (this.fallbackMode) {
       return await this.geminiApiCall('quiz', text, { ...options, questionCount });
     }
