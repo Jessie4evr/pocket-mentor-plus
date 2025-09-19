@@ -110,13 +110,53 @@ ${sentences.length > 1 ? sentences[1].trim() + '.' : 'The content provides valua
   extractTopic(text) {
     // Simple topic extraction based on common keywords
     const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 4);
-    const commonWords = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'man', 'may', 'she', 'use'];
+    const commonWords = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'man', 'may', 'she', 'use', 'that', 'this', 'with', 'have', 'from', 'they', 'know', 'want', 'been', 'good', 'much', 'some', 'time', 'very', 'when', 'come', 'here', 'just', 'like', 'long', 'make', 'many', 'over', 'such', 'take', 'than', 'them', 'well', 'work'];
     const meaningfulWords = words.filter(word => !commonWords.includes(word));
     
     if (meaningfulWords.length > 0) {
       return meaningfulWords.slice(0, 3).join(', ');
     }
     return 'the provided subject matter';
+  }
+
+  extractKeyPhrases(text) {
+    // Extract meaningful phrases and key terms from the text
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
+    const phrases = [];
+    
+    sentences.forEach(sentence => {
+      // Look for patterns like "X is Y", "X means Y", "X includes Y", etc.
+      const patterns = [
+        /(\w+(?:\s+\w+)*)\s+(?:is|are|means?|includes?|involves?|refers?\s+to)\s+([^,\n]+)/gi,
+        /(?:the|a|an)\s+(\w+(?:\s+\w+)*)\s+(?:of|for|in|on)\s+([^,\n]+)/gi,
+        /(\w+(?:\s+\w+){1,2})\s+(?:can|will|should|must|might)\s+([^,\n]+)/gi
+      ];
+      
+      patterns.forEach(pattern => {
+        let match;
+        while ((match = pattern.exec(sentence)) !== null && phrases.length < 8) {
+          if (match[1] && match[1].length > 3 && match[1].length < 30) {
+            phrases.push(match[1].trim());
+          }
+        }
+      });
+    });
+    
+    // Also extract standalone important-looking words
+    const words = text.toLowerCase().split(/\W+/).filter(word => 
+      word.length > 5 && 
+      !this.isCommonWord(word) && 
+      phrases.length < 10
+    );
+    
+    phrases.push(...words.slice(0, 10 - phrases.length));
+    
+    return [...new Set(phrases)].slice(0, 6); // Remove duplicates and limit
+  }
+
+  isCommonWord(word) {
+    const common = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'man', 'may', 'she', 'use', 'that', 'this', 'with', 'have', 'from', 'they', 'know', 'want', 'been', 'good', 'much', 'some', 'time', 'very', 'when', 'come', 'here', 'just', 'like', 'long', 'make', 'many', 'over', 'such', 'take', 'than', 'them', 'well', 'work', 'through', 'between', 'important', 'example', 'different', 'including', 'because', 'without', 'around', 'before', 'during', 'after', 'under', 'would', 'could', 'should', 'might', 'information', 'question', 'problem', 'system', 'process', 'method', 'approach', 'concept'];
+    return common.includes(word.toLowerCase());
   }
 
   generateMockTranslation(text, targetLang = 'es') {
