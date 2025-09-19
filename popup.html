@@ -9,7 +9,7 @@
 <body class="light-theme">
   <div class="popup-container">
     <!-- Header -->
-    <header class="popup-header">
+    <header class="popup-header fade-in-scale">
       <img src="icon48.png" alt="Pocket Mentor+ Logo" class="logo">
       <h1 class="app-title">Pocket Mentor+ 🎓✨</h1>
       <p class="tagline">Your AI-powered study assistant</p>
@@ -17,8 +17,8 @@
     </header>
 
     <!-- Quick Actions -->
-    <section class="quick-actions" aria-label="Quick Actions">
-      <h3>Quick Actions</h3>
+    <section class="quick-actions fade-in-up" aria-label="Quick Actions">
+      <h3>⚡ Quick Actions</h3>
       <div class="popup-buttons">
         <button id="openNotebook" class="primary-btn" aria-label="Open full notebook">
           📚 Open Notebook
@@ -30,18 +30,18 @@
     </section>
 
     <!-- Text Input -->
-    <section class="input-section" aria-label="Text Input">
+    <section class="input-section fade-in-up" aria-label="Text Input">
       <label for="quickInput" class="sr-only">Enter text for quick processing</label>
       <textarea 
         id="quickInput" 
-        placeholder="Paste text here for quick AI processing..."
+        placeholder="✨ Paste text here for quick AI processing..."
         aria-label="Quick text input"
         rows="4"
       ></textarea>
     </section>
 
     <!-- Action Buttons -->
-    <section class="action-buttons" aria-label="AI Actions">
+    <section class="action-buttons fade-in-up" aria-label="AI Actions">
       <div class="popup-buttons">
         <button id="quickSummarize" class="primary-btn" aria-label="Quick summarize">
           📝 Summarize
@@ -59,9 +59,9 @@
     </section>
 
     <!-- Output -->
-    <section class="output-section" aria-live="polite" aria-label="Results">
+    <section class="output-section fade-in-up" aria-live="polite" aria-label="Results">
       <div class="output-panel">
-        <h3>Quick Result</h3>
+        <h3>✨ Quick Result</h3>
         <div id="quickOutput">
           Select text on any webpage and right-click for instant AI processing, or paste text above for quick actions.
         </div>
@@ -69,9 +69,9 @@
     </section>
 
     <!-- Recent Notes Preview -->
-    <section class="recent-notes" aria-label="Recent Notes">
+    <section class="recent-notes fade-in-up" aria-label="Recent Notes">
       <div class="notes-header">
-        <h3>Recent Notes</h3>
+        <h3>📚 Recent Notes</h3>
         <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
       </div>
       <div id="recentNotesList" class="recent-notes-list">
