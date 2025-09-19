@@ -138,7 +138,7 @@ Let me break this down in simple terms:
   }
 
   generateMockQuiz(text) {
-    return `❓ **Generated Quiz:**
+    return `❓ **QUIZ: Study Material Assessment**
 
 **Question 1:** What is the main topic discussed in the text?
 A) Basic concepts and definitions
@@ -160,6 +160,11 @@ B) Better retention and understanding
 C) Less effort required
 D) More impressive to others
 **Correct Answer:** B) Better retention and understanding
+
+**ANSWER KEY:**
+1. D) All of the above - The text typically covers multiple aspects including concepts, frameworks, and applications
+2. B) Breaking concepts into simpler parts - This is a proven learning strategy for comprehension
+3. B) Better retention and understanding - The primary goal of effective learning methods
 
 *Quiz generated using AI fallback mode - Enhanced questions available with API key*`;
   }
