@@ -75,6 +75,14 @@ class PocketMentorNotebook {
     // Theme toggle
     this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
 
+    // API Configuration
+    this.elements.saveApiKey.addEventListener('click', () => this.saveApiKey());
+    this.elements.geminiApiKey.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        this.saveApiKey();
+      }
+    });
+
     // Input controls
     this.elements.clearInput.addEventListener('click', () => this.clearInput());
     this.elements.pasteFromClipboard.addEventListener('click', () => this.pasteFromClipboard());
