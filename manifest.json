@@ -4,15 +4,15 @@
   "version": "1.0.0",
   "description": "Your AI-powered study and writing assistant, built with Chrome's on-device AI. Summarize, translate, proofread, and learn, all in your browser.",
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
   },
   "action": {
     "default_icon": {
-      "16": "icon16.png",
-      "48": "icon48.png",
-      "128": "icon128.png"
+      "16": "icon.svg",
+      "48": "icon.svg",
+      "128": "icon.svg"
     },
     "default_popup": "popup.html",
     "default_title": "Pocket Mentor+"
