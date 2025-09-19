@@ -313,6 +313,70 @@ class PocketMentorNotebook {
     }
   }
 
+  async checkCapabilities() {
+    this.showLoading('Checking AI capabilities...');
+    
+    try {
+      const response = await chrome.runtime.sendMessage({ action: 'checkCapabilities' });
+      
+      if (response.success) {
+        const capabilities = response.result;
+        const availableAPIs = Object.entries(capabilities)
+          .filter(([_, available]) => available)
+          .map(([api, _]) => api)
+          .join(', ');
+        
+        const message = availableAPIs 
+          ? `✅ Available APIs: ${availableAPIs}`
+          : '⚠️ No AI APIs currently available. Please check Chrome flags and ensure Gemini Nano is enabled.';
+        
+        this.showMessage(message, availableAPIs ? 'success' : 'warning');
+      } else {
+        this.showMessage('❌ Failed to check capabilities', 'error');
+      }
+    } catch (error) {
+      console.error('Capability check failed:', error);
+      this.showMessage('❌ AI capability check failed', 'error');
+    }
+  }
+
+  async showQuickNotes() {
+    try {
+      const response = await chrome.runtime.sendMessage({ 
+        action: 'getNotes', 
+        filter: { limit: 5 } 
+      });
+
+      if (response.success && response.result.length > 0) {
+        const notesHtml = response.result.map(note => `
+          <div class="quick-note-item" style="
+            background: rgba(184, 134, 11, 0.1); 
+            border: 1px solid rgba(184, 134, 11, 0.3); 
+            border-radius: 8px; 
+            padding: 12px; 
+            margin-bottom: 8px;
+          ">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="font-size: 16px;">${this.getTypeIcon(note.type)}</span>
+              <span style="font-weight: 600; color: var(--primary-gold);">${this.capitalizeFirst(note.type)}</span>
+              <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.7;">${this.formatDate(note.createdAt)}</span>
+            </div>
+            <div style="font-size: 0.9rem; line-height: 1.4;">
+              ${this.truncateText(note.processedText || note.originalText, 120)}
+            </div>
+          </div>
+        `).join('');
+        
+        this.showResult(`<div style="max-width: 100%;">${notesHtml}</div>`);
+      } else {
+        this.showMessage('📝 No notes yet. Start by processing some text!', 'info');
+      }
+    } catch (error) {
+      console.error('Failed to load quick notes:', error);
+      this.showMessage('❌ Failed to load notes', 'error');
+    }
+  }
+
   setupCharCounter() {
     this.updateCharCount();
   }
