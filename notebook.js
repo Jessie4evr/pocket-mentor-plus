@@ -147,10 +147,8 @@ class PocketMentorNotebook {
         } else {
           this.elements.aiStatusBanner.className = 'status-message status-warning';
           this.elements.aiStatusBanner.innerHTML = `
-            ⚠️ No AI capabilities detected. 
-            <a href="chrome://flags/#optimization-guide-on-device-model" target="_blank" style="color: inherit; text-decoration: underline;">
-              Enable Chrome AI flags
-            </a> and restart Chrome.
+            ⚠️ Chrome Built-in AI not available. Using fallback Gemini API. 
+            <button onclick="this.parentElement.style.display='none'" style="background: none; border: none; color: inherit; cursor: pointer; margin-left: 10px;">×</button>
           `;
         }
       } else {
