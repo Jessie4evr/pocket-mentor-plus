@@ -1,6 +1,7 @@
 // ===== Pocket Mentor+ Popup Script 🎓✨ =====
 
 import pocketMentorAPI from './api.js';
+import themeManager from './theme-manager.js';
 
 class PocketMentorPopup {
   constructor() {
@@ -15,15 +16,21 @@ class PocketMentorPopup {
     this.loadTheme();
     this.loadRecentNotes();
     this.checkAIStatus();
+    this.setupThemes();
   }
 
   bindElements() {
     this.elements = {
       themeToggle: document.getElementById('themeToggle'),
+      themesBtn: document.getElementById('themesBtn'),
+      themesPanel: document.getElementById('themesPanel'),
+      themeGrid: document.getElementById('themeGrid'),
       quickInput: document.getElementById('quickInput'),
       quickOutput: document.getElementById('quickOutput'),
       openNotebook: document.getElementById('openNotebook'),
       checkCapabilities: document.getElementById('checkCapabilities'),
+      summarizeVideo: document.getElementById('summarizeVideo'),
+      quickNotes: document.getElementById('quickNotes'),
       quickSummarize: document.getElementById('quickSummarize'),
       quickExplain: document.getElementById('quickExplain'),
       quickTranslate: document.getElementById('quickTranslate'),
@@ -34,12 +41,15 @@ class PocketMentorPopup {
   }
 
   attachEventListeners() {
-    // Theme toggle
+    // Theme controls
     this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
+    this.elements.themesBtn.addEventListener('click', () => this.toggleThemesPanel());
 
     // Navigation
     this.elements.openNotebook.addEventListener('click', () => this.openNotebook());
     this.elements.checkCapabilities.addEventListener('click', () => this.checkCapabilities());
+    this.elements.summarizeVideo.addEventListener('click', () => this.summarizeVideo());
+    this.elements.quickNotes.addEventListener('click', () => this.showQuickNotes());
 
     // Quick actions
     this.elements.quickSummarize.addEventListener('click', () => this.handleQuickAction('summarize'));
@@ -54,6 +64,113 @@ class PocketMentorPopup {
     this.elements.quickInput.addEventListener('input', this.debounce(() => {
       this.saveInputState();
     }, 500));
+
+    // Listen for theme changes
+    document.addEventListener('themeChanged', (e) => {
+      this.updateThemeToggleText(e.detail.theme);
+    });
+  }
+
+  setupThemes() {
+    const themes = themeManager.getAvailableThemes();
+    const currentTheme = themeManager.getCurrentTheme();
+    
+    this.elements.themeGrid.innerHTML = '';
+    
+    themes.forEach(theme => {
+      const themePreview = themeManager.createThemePreview(theme.key);
+      
+      if (theme.key === currentTheme) {
+        themePreview.style.borderColor = theme.colors.accent;
+        themePreview.style.borderWidth = '3px';
+      }
+      
+      themePreview.addEventListener('click', () => {
+        this.selectTheme(theme.key);
+      });
+      
+      this.elements.themeGrid.appendChild(themePreview);
+    });
+  }
+
+  async selectTheme(themeName) {
+    await themeManager.setTheme(themeName);
+    this.setupThemes(); // Refresh theme grid
+    this.elements.themesPanel.style.display = 'none';
+    this.showMessage(`✅ ${themeManager.themes[themeName].name} theme applied!`, 'success');
+  }
+
+  toggleThemesPanel() {
+    const isVisible = this.elements.themesPanel.style.display !== 'none';
+    this.elements.themesPanel.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+      this.setupThemes(); // Refresh when opening
+    }
+  }
+
+  async summarizeVideo() {
+    this.showLoading('🎥 Looking for videos to summarize...');
+    
+    try {
+      // Send message to content script to analyze video
+      const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      
+      const response = await chrome.tabs.sendMessage(activeTab.id, {
+        action: 'analyzeVideo',
+        options: { source: 'popup' }
+      });
+
+      if (response && response.success) {
+        this.showResult(response.result);
+      } else {
+        this.showMessage('⚠️ No video found to summarize. Try opening a YouTube video or video page.', 'warning');
+      }
+    } catch (error) {
+      console.error('Video summarization failed:', error);
+      this.showMessage('❌ Video summarization failed. Make sure you\'re on a page with video content.', 'error');
+    }
+  }
+
+  async showQuickNotes() {
+    try {
+      const response = await chrome.runtime.sendMessage({ 
+        action: 'getNotes', 
+        filter: { limit: 5 } 
+      });
+
+      if (response.success && response.result.length > 0) {
+        const notesHtml = response.result.map(note => `
+          <div class="quick-note-item" data-note-id="${note.id}">
+            <div class="note-type-small">${this.getTypeIcon(note.type)}</div>
+            <div class="note-content-small">
+              ${this.truncateText(note.processedText || note.originalText, 60)}
+            </div>
+            <div class="note-date-small">${this.formatDate(note.createdAt)}</div>
+          </div>
+        `).join('');
+        
+        this.showResult(`<div class="quick-notes-container">${notesHtml}</div>`);
+      } else {
+        this.showMessage('📝 No notes yet. Start by processing some text!', 'info');
+      }
+    } catch (error) {
+      console.error('Failed to load quick notes:', error);
+      this.showMessage('❌ Failed to load notes', 'error');
+    }
+  }
+
+  updateThemeToggleText(theme) {
+    const themeNames = {
+      light: '🌙 Dark Mode',
+      dark: '☀️ Light Mode',
+      cyberpunk: '🌙 Dark Mode',
+      forest: '🌙 Dark Mode', 
+      ocean: '🌙 Dark Mode',
+      rose: '🌙 Dark Mode'
+    };
+    
+    this.elements.themeToggle.textContent = themeNames[theme] || '🌙 Dark Mode';
   }
 
   async loadTheme() {
