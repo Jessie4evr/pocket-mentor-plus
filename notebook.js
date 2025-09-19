@@ -1,6 +1,7 @@
 /* ===== Pocket Mentor+ 🎓✨ Notebook Application ===== */
 
 import pocketMentorAPI from './api.js';
+import geminiConfig from './gemini-config.js';
 
 class PocketMentorNotebook {
   constructor() {
@@ -20,6 +21,7 @@ class PocketMentorNotebook {
     await this.checkAICapabilities();
     await this.loadNotes();
     await this.loadStats();
+    await this.loadApiKey();
     this.setupCharCounter();
   }
 
@@ -28,6 +30,11 @@ class PocketMentorNotebook {
       // Theme and controls
       themeToggle: document.getElementById('themeToggle'),
       aiStatusBanner: document.getElementById('aiStatusBanner'),
+      
+      // API Configuration
+      apiConfigPanel: document.getElementById('apiConfigPanel'),
+      geminiApiKey: document.getElementById('geminiApiKey'),
+      saveApiKey: document.getElementById('saveApiKey'),
       
       // Input elements
       inputBox: document.getElementById('inputBox'),
