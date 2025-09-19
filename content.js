@@ -7,7 +7,6 @@ class PocketMentorContent {
   constructor() {
     this.selectedText = '';
     this.isProcessing = false;
-    this.videoAnalyzer = videoAnalyzer;
     this.init();
   }
 
