@@ -49,7 +49,7 @@ class GeminiAPIConfig {
 
     } catch (error) {
       console.error('Gemini API request failed:', error);
-      // Fallback to mock response
+      // Fallback to mock response with the original prompt
       return this.getMockResponse(prompt, options);
     }
   }
