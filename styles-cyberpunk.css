@@ -1,0 +1,88 @@
+/* ===== Pocket Mentor+ Cyberpunk Theme 🚀⚡ ===== */
+
+:root {
+  --neon-cyan: #00ffff;
+  --neon-pink: #ff0080;
+  --neon-purple: #8000ff;
+  --neon-green: #00ff41;
+  --cyber-dark: #0a0a0a;
+  --cyber-darker: #000000;
+  --cyber-blue: #001a33;
+  --cyber-grid: #333333;
+  --glow-cyan: 0 0 20px #00ffff, 0 0 40px #00ffff, 0 0 60px #00ffff;
+  --glow-pink: 0 0 20px #ff0080, 0 0 40px #ff0080, 0 0 60px #ff0080;
+  --gradient-cyber: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+}
+
+/* Import base styles */
+@import url('styles.css');
+
+/* Override for Cyberpunk Theme */
+body.cyberpunk-theme {
+  background: 
+    radial-gradient(ellipse at top, var(--cyber-blue) 0%, var(--cyber-dark) 50%),
+    linear-gradient(45deg, transparent 49%, var(--cyber-grid) 49%, var(--cyber-grid) 51%, transparent 51%),
+    linear-gradient(-45deg, transparent 49%, var(--cyber-grid) 49%, var(--cyber-grid) 51%, transparent 51%);
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+  color: var(--neon-cyan);
+  font-family: 'Courier New', 'Monaco', monospace;
+}
+
+.cyberpunk-theme .popup-container {
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 
+    var(--glow-cyan),
+    inset 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.cyberpunk-theme .popup-header {
+  background: var(--gradient-cyber);
+  text-shadow: 0 0 10px currentColor;
+  animation: headerGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes headerGlow {
+  from { box-shadow: var(--glow-cyan); }
+  to { box-shadow: var(--glow-pink); }
+}
+
+.cyberpunk-theme button {
+  background: transparent;
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px currentColor;
+  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-theme button:hover {
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-2px);
+}
+
+.cyberpunk-theme .primary-btn {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+}
+
+.cyberpunk-theme .primary-btn:hover {
+  box-shadow: var(--glow-pink);
+}
+
+.cyberpunk-theme textarea,
+.cyberpunk-theme input {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-green);
+  font-family: 'Courier New', monospace;
+}
+
+.cyberpunk-theme #outputBox {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 3px currentColor;
+}
