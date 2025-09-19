@@ -1,8 +1,6 @@
 // ===== Pocket Mentor+ Content Script 🎓✨ =====
 // Handles webpage interaction and text selection processing
 
-import videoAnalyzer from './video-analyzer.js';
-
 console.log('✅ Pocket Mentor+ content script loaded on:', window.location.href);
 
 class PocketMentorContent {
