@@ -84,17 +84,35 @@ class GeminiAPIConfig {
   }
 
   generateMockSummary(text) {
+    const textPreview = text.substring(0, 200);
+    const topic = this.extractTopic(text);
     return `📝 **AI Summary:**
 
+**Based on your text:** "${textPreview}${text.length > 200 ? '...' : ''}"
+
 **Key Points:**
-• Main concept: The text discusses important topics that are central to understanding the subject matter
-• Supporting details: Various examples and explanations are provided to clarify the main ideas  
-• Conclusion: The content wraps up with insights that tie together the discussed concepts
+• Main concept: The text discusses ${topic} with specific focus on the provided content
+• Supporting details: Various examples and explanations help clarify the main ideas presented
+• Context: The content covers approximately ${Math.floor(text.length / 5)} words of relevant information
 
 **Main Takeaways:**
-The text covers essential information that helps readers understand the topic better. Key themes include practical applications and theoretical foundations.
+Your text covers essential information about ${topic}. Key themes include practical applications and theoretical foundations directly related to your specific content.
 
-*Generated using AI fallback mode - Configure Gemini API key for enhanced responses*`;
+**Summary Length:** Original ${text.length} characters condensed to key insights
+
+*Generated using AI fallback mode - Configure Gemini API key for enhanced, context-aware responses*`;
+  }
+
+  extractTopic(text) {
+    // Simple topic extraction based on common keywords
+    const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 4);
+    const commonWords = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how', 'its', 'new', 'now', 'old', 'see', 'two', 'way', 'who', 'boy', 'did', 'man', 'may', 'she', 'use'];
+    const meaningfulWords = words.filter(word => !commonWords.includes(word));
+    
+    if (meaningfulWords.length > 0) {
+      return meaningfulWords.slice(0, 3).join(', ');
+    }
+    return 'the provided subject matter';
   }
 
   generateMockTranslation(text, targetLang = 'es') {
