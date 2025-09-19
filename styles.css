@@ -83,65 +83,89 @@ body.dark-theme {
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
+/* Enhanced Header Styles */
 .popup-header {
   text-align: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid var(--primary-gold);
-}
-
-.logo {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-}
-
-.app-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: var(--primary-gold);
-}
-
-.tagline {
-  font-size: 0.9rem;
-  opacity: 0.8;
-  margin-bottom: 10px;
-}
-
-/* === Notebook Styles === */
-.app-container {
-  max-width: 800px;
-  margin: 0 auto;
+  margin-bottom: 24px;
   padding: 20px;
-  min-height: 100vh;
+  background: var(--gradient-primary);
+  border-radius: 16px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px var(--shadow-gold);
+}
+
+.popup-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: rotate(0deg); opacity: 0.3; }
+  50% { transform: rotate(180deg); opacity: 0.6; }
 }
 
 .app-header {
   text-align: center;
-  padding: 30px 0;
-  margin-bottom: 30px;
-  background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
-  border-radius: 20px;
+  padding: 40px 20px;
+  margin-bottom: 40px;
+  background: var(--gradient-primary);
+  border-radius: 24px;
   color: white;
-  box-shadow: 0 4px 20px rgba(184, 134, 11, 0.3);
+  box-shadow: 
+    0 16px 40px var(--shadow-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--bright-gold), transparent);
+  animation: slideGlow 2s ease-in-out infinite;
+}
+
+@keyframes slideGlow {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.logo:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .app-header .logo {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 15px;
-}
-
-.app-header h1 {
-  font-size: 2.2rem;
-  margin-bottom: 10px;
-}
-
-.app-header .tagline {
-  font-size: 1.1rem;
-  opacity: 0.9;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 16px;
 }
 
 /* === Form Elements === */
