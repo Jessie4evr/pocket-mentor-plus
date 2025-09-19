@@ -316,13 +316,18 @@ Text to create quiz from: ${text}`;
       return await this.geminiApiCall('prompt', text, { ...options, action: 'study-notes' });
     }
 
-    const prompt = `Create comprehensive study notes from this text. Include:
-- Key concepts and definitions
-- Important facts and figures  
-- Main themes and ideas
-- Potential exam questions
+    const prompt = `Create comprehensive study notes from this specific text. Focus on the actual content provided:
 
-Text: ${text}`;
+"${text}"
+
+Create notes that include:
+- **Main Topics**: Key subjects covered in the text
+- **Key Concepts**: Important ideas and definitions from the content
+- **Important Details**: Specific facts, figures, and examples mentioned
+- **Key Takeaways**: Main lessons or insights from the text
+- **Study Questions**: 3-5 questions based on the content for review
+
+Make sure all information comes directly from the provided text.`;
     
     return await this.generateWithPrompt(prompt, options);
   }
