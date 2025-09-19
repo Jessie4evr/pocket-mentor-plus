@@ -16,8 +16,19 @@
            decoding="async">
       <h1 class="app-title">Pocket Mentor+ 🎓✨</h1>
       <p class="tagline">Your AI-powered study assistant</p>
-      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+      <div class="header-controls" style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+        <button id="themesBtn" class="theme-btn" aria-label="Choose themes">🎨 Themes</button>
+      </div>
     </header>
+
+    <!-- Themes Panel (Initially Hidden) -->
+    <section id="themesPanel" class="themes-panel fade-in-up" style="display: none;" aria-label="Theme Selection">
+      <h3>🎨 Choose Your Theme</h3>
+      <div id="themeGrid" class="theme-grid">
+        <!-- Theme options will be populated by JavaScript -->
+      </div>
+    </section>
 
     <!-- Quick Actions -->
     <section class="quick-actions fade-in-up" aria-label="Quick Actions">
