@@ -260,7 +260,17 @@ Requirements:
       return await this.geminiApiCall('explain', text, options);
     }
 
-    const prompt = `Explain the following text in simple, clear terms that anyone can understand. Break down complex concepts and provide context where helpful:\n\n${text}`;
+    const prompt = `Explain the following text in simple, clear terms. Focus on the actual content and make it easy to understand:
+
+"${text}"
+
+Instructions:
+- Break down the main concepts in the text
+- Use simple language and everyday examples
+- Explain why this information is important
+- Include specific details from the original text
+- Make connections to help understanding`;
+    
     return await this.generateWithPrompt(prompt, options);
   }
 
