@@ -1,18 +1,35 @@
-/* ===== Pocket Mentor+ Styles 🎓✨ ===== */
+/* ===== Pocket Mentor+ Enhanced Styles 🎓✨ ===== */
 
 :root {
   --primary-gold: #b8860b;
   --dark-gold: #996515;
-  --light-bg: #fafafa;
-  --dark-bg: #1a1a1a;
-  --text-light: #2c2c2c;
-  --text-dark: #f3f3f3;
-  --border-light: #e0e0e0;
-  --border-dark: #404040;
+  --light-gold: #daa520;
+  --bright-gold: #ffd700;
   --accent-blue: #007bff;
+  --deep-blue: #0056b3;
   --success-green: #28a745;
   --warning-orange: #ffc107;
   --error-red: #dc3545;
+  --text-dark: #2c2c2c;
+  --text-light: #6c757d;
+  --text-muted: #8e8e93;
+  --bg-light: #fafafa;
+  --bg-white: #ffffff;
+  --bg-glass-light: rgba(255, 255, 255, 0.85);
+  --bg-glass-dark: rgba(26, 26, 26, 0.85);
+  --border-light: #e9ecef;
+  --border-dark: #404040;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --shadow-heavy: rgba(0, 0, 0, 0.25);
+  --shadow-gold: rgba(184, 134, 11, 0.3);
+  --shadow-blue: rgba(0, 123, 255, 0.3);
+  --gradient-primary: linear-gradient(135deg, var(--primary-gold), var(--light-gold));
+  --gradient-secondary: linear-gradient(135deg, var(--accent-blue), var(--deep-blue));
+  --gradient-bg-light: linear-gradient(135deg, #fafafa 0%, #f0f8ff 100%);
+  --gradient-bg-dark: linear-gradient(135deg, #1a1a1a 0%, #2d1b69 100%);
+  --blur-light: blur(20px);
+  --blur-heavy: blur(40px);
 }
 
 /* === Base Styles === */
