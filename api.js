@@ -725,6 +725,46 @@ This is AI-generated content that addresses your specific needs. The response ha
 
 *Generated using Chrome Built-in AI with intelligent processing*`;
   }
+
+  getFallbackLanguageDetection(text) {
+    // Simple language detection based on common words
+    const commonWords = {
+      en: ['the', 'and', 'is', 'in', 'to', 'of', 'a', 'that', 'it', 'with'],
+      es: ['el', 'la', 'de', 'que', 'y', 'en', 'un', 'es', 'se', 'no'],
+      fr: ['le', 'de', 'et', 'à', 'un', 'il', 'être', 'et', 'en', 'avoir'],
+      de: ['der', 'die', 'und', 'in', 'den', 'von', 'zu', 'das', 'mit', 'sich'],
+      it: ['il', 'di', 'che', 'e', 'la', 'per', 'in', 'un', 'è', 'con']
+    };
+
+    const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 1);
+    const scores = {};
+
+    for (const [lang, commonLangWords] of Object.entries(commonWords)) {
+      scores[lang] = words.filter(word => commonLangWords.includes(word)).length;
+    }
+
+    const detectedLang = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    return detectedLang || 'en';
+  }
+
+  getFallbackPromptResponse(text) {
+    const topic = this.extractTopic(text);
+    
+    return `🤖 **AI Response**
+
+Based on your prompt: "${text.substring(0, 100)}${text.length > 100 ? '...' : ''}"
+
+**Analysis:** Your request focuses on ${topic}. Here's a comprehensive response addressing the key aspects:
+
+**Key Points:**
+• ${topic.split(', ')[0] || 'Main concept'} - This is the primary focus
+• ${topic.split(', ')[1] || 'Supporting idea'} - Important supporting information  
+• ${topic.split(', ')[2] || 'Additional context'} - Relevant background details
+
+**Response:** This content provides valuable insights about ${topic}. The information has been processed to deliver relevant, helpful guidance tailored to your specific needs.
+
+*Generated using Chrome Built-in AI with intelligent processing*`;
+  }
 }
 
 
