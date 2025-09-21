@@ -435,25 +435,66 @@ This video appears to contain educational content that can be valuable for learn
     try {
       const response = await chrome.runtime.sendMessage({ 
         action: 'getNotes', 
-        filter: { limit: 5 } 
+        filter: { limit: 10 } // Load more recent notes
       });
 
       if (response.success && response.result.length > 0) {
-        const notesHtml = response.result.map(note => `
+        const notesHtml = response.result.map((note, index) => `
           <div class="quick-note-item" style="
             background: rgba(184, 134, 11, 0.1); 
             border: 1px solid rgba(184, 134, 11, 0.3); 
             border-radius: 8px; 
             padding: 12px; 
             margin-bottom: 8px;
+            position: relative;
           ">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
               <span style="font-size: 16px;">${this.getTypeIcon(note.type)}</span>
               <span style="font-weight: 600; color: var(--primary-gold);">${this.capitalizeFirst(note.type)}</span>
               <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.7;">${this.formatDate(note.createdAt)}</span>
+              <button onclick="pocketMentorNotebook.editNote('${note.id || index}')" style="
+                background: rgba(184, 134, 11, 0.2); 
+                border: 1px solid rgba(184, 134, 11, 0.5);
+                border-radius: 4px;
+                padding: 2px 8px;
+                font-size: 0.7rem;
+                cursor: pointer;
+                color: var(--primary-gold);
+              ">✏️ Edit</button>
+              <button onclick="pocketMentorNotebook.loadNoteToInput('${note.id || index}')" style="
+                background: rgba(59, 130, 246, 0.2); 
+                border: 1px solid rgba(59, 130, 246, 0.5);
+                border-radius: 4px;
+                padding: 2px 8px;
+                font-size: 0.7rem;
+                cursor: pointer;
+                color: #3b82f6;
+              ">📥 Load</button>
             </div>
-            <div style="font-size: 0.9rem; line-height: 1.4;">
-              ${this.truncateText(note.processedText || note.originalText, 120)}
+            <div class="note-content" id="note-content-${note.id || index}" style="font-size: 0.9rem; line-height: 1.4;">
+              ${this.truncateText(note.processedText || note.originalText, 150)}
+            </div>
+            <div class="note-edit" id="note-edit-${note.id || index}" style="display: none;">
+              <textarea style="width: 100%; height: 80px; margin-bottom: 8px; padding: 8px;" id="edit-textarea-${note.id || index}">${note.processedText || note.originalText}</textarea>
+              <button onclick="pocketMentorNotebook.saveNoteEdit('${note.id || index}')" style="
+                background: rgba(34, 197, 94, 0.2); 
+                border: 1px solid rgba(34, 197, 94, 0.5);
+                border-radius: 4px;
+                padding: 4px 12px;
+                font-size: 0.8rem;
+                cursor: pointer;
+                color: #22c55e;
+                margin-right: 8px;
+              ">💾 Save</button>
+              <button onclick="pocketMentorNotebook.cancelNoteEdit('${note.id || index}')" style="
+                background: rgba(239, 68, 68, 0.2); 
+                border: 1px solid rgba(239, 68, 68, 0.5);
+                border-radius: 4px;
+                padding: 4px 12px;
+                font-size: 0.8rem;
+                cursor: pointer;
+                color: #ef4444;
+              ">❌ Cancel</button>
             </div>
           </div>
         `).join('');
@@ -465,6 +506,81 @@ This video appears to contain educational content that can be valuable for learn
     } catch (error) {
       console.error('Failed to load quick notes:', error);
       this.showMessage('❌ Failed to load notes', 'error');
+    }
+  }
+
+  editNote(noteId) {
+    const contentDiv = document.getElementById(`note-content-${noteId}`);
+    const editDiv = document.getElementById(`note-edit-${noteId}`);
+    
+    if (contentDiv && editDiv) {
+      contentDiv.style.display = 'none';
+      editDiv.style.display = 'block';
+    }
+  }
+
+  cancelNoteEdit(noteId) {
+    const contentDiv = document.getElementById(`note-content-${noteId}`);
+    const editDiv = document.getElementById(`note-edit-${noteId}`);
+    
+    if (contentDiv && editDiv) {
+      contentDiv.style.display = 'block';
+      editDiv.style.display = 'none';
+    }
+  }
+
+  async saveNoteEdit(noteId) {
+    const textarea = document.getElementById(`edit-textarea-${noteId}`);
+    const newContent = textarea.value.trim();
+    
+    if (!newContent) {
+      this.showMessage('⚠️ Note content cannot be empty', 'warning');
+      return;
+    }
+
+    try {
+      // Update the note in storage
+      await chrome.runtime.sendMessage({
+        action: 'updateNote',
+        noteId: noteId,
+        content: newContent
+      });
+
+      // Update the display
+      const contentDiv = document.getElementById(`note-content-${noteId}`);
+      if (contentDiv) {
+        contentDiv.innerHTML = this.truncateText(newContent, 150);
+      }
+
+      this.cancelNoteEdit(noteId);
+      this.showMessage('✅ Note updated successfully!', 'success');
+      
+      // Refresh the notes list
+      setTimeout(() => this.loadNotes(), 1000);
+    } catch (error) {
+      console.error('Failed to update note:', error);
+      this.showMessage('❌ Failed to update note', 'error');
+    }
+  }
+
+  async loadNoteToInput(noteId) {
+    try {
+      const response = await chrome.runtime.sendMessage({ 
+        action: 'getNote', 
+        noteId: noteId 
+      });
+
+      if (response.success && response.result) {
+        this.elements.inputBox.value = response.result.originalText || response.result.processedText;
+        this.updateCharCount();
+        this.elements.inputBox.focus();
+        this.showMessage('✅ Note loaded to input!', 'success');
+      } else {
+        this.showMessage('❌ Failed to load note', 'error');
+      }
+    } catch (error) {
+      console.error('Failed to load note to input:', error);
+      this.showMessage('❌ Failed to load note', 'error');
     }
   }
 
