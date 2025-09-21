@@ -504,7 +504,8 @@ This video appears to contain educational content that can be valuable for learn
       return;
     }
 
-    this.showLoading(`${this.capitalizeFirst(action)}ing your text...`);
+    // Show faster loading for better UX
+    this.showLoading(`Processing...`);
     
     try {
       let questionCount = 5; // default
@@ -533,11 +534,20 @@ This video appears to contain educational content that can be valuable for learn
           type: action,
           originalText: text,
           processedText: response.result,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          questionCount: questionCount // Store for answer generation
         };
         
         this.showResult(response.result);
         this.enableResultActions();
+        
+        // Show "Show Answers" button for quizzes
+        if (action === 'generateQuiz') {
+          this.showAnswersBtn.style.display = 'inline-block';
+        } else {
+          this.showAnswersBtn.style.display = 'none';
+        }
+        
         await this.loadNotes(); // Refresh notes
         await this.loadStats(); // Refresh stats
       } else {
@@ -546,6 +556,37 @@ This video appears to contain educational content that can be valuable for learn
     } catch (error) {
       console.error(`${action} failed:`, error);
       this.showMessage(`❌ ${this.capitalizeFirst(action)} failed. Please try again.`, 'error');
+    }
+  }
+
+  async showQuizAnswers() {
+    if (!this.currentResult || this.currentResult.type !== 'generateQuiz') {
+      this.showMessage('⚠️ Please generate a quiz first', 'warning');
+      return;
+    }
+
+    this.showLoading('Generating answer key...');
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        action: 'generateQuizAnswers',
+        text: this.currentResult.originalText,
+        questionCount: this.currentResult.questionCount || 5,
+        options: { format: 'markdown' }
+      });
+
+      if (response.success) {
+        // Append answers to current result
+        const currentOutput = this.elements.outputBox.innerHTML;
+        this.elements.outputBox.innerHTML = currentOutput + '\n\n' + this.formatText(response.result);
+        this.showAnswersBtn.style.display = 'none'; // Hide button after showing answers
+        this.showMessage('✅ Answer key generated!', 'success');
+      } else {
+        this.showMessage(`❌ Failed to generate answers: ${response.error}`, 'error');
+      }
+    } catch (error) {
+      console.error('Answer generation failed:', error);
+      this.showMessage('❌ Answer generation failed. Please try again.', 'error');
     }
   }
 
