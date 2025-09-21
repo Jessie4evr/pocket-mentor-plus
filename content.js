@@ -1,4 +1,5 @@
 // ===== Pocket Mentor+ Content Script 🎓✨ =====
+// Optimized for faster loading and better performance
 // Handles webpage interaction and text selection processing
 
 console.log('✅ Pocket Mentor+ content script loaded on:', window.location.href);
@@ -33,12 +34,6 @@ class PocketMentorContent {
         
         case 'processSelectedText':
           this.processSelectedText(request.aiAction)
-            .then(result => sendResponse({ success: true, result }))
-            .catch(error => sendResponse({ success: false, error: error.message }));
-          return true; // Keep message channel open for async response
-        
-        case 'analyzeVideo':
-          this.analyzeCurrentVideo(request.options)
             .then(result => sendResponse({ success: true, result }))
             .catch(error => sendResponse({ success: false, error: error.message }));
           return true; // Keep message channel open for async response
@@ -80,64 +75,6 @@ class PocketMentorContent {
           });
       }
     });
-  }
-
-  async analyzeCurrentVideo(options = {}) {
-    try {
-      // Simple video analysis for current page
-      const videos = document.querySelectorAll('video, iframe[src*="youtube"], iframe[src*="vimeo"]');
-      
-      if (videos.length === 0) {
-        throw new Error('No video found on this page');
-      }
-
-      // Get video information
-      const videoInfo = this.extractVideoInfo();
-      
-      // Send to background for AI processing
-      const response = await chrome.runtime.sendMessage({
-        action: 'generateStudyNotes',
-        text: `Video Analysis: ${videoInfo.title}\n\nDescription: ${videoInfo.description}\n\nDuration: ${videoInfo.duration}\n\nURL: ${window.location.href}`,
-        options: { context: 'video-analysis' }
-      });
-
-      if (response && response.success) {
-        return response.result;
-      } else {
-        throw new Error('Video analysis failed');
-      }
-    } catch (error) {
-      console.error('Video analysis failed:', error);
-      throw error;
-    }
-  }
-
-  extractVideoInfo() {
-    let title = 'Unknown Video';
-    let description = '';
-    let duration = 'Unknown';
-
-    // YouTube
-    if (window.location.hostname.includes('youtube.com')) {
-      title = document.querySelector('h1.ytd-watch-metadata')?.textContent || 
-              document.querySelector('title')?.textContent || 'YouTube Video';
-      description = document.querySelector('#description-text')?.textContent?.substring(0, 200) || 'YouTube video content';
-    }
-    // Vimeo  
-    else if (window.location.hostname.includes('vimeo.com')) {
-      title = document.querySelector('h1')?.textContent || 'Vimeo Video';
-      description = document.querySelector('.description')?.textContent?.substring(0, 200) || 'Vimeo video content';
-    }
-    // Generic video
-    else {
-      title = document.querySelector('title')?.textContent || 'Video Content';
-      const videoElement = document.querySelector('video');
-      if (videoElement && videoElement.duration) {
-        duration = Math.floor(videoElement.duration / 60) + ' minutes';
-      }
-    }
-
-    return { title, description, duration };
   }
 
   setupSelectionTracking() {
@@ -203,6 +140,12 @@ class PocketMentorContent {
       if (e.altKey && e.key.toLowerCase() === 'p' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         this.quickProcess('proofread');
+      }
+      
+      // Alt + Q for quick quiz (new feature)
+      if (e.altKey && e.key.toLowerCase() === 'q' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        this.quickProcess('generateQuiz');
       }
     });
   }
@@ -294,6 +237,7 @@ class PocketMentorContent {
         <button class="tooltip-btn" data-action="explain" title="Alt+E">💡 Explain</button>
         <button class="tooltip-btn" data-action="translate" title="Alt+T">🌐 Translate</button>
         <button class="tooltip-btn" data-action="proofread" title="Alt+P">✏️ Proofread</button>
+        ${text.length > 50 ? '<button class="tooltip-btn" data-action="generateQuiz" title="Alt+Q">❓ Quiz</button>' : ''}
       </div>
     `;
     
@@ -457,7 +401,7 @@ class PocketMentorContent {
         font-size: 14px;
         min-width: 280px;
         max-width: 320px;
-        animation: fadeInUp 0.3s ease-out;
+        animation: fadeInUp 0.2s ease-out;
       }
       
       .tooltip-header {
@@ -484,6 +428,7 @@ class PocketMentorContent {
         align-items: center;
         justify-content: center;
         border-radius: 50%;
+        transition: background 0.2s ease;
       }
       
       .tooltip-close:hover {
@@ -524,7 +469,7 @@ class PocketMentorContent {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 14px;
-        animation: fadeInUp 0.3s ease-out;
+        animation: fadeInUp 0.2s ease-out;
       }
       
       .processing-content {
@@ -551,7 +496,7 @@ class PocketMentorContent {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 14px;
         max-width: 400px;
-        animation: slideInRight 0.3s ease-out;
+        animation: slideInRight 0.2s ease-out;
       }
       
       .pocket-mentor-notification.success {
@@ -578,6 +523,11 @@ class PocketMentorContent {
         cursor: pointer;
         color: #6c757d;
         padding: 0;
+        transition: color 0.2s ease;
+      }
+      
+      .notification-close:hover {
+        color: #333;
       }
       
       .notification-body {
@@ -608,11 +558,12 @@ class PocketMentorContent {
         font-size: 12px;
         font-weight: 500;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: all 0.2s ease;
       }
       
       .notification-btn:hover {
         background: #0056b3;
+        transform: translateY(-1px);
       }
       
       .pocket-mentor-toast {
@@ -687,7 +638,7 @@ class PocketMentorContent {
   }
 }
 
-// Initialize content script
+// Initialize content script with performance optimization
 const pocketMentorContent = new PocketMentorContent();
 
 // Export for potential use by other scripts
