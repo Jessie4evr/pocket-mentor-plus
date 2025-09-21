@@ -332,21 +332,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     switch (info.menuItemId) {
       case "summarize":
-        result = await simpleAI.summarizeText(text);
+        result = await chromeAI.summarizeText(text);
         break;
       case "explain":
-        result = await simpleAI.explainText(text);
+        result = await chromeAI.explainText(text);
         break;
       case "simplify":
-        result = await simpleAI.rewriteText(text, 'casual');
+        result = await chromeAI.rewriteText(text, 'casual');
         break;
       case "translate":
         const prefs = await chrome.storage.local.get('preferences');
         const targetLang = prefs.preferences?.defaultLanguage || 'es';
-        result = await simpleAI.translateText(text, targetLang);
+        result = await chromeAI.translateText(text, targetLang);
         break;
       case "quiz":
-        result = await simpleAI.generateQuiz(text, 3);
+        result = await chromeAI.generateQuiz(text, 3);
         break;
       case "saveNote":
         result = text; // Save original text as note
