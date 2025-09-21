@@ -75,17 +75,262 @@ const chromeAI = {
 
   async generateStudyNotes(text, options = {}) {
     return generateFallbackResponse('generateStudyNotes', text, options);
-  },
-
-  getLanguageName(code) {
-    const languages = {
-      es: 'Spanish', fr: 'French', de: 'German', zh: 'Chinese',
-      ja: 'Japanese', hi: 'Hindi', it: 'Italian', pt: 'Portuguese',
-      ru: 'Russian', ar: 'Arabic', ko: 'Korean'
-    };
-    return languages[code] || code.toUpperCase();
   }
 };
+
+// --- Context Menu Setup ---
+async function createContextMenus() {
+  const menuItems = [
+    { id: "summarize", title: "📝 Summarize", contexts: ["selection"] },
+    { id: "explain", title: "💡 Explain", contexts: ["selection"] },
+    { id: "translate", title: "🌐 Translate", contexts: ["selection"] },
+    { id: "quiz", title: "❓ Generate Quiz", contexts: ["selection"] },
+    { id: "saveNote", title: "💾 Save as Note", contexts: ["selection"] }
+  ];
+
+  for (const item of menuItems) {
+    await chrome.contextMenus.create({
+      id: item.id,
+      title: item.title,
+      contexts: item.contexts
+    });
+  }
+
+  console.log('✅ Context menus created');
+}
+
+// --- Initialize Extension ---
+chrome.runtime.onInstalled.addListener(async () => {
+  console.log('🎓 Pocket Mentor+ installed');
+  
+  await createContextMenus();
+  await initializeStorage();
+  
+  isInitialized = true;
+  console.log('✅ Simple AI processor ready');
+});
+
+// --- Storage Initialization ---
+async function initializeStorage() {
+  const defaultData = {
+    notes: [],
+    stats: { totalNotes: 0, totalSessions: 0, totalProcessed: 0 },
+    preferences: { defaultLanguage: 'es', autoSave: true }
+  };
+
+  for (const [key, defaultValue] of Object.entries(defaultData)) {
+    const result = await chrome.storage.local.get(key);
+    if (!result[key]) {
+      await chrome.storage.local.set({ [key]: defaultValue });
+    }
+  }
+}
+
+// --- Context Menu Handler ---
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  const text = info.selectionText;
+  if (!text) return;
+
+  console.log(`Processing context menu action: ${info.menuItemId}`);
+
+  try {
+    let result;
+    let noteType = info.menuItemId;
+
+    switch (info.menuItemId) {
+      case "summarize":
+        result = await chromeAI.summarizeText(text);
+        break;
+      case "explain":
+        result = await chromeAI.explainText(text);
+        break;
+      case "translate":
+        const prefs = await chrome.storage.local.get('preferences');
+        const targetLang = prefs.preferences?.defaultLanguage || 'es';
+        result = await chromeAI.translateText(text, targetLang);
+        break;
+      case "quiz":
+        result = await chromeAI.generateQuiz(text, 3);
+        break;
+      case "saveNote":
+        result = text; // Save original text as note
+        noteType = 'saved';
+        break;
+      default:
+        console.warn("Unknown context menu action:", info.menuItemId);
+        return;
+    }
+
+    // Save to notes
+    await saveNote({
+      type: noteType,
+      originalText: text,
+      processedText: result,
+      createdAt: new Date().toISOString(),
+      url: tab.url,
+      title: tab.title
+    });
+
+    // Show notification
+    await chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon48.png',
+      title: 'Pocket Mentor+',
+      message: `${noteType} completed and saved to notes!`
+    });
+
+  } catch (error) {
+    console.error('Context menu processing failed:', error);
+    await chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon48.png',
+      title: 'Pocket Mentor+',
+      message: 'Processing failed. Please try again.'
+    });
+  }
+});
+
+// --- Message Handler for Popup/Notebook ---
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  console.log('Message received:', request.action);
+
+  try {
+    let result;
+
+    if (request.action === 'checkCapabilities') {
+      result = {
+        summarizer: true,
+        writer: true,
+        rewriter: true,
+        translator: true,
+        languageDetector: true,
+        promptAPI: true
+      };
+    } else if (['summarize', 'translate', 'proofread', 'rewrite', 'explain', 'generateQuiz', 'generateQuizAnswers', 'generateStudyNotes'].includes(request.action)) {
+      switch (request.action) {
+        case 'summarize':
+          result = await chromeAI.summarizeText(request.text, request.options);
+          break;
+        case 'translate':
+          result = await chromeAI.translateText(request.text, request.targetLang, request.options);
+          break;
+        case 'proofread':
+          result = await chromeAI.proofreadText(request.text, request.options);
+          break;
+        case 'rewrite':
+          result = await chromeAI.rewriteText(request.text, request.style, request.options);
+          break;
+        case 'explain':
+          result = await chromeAI.explainText(request.text, request.options);
+          break;
+        case 'generateQuiz':
+          result = await chromeAI.generateQuiz(request.text, request.questionCount, request.options);
+          break;
+        case 'generateQuizAnswers':
+          result = await chromeAI.generateQuizAnswers(request.text, request.questionCount, request.options);
+          break;
+        case 'generateStudyNotes':
+          result = await chromeAI.generateStudyNotes(request.text, request.options);
+          break;
+      }
+    } else if (request.action === 'saveNote') {
+      result = await saveNote(request.note);
+    } else if (request.action === 'getNotes') {
+      result = await getNotes(request.filter);
+    } else if (request.action === 'getNote') {
+      result = await getNote(request.noteId);
+    } else if (request.action === 'updateNote') {
+      result = await updateNote(request.noteId, request.content);
+    } else if (request.action === 'deleteNote') {
+      result = await deleteNote(request.noteId);
+    } else if (request.action === 'updateStats') {
+      result = await updateStats();
+    } else {
+      throw new Error(`Unknown action: ${request.action}`);
+    }
+
+    sendResponse({ success: true, result });
+    
+  } catch (error) {
+    console.error('Message handler error:', error);
+    sendResponse({ success: false, error: error.message });
+  }
+
+  return true; // Keep message channel open for async response
+});
+
+// --- Notes Management Functions ---
+async function saveNote(note) {
+  const { notes } = await chrome.storage.local.get('notes');
+  note.id = Date.now().toString();
+  notes.unshift(note);
+  
+  // Keep only last 100 notes
+  if (notes.length > 100) {
+    notes.splice(100);
+  }
+  
+  await chrome.storage.local.set({ notes });
+  await updateStats();
+  
+  return note;
+}
+
+async function getNotes(filter = {}) {
+  const { notes } = await chrome.storage.local.get('notes');
+  let filteredNotes = notes || [];
+  
+  if (filter.type) {
+    filteredNotes = filteredNotes.filter(note => note.type === filter.type);
+  }
+  
+  if (filter.limit) {
+    filteredNotes = filteredNotes.slice(0, filter.limit);
+  }
+  
+  return filteredNotes;
+}
+
+async function getNote(noteId) {
+  const { notes } = await chrome.storage.local.get('notes');
+  return notes.find(note => note.id === noteId);
+}
+
+async function updateNote(noteId, content) {
+  const { notes } = await chrome.storage.local.get('notes');
+  const noteIndex = notes.findIndex(note => note.id === noteId);
+  
+  if (noteIndex !== -1) {
+    notes[noteIndex].processedText = content;
+    notes[noteIndex].updatedAt = new Date().toISOString();
+    await chrome.storage.local.set({ notes });
+    return notes[noteIndex];
+  }
+  
+  throw new Error('Note not found');
+}
+
+async function deleteNote(noteId) {
+  const { notes } = await chrome.storage.local.get('notes');
+  const filteredNotes = notes.filter(note => note.id !== noteId);
+  await chrome.storage.local.set({ notes: filteredNotes });
+  return true;
+}
+
+async function updateStats() {
+  const { notes, stats } = await chrome.storage.local.get(['notes', 'stats']);
+  
+  const newStats = {
+    totalNotes: notes?.length || 0,
+    totalSessions: (stats?.totalSessions || 0) + 1,
+    totalProcessed: notes?.reduce((sum, note) => sum + (note.originalText?.length || 0), 0) || 0
+  };
+  
+  await chrome.storage.local.set({ stats: newStats });
+  return newStats;
+}
+
+console.log('🎓 Background script loaded successfully');
 
 // --- Initialize Extension ---
 chrome.runtime.onInstalled.addListener(async () => {
