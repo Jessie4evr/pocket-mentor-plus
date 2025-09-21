@@ -291,25 +291,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       switch (request.action) {
         case 'summarize':
-          result = await pocketMentorAPI.summarizeText(request.text, request.options);
+          result = await simpleAI.summarizeText(request.text, request.options);
           break;
         case 'translate':
-          result = await pocketMentorAPI.translateText(request.text, request.targetLang, request.options);
+          result = await simpleAI.translateText(request.text, request.targetLang, request.options);
           break;
         case 'proofread':
-          result = await pocketMentorAPI.proofreadText(request.text, request.options);
+          result = await simpleAI.proofreadText(request.text, request.options);
           break;
         case 'rewrite':
-          result = await pocketMentorAPI.rewriteText(request.text, request.style, request.options);
+          result = await simpleAI.rewriteText(request.text, request.style, request.options);
           break;
         case 'explain':
-          result = await pocketMentorAPI.explainText(request.text, request.options);
+          result = await simpleAI.explainText(request.text, request.options);
           break;
         case 'generateQuiz':
-          result = await pocketMentorAPI.generateQuiz(request.text, request.questionCount, request.options);
+          result = await simpleAI.generateQuiz(request.text, request.questionCount, request.options);
           break;
         case 'generateStudyNotes':
-          result = await pocketMentorAPI.generateStudyNotes(request.text, request.options);
+          result = await simpleAI.generateStudyNotes(request.text, request.options);
           break;
         case 'getNotes':
           result = await getNotes(request.filter);
