@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Mentor+</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header fade-in-scale">
+      <img src="icon.svg" alt="Pocket Mentor+ Logo" class="logo" 
+           onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSI4IiByeT0iOCIgZmlsbD0iI2I4ODYwYiIvPgogIDx0ZXh0IHg9IjI0IiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPlBNKzwvdGV4dD4KICA8dGV4dCB4PSIyNCIgeT0iMzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+OkzwvdGV4dD4KPC9zdmc+'; this.alt='PM+ 🎓';"
+           loading="lazy"
+           decoding="async">
+      <h1 class="app-title">Pocket Mentor+ 🎓✨</h1>
+      <p class="tagline">Your AI-powered study assistant</p>
+      <div class="header-controls" style="display: flex; gap: 8px; justify-content: center; margin-top: 12px;">
+        <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+        <button id="themesBtn" class="theme-btn" aria-label="Choose themes">🎨 Themes</button>
+      </div>
+    </header>
+
+    <!-- Themes Panel (Initially Hidden) -->
+    <section id="themesPanel" class="themes-panel fade-in-up" style="display: none;" aria-label="Theme Selection">
+      <h3>🎨 Choose Your Theme</h3>
+      <div id="themeGrid" class="theme-grid">
+        <!-- Theme options will be populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions fade-in-up" aria-label="Quick Actions">
+      <h3>⚡ Quick Actions</h3>
+      <div class="popup-buttons">
+        <button id="openNotebook" class="primary-btn" aria-label="Open full notebook">
+          📚 Open Notebook
+        </button>
+        <button id="checkCapabilities" class="secondary-btn" aria-label="Check AI status">
+          🔍 Check AI Status
+        </button>
+        <button id="summarizeVideo" class="secondary-btn" aria-label="Summarize current video" title="Alt+V">
+          🎥 Video Summary
+        </button>
+        <button id="quickNotes" class="secondary-btn" aria-label="Quick notes access">
+          📝 Quick Notes
+        </button>
+      </div>
+    </section>
+
+    <!-- Text Input -->
+    <section class="input-section fade-in-up" aria-label="Text Input">
+      <label for="quickInput" class="sr-only">Enter text for quick processing</label>
+      <textarea 
+        id="quickInput" 
+        placeholder="✨ Paste text here for quick AI processing..."
+        aria-label="Quick text input"
+        rows="4"
+      ></textarea>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="action-buttons fade-in-up" aria-label="AI Actions">
+      <div class="popup-buttons">
+        <button id="quickSummarize" class="primary-btn" aria-label="Quick summarize">
+          📝 Summarize
+        </button>
+        <button id="quickExplain" class="secondary-btn" aria-label="Quick explain">
+          💡 Explain
+        </button>
+        <button id="quickTranslate" class="secondary-btn" aria-label="Quick translate">
+          🌐 Translate
+        </button>
+        <button id="quickProofread" class="secondary-btn" aria-label="Quick proofread">
+          ✏️ Proofread
+        </button>
+      </div>
+    </section>
+
+    <!-- Output -->
+    <section class="output-section fade-in-up" aria-live="polite" aria-label="Results">
+      <div class="output-panel">
+        <h3>✨ Quick Result</h3>
+        <div id="quickOutput">
+          Select text on any webpage and right-click for instant AI processing, or paste text above for quick actions.
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Notes Preview -->
+    <section class="recent-notes fade-in-up" aria-label="Recent Notes">
+      <div class="notes-header">
+        <h3>📚 Recent Notes</h3>
+        <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
+      </div>
+      <div id="recentNotesList" class="recent-notes-list">
+        <p>No recent notes. Start by processing some text!</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <p style="font-size: 0.8rem; text-align: center; opacity: 0.7; margin-top: 15px;">
+        Built with Chrome's on-device AI
+      </p>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

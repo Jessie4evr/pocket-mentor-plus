@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Mentor+ Notebook 🎓✨</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+  <!-- Header -->
+  <header class="app-header">
+    <img src="icon.svg" alt="Pocket Mentor+ Logo" class="logo"
+         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSI4IiByeT0iOCIgZmlsbD0iI2I4ODYwYiIvPgogIDx0ZXh0IHg9IjI0IiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiPlBNKzwvdGV4dD4KICA8dGV4dCB4PSIyNCIgeT0iMzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+OkzwvdGV4dD4KPC9zdmc+'; this.alt='PM+ 🎓';"
+         loading="lazy"
+         decoding="async">
+    <h1>Pocket Mentor+ Notebook 🎓✨</h1>
+    <p class="tagline">Your AI-powered study and writing assistant</p>
+    
+    <!-- Header Controls -->
+    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Mode</button>
+      <button id="themesBtn" class="theme-btn" aria-label="Choose themes">🎨 Themes</button>
+      <button id="videoSummaryBtn" class="theme-btn" aria-label="Analyze video" title="Alt+V">🎥 Video</button>
+      <button id="checkCapabilities" class="theme-btn" aria-label="Check AI status">🔍 Check AI Status</button>
+      <button id="quickNotes" class="theme-btn" aria-label="Quick notes access">📝 Quick Notes</button>
+      <button id="exportNotes" class="theme-btn" aria-label="Export notes">📥 Export</button>
+      <button id="clearAllNotes" class="theme-btn" aria-label="Clear all notes">🗑️ Clear All</button>
+    </div>
+  </header>
+
+  <!-- Themes Panel (Initially Hidden) -->
+  <div id="themesPanel" class="themes-panel-notebook" style="display: none;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 24px;">
+      <h2 style="text-align: center; color: var(--primary-gold); margin-bottom: 24px;">🎨 Choose Your Perfect Theme</h2>
+      <div id="themeGrid" class="theme-grid-notebook">
+        <!-- Theme options will be populated by JavaScript -->
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button id="closeThemesPanel" class="secondary-btn">Close Themes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <main class="app-container">
+    <!-- AI Status Banner -->
+    <div id="aiStatusBanner" class="status-message status-warning" style="margin-bottom: 20px;">
+      🔄 Checking AI capabilities...
+    </div>
+
+    <!-- API Configuration Panel (Initially Hidden) -->
+    <div id="apiConfigPanel" class="input-panel" style="display: none; margin-bottom: 24px;">
+      <h3 style="color: var(--primary-gold); margin-bottom: 16px;">🔑 API Configuration</h3>
+      <p style="margin-bottom: 12px; color: var(--text-light);">
+        Configure Gemini API key for enhanced AI responses when Chrome Built-in AI is not available.
+      </p>
+      <div style="display: flex; gap: 12px; align-items: end;">
+        <div style="flex: 1;">
+          <label for="geminiApiKey" style="display: block; margin-bottom: 8px; font-weight: 600;">
+            Gemini API Key (Optional)
+          </label>
+          <input 
+            type="password" 
+            id="geminiApiKey" 
+            placeholder="Enter your Gemini API key..."
+            style="font-family: monospace; font-size: 0.9rem;"
+          >
+        </div>
+        <button id="saveApiKey" class="primary-btn" style="padding: 12px 16px; white-space: nowrap;">
+          💾 Save Key
+        </button>
+      </div>
+      <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 8px;">
+        🔒 API key is stored locally and never shared. Get your free key at 
+        <a href="#" onclick="window.open('https://makersuite.google.com/app/apikey', '_blank')" 
+           style="color: var(--primary-gold);">Google AI Studio</a>
+      </p>
+    </div>
+
+    <!-- Input Section -->
+    <section class="input-panel" aria-label="Text Input">
+      <label for="inputBox">Enter your text for AI processing:</label>
+      <textarea 
+        id="inputBox" 
+        placeholder="Paste or type your text here for summarization, translation, rewriting, or other AI enhancements..."
+        aria-label="Main text input area"
+        rows="8">
+      </textarea>
+      
+      <!-- Input Controls -->
+      <div style="display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap;">
+        <button id="clearInput" class="secondary-btn" style="padding: 6px 12px; font-size: 0.9rem;">
+          🗑️ Clear
+        </button>
+        <button id="pasteFromClipboard" class="secondary-btn" style="padding: 6px 12px; font-size: 0.9rem;">
+          📋 Paste
+        </button>
+        <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.7;">
+          <span id="charCount">0</span> characters
+        </span>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="button-panel" role="group" aria-label="AI actions">
+      <!-- Core AI Actions -->
+      <button id="summarizeBtn" class="primary-btn" aria-label="Summarize text">
+        📝 Summarize
+      </button>
+      <button id="explainBtn" class="secondary-btn" aria-label="Explain text">
+        💡 Explain Simply
+      </button>
+      <button id="rewriteBtn" class="secondary-btn" aria-label="Rewrite text">
+        ✏️ Rewrite & Polish
+      </button>
+      <button id="proofreadBtn" class="secondary-btn" aria-label="Proofread text">
+        🔤 Proofread
+      </button>
+
+      <!-- Advanced Actions -->
+      <button id="generateQuizBtn" class="secondary-btn" aria-label="Generate quiz">
+        ❓ Generate Quiz
+      </button>
+      <button id="studyNotesBtn" class="secondary-btn" aria-label="Create study notes">
+        📚 Study Notes
+      </button>
+
+      <!-- Translation Controls -->
+      <div class="translate-controls" aria-label="Translation controls">
+        <select id="languageSelect" aria-label="Select target language">
+          <option value="es">🇪🇸 Spanish</option>
+          <option value="fr">🇫🇷 French</option>
+          <option value="de">🇩🇪 German</option>
+          <option value="zh">🇨🇳 Chinese</option>
+          <option value="ja">🇯🇵 Japanese</option>
+          <option value="hi">🇮🇳 Hindi</option>
+          <option value="it">🇮🇹 Italian</option>
+          <option value="pt">🇵🇹 Portuguese</option>
+          <option value="ru">🇷🇺 Russian</option>
+          <option value="ar">🇸🇦 Arabic</option>
+        </select>
+        <button id="translateBtn" class="secondary-btn" aria-label="Translate text">
+          🌐 Translate
+        </button>
+      </div>
+    </section>
+
+    <!-- Output Section -->
+    <section class="output-panel" aria-live="polite" aria-label="AI Results">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2>AI Results</h2>
+        <div>
+          <button id="saveResult" class="secondary-btn" style="padding: 6px 12px; font-size: 0.9rem;" disabled>
+            💾 Save to Notes
+          </button>
+          <button id="copyResult" class="secondary-btn" style="padding: 6px 12px; font-size: 0.9rem;" disabled>
+            📋 Copy
+          </button>
+        </div>
+      </div>
+      <div id="outputBox" tabindex="0">
+        ✨ Your AI-enhanced results will appear here...
+        <br><br>
+        💡 <strong>Tips:</strong>
+        <br>• Right-click selected text on any webpage for instant processing
+        <br>• Use the buttons above to transform your text with AI
+        <br>• All results are processed locally with Chrome's on-device AI
+      </div>
+    </section>
+
+    <!-- Study Statistics -->
+    <section class="stats-panel" style="display: none;" aria-label="Study Statistics">
+      <h2>📊 Study Statistics</h2>
+      <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+        <div class="stat-card">
+          <div class="stat-number" id="totalNotes">0</div>
+          <div class="stat-label">Total Notes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalSessions">0</div>
+          <div class="stat-label">Study Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalProcessed">0</div>
+          <div class="stat-label">Words Processed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes Section -->
+    <section class="notes-section" aria-label="Saved Notes">
+      <div class="notes-header">
+        <h2>📚 Your Study Notes</h2>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <select id="notesFilter" aria-label="Filter notes by type">
+            <option value="">All Types</option>
+            <option value="summarize">Summaries</option>
+            <option value="explain">Explanations</option>
+            <option value="translate">Translations</option>
+            <option value="quiz">Quizzes</option>
+            <option value="rewrite">Rewrites</option>
+            <option value="saved">Saved Text</option>
+          </select>
+          <button id="refreshNotes" class="secondary-btn" style="padding: 6px 12px; font-size: 0.9rem;">
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+      
+      <div id="notesContainer" class="notes-grid">
+        <div style="text-align: center; padding: 40px; opacity: 0.7;">
+          <p>📝 No notes yet. Start by processing some text above!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>Built with ❤️ using Chrome's Built-in AI Challenge 2025 APIs</p>
+    <p style="font-size: 0.8rem; margin-top: 5px;">
+      Privacy-first • Offline-ready • On-device AI processing
+    </p>
+  </footer>
+
+  <script type="module" src="notebook.js"></script>
+</body>
+</html>
