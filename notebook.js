@@ -622,7 +622,7 @@ This video appears to contain educational content that can be valuable for learn
     }
 
     // Show faster loading for better UX
-    this.showLoading(`Processing...`);
+    this.showLoading(`Processing ${action}...`);
     
     try {
       let questionCount = 5; // default
@@ -636,17 +636,22 @@ This video appears to contain educational content that can be valuable for learn
         }
       }
       
+      console.log('🚀 Sending message to background:', { action, text: text.substring(0, 50) + '...', questionCount });
+      
       const response = await chrome.runtime.sendMessage({
         action: action,
         text: text,
         questionCount: questionCount,
         options: { 
           format: 'markdown',
-          temperature: 0.7
+          temperature: 0.7,
+          outputLanguage: 'en'  // Add language specification
         }
       });
 
-      if (response.success) {
+      console.log('📨 Response from background:', response);
+
+      if (response && response.success) {
         this.currentResult = {
           type: action,
           originalText: text,
@@ -659,19 +664,19 @@ This video appears to contain educational content that can be valuable for learn
         this.enableResultActions();
         
         // Show "Show Answers" button for quizzes
-        if (action === 'generateQuiz') {
+        if (action === 'generateQuiz' && this.showAnswersBtn) {
           this.showAnswersBtn.style.display = 'inline-block';
-        } else {
+        } else if (this.showAnswersBtn) {
           this.showAnswersBtn.style.display = 'none';
         }
         
-        await this.loadNotes(); // Refresh notes
-        await this.loadStats(); // Refresh stats
+        console.log('✅ AI action completed successfully');
       } else {
-        this.showMessage(`❌ ${this.capitalizeFirst(action)} failed: ${response.error}`, 'error');
+        console.error('❌ AI action failed:', response);
+        this.showMessage(`❌ ${this.capitalizeFirst(action)} failed: ${response?.error || 'Unknown error'}`, 'error');
       }
     } catch (error) {
-      console.error(`${action} failed:`, error);
+      console.error(`💥 ${action} failed with error:`, error);
       this.showMessage(`❌ ${this.capitalizeFirst(action)} failed. Please try again.`, 'error');
     }
   }
