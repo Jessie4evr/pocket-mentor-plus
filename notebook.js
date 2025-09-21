@@ -410,28 +410,24 @@ This video appears to contain educational content that can be valuable for learn
   }
 
   async checkCapabilities() {
-    this.showLoading('Checking AI capabilities...');
-    
     try {
-      const response = await chrome.runtime.sendMessage({ action: 'checkCapabilities' });
+      console.log('🔍 Checking AI capabilities...');
       
-      if (response.success) {
+      const response = await chrome.runtime.sendMessage({ action: 'checkCapabilities' });
+      console.log('📋 Capabilities response:', response);
+      
+      if (response && response.success) {
         const capabilities = response.result;
-        const availableAPIs = Object.entries(capabilities)
-          .filter(([_, available]) => available)
-          .map(([api, _]) => api)
-          .join(', ');
+        const availableCount = Object.values(capabilities).filter(Boolean).length;
         
-        const message = availableAPIs 
-          ? `✅ Available APIs: ${availableAPIs}`
-          : '⚠️ No AI APIs currently available. Please check Chrome flags and ensure Gemini Nano is enabled.';
-        
-        this.showMessage(message, availableAPIs ? 'success' : 'warning');
+        this.showMessage(`✅ AI capabilities: Found ${availableCount} available APIs`, 'success');
+        console.log('🎯 Available capabilities:', capabilities);
       } else {
-        this.showMessage('❌ Failed to check capabilities', 'error');
+        this.showMessage('❌ Failed to check AI capabilities', 'error');
+        console.error('💥 Capabilities check failed:', response);
       }
     } catch (error) {
-      console.error('Capability check failed:', error);
+      console.error('🚨 Capability check error:', error);
       this.showMessage('❌ AI capability check failed', 'error');
     }
   }
