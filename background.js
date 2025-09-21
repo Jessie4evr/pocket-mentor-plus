@@ -495,6 +495,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case 'generateQuiz':
           result = await chromeAI.generateQuiz(request.text, request.questionCount, request.options);
           break;
+        case 'generateQuizAnswers':
+          result = await chromeAI.generateQuizAnswers(request.text, request.questionCount, request.options);
+          break;
         case 'generateStudyNotes':
           result = await chromeAI.generateStudyNotes(request.text, request.options);
           break;
