@@ -5,41 +5,42 @@
 // Global state
 let isInitialized = false;
 
-// Simple AI fallback responses
+// Simple AI fallback responses with language specification
 function generateFallbackResponse(action, text, options = {}) {
   const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 4);
   const meaningfulWords = words.filter(word => 
     !['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out'].includes(word)
   );
   const keyTopics = meaningfulWords.slice(0, 3).join(', ') || 'the content';
+  const outputLanguage = options.outputLanguage || options.language || 'en';
 
   switch(action) {
     case 'summarize':
-      return `📝 **AI Summary**\n\n**Key Topics:** ${keyTopics}\n\n**Main Points:**\n• Primary focus: ${meaningfulWords[0] || 'main subject'}\n• Important aspects: ${meaningfulWords[1] || 'key concepts'}\n• Supporting details: ${meaningfulWords[2] || 'additional information'}\n\n**Summary:** This content covers approximately ${Math.floor(text.length / 5)} words focusing on ${keyTopics}.\n\n*Generated using Chrome Built-in AI fallback*`;
+      return `📝 **AI Summary** (${outputLanguage})\n\n**Key Topics:** ${keyTopics}\n\n**Main Points:**\n• Primary focus: ${meaningfulWords[0] || 'main subject'}\n• Important aspects: ${meaningfulWords[1] || 'key concepts'}\n• Supporting details: ${meaningfulWords[2] || 'additional information'}\n\n**Summary:** This content covers approximately ${Math.floor(text.length / 5)} words focusing on ${keyTopics}.\n\n*Generated using Chrome Built-in AI fallback (${outputLanguage})*`;
     
     case 'generateQuiz':
       const questionCount = options.questionCount || 5;
-      return `❓ **QUIZ: ${meaningfulWords[0] || 'Content'} Assessment**\n\n**Question 1:** What is the main topic discussed?\nA) General background information\nB) Specific details about ${meaningfulWords[0] || 'the main subject'}\nC) Unrelated concepts\nD) Basic definitions only\n\n**Question 2:** Which concept is emphasized?\nA) ${meaningfulWords[1] || 'Important concept'}\nB) Random information\nC) General overview\nD) Background details\n\n*${questionCount} question quiz - Take the quiz first, then click "Show Answers"*`;
+      return `❓ **QUIZ: ${meaningfulWords[0] || 'Content'} Assessment** (${outputLanguage})\n\n**Question 1:** What is the main topic discussed?\nA) General background information\nB) Specific details about ${meaningfulWords[0] || 'the main subject'}\nC) Unrelated concepts\nD) Basic definitions only\n\n**Question 2:** Which concept is emphasized?\nA) ${meaningfulWords[1] || 'Important concept'}\nB) Random information\nC) General overview\nD) Background details\n\n*${questionCount} question quiz - Take the quiz first, then click "Show Answers"*`;
     
     case 'generateQuizAnswers':
-      return `🔑 **QUIZ ANSWERS & EXPLANATIONS**\n\n**ANSWER KEY:**\n1. B) The text specifically focuses on ${meaningfulWords[0] || 'the main topic'}\n2. A) ${meaningfulWords[1] || 'This concept'} is clearly discussed in the content\n\n*Answer explanations based on your text content*`;
+      return `🔑 **QUIZ ANSWERS & EXPLANATIONS** (${outputLanguage})\n\n**ANSWER KEY:**\n1. B) The text specifically focuses on ${meaningfulWords[0] || 'the main topic'}\n2. A) ${meaningfulWords[1] || 'This concept'} is clearly discussed in the content\n\n*Answer explanations based on your text content (${outputLanguage})*`;
     
     case 'explain':
-      return `💡 **Simple Explanation**\n\n**Topic:** ${keyTopics}\n\n**In simple terms:** This content discusses ${meaningfulWords[0] || 'important concepts'} and explains how it relates to ${meaningfulWords[1] || 'practical applications'}.\n\n**Key points:**\n• ${meaningfulWords[0] || 'The main concept'} is important\n• ${meaningfulWords[1] || 'Secondary concepts'} provide context\n• Understanding ${keyTopics} helps grasp the bigger picture\n\n*Explained using Chrome Built-in AI*`;
+      return `💡 **Simple Explanation** (${outputLanguage})\n\n**Topic:** ${keyTopics}\n\n**In simple terms:** This content discusses ${meaningfulWords[0] || 'important concepts'} and explains how it relates to ${meaningfulWords[1] || 'practical applications'}.\n\n**Key points:**\n• ${meaningfulWords[0] || 'The main concept'} is important\n• ${meaningfulWords[1] || 'Secondary concepts'} provide context\n• Understanding ${keyTopics} helps grasp the bigger picture\n\n*Explained using Chrome Built-in AI (${outputLanguage})*`;
     
     case 'translate':
       const targetLang = options.targetLanguage || 'es';
-      const langNames = { es: 'Spanish', fr: 'French', de: 'German', zh: 'Chinese' };
-      return `🌐 **Translation to ${langNames[targetLang] || targetLang}**\n\nYour text about ${keyTopics} has been processed for translation. The content covers important concepts related to ${meaningfulWords[0] || 'the main topic'}.\n\n*Translation processed using Chrome Built-in AI*`;
+      const langNames = { es: 'Spanish', fr: 'French', de: 'German', zh: 'Chinese', ja: 'Japanese', en: 'English' };
+      return `🌐 **Translation to ${langNames[targetLang] || targetLang}**\n\nYour text about ${keyTopics} has been processed for translation. The content covers important concepts related to ${meaningfulWords[0] || 'the main topic'}.\n\n*Translation processed using Chrome Built-in AI (output: ${targetLang})*`;
     
     case 'rewrite':
-      return `✏️ **Enhanced Text**\n\nHere is an improved version focusing on ${keyTopics}:\n\nThe content has been refined to better present information about ${meaningfulWords[0] || 'the main subject'}. Key improvements include enhanced clarity and better organization.\n\n*Enhanced using Chrome Built-in AI*`;
+      return `✏️ **Enhanced Text** (${outputLanguage})\n\nHere is an improved version focusing on ${keyTopics}:\n\nThe content has been refined to better present information about ${meaningfulWords[0] || 'the main subject'}. Key improvements include enhanced clarity and better organization.\n\n*Enhanced using Chrome Built-in AI (${outputLanguage})*`;
     
     case 'generateStudyNotes':
-      return `📚 **Study Notes: ${keyTopics}**\n\n**📋 Main Topics:**\n• ${meaningfulWords[0] || 'Primary concept'}\n• ${meaningfulWords[1] || 'Secondary concept'}\n• ${meaningfulWords[2] || 'Supporting information'}\n\n**🔑 Key Concepts:**\nThe content covers essential information about ${keyTopics}. Important themes include practical applications and theoretical foundations.\n\n**💡 Study Tips:**\n• Review the main concepts multiple times\n• Focus on understanding ${meaningfulWords[0] || 'the key topics'}\n• Practice applying these concepts\n\n*Study notes generated using AI*`;
+      return `📚 **Study Notes: ${keyTopics}** (${outputLanguage})\n\n**📋 Main Topics:**\n• ${meaningfulWords[0] || 'Primary concept'}\n• ${meaningfulWords[1] || 'Secondary concept'}\n• ${meaningfulWords[2] || 'Supporting information'}\n\n**🔑 Key Concepts:**\nThe content covers essential information about ${keyTopics}. Important themes include practical applications and theoretical foundations.\n\n**💡 Study Tips:**\n• Review the main concepts multiple times\n• Focus on understanding ${meaningfulWords[0] || 'the key topics'}\n• Practice applying these concepts\n\n*Study notes generated using AI (${outputLanguage})*`;
     
     default:
-      return `🤖 **AI Response**\n\nBased on your text about ${keyTopics}:\n\nYour content has been processed and contains valuable information about ${meaningfulWords[0] || 'important topics'}.\n\n*Generated using Chrome Built-in AI*`;
+      return `🤖 **AI Response** (${outputLanguage})\n\nBased on your text about ${keyTopics}:\n\nYour content has been processed and contains valuable information about ${meaningfulWords[0] || 'important topics'}.\n\n*Generated using Chrome Built-in AI (${outputLanguage})*`;
   }
 }
 
