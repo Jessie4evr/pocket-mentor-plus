@@ -695,7 +695,8 @@ This video appears to contain educational content that can be valuable for learn
       if (response.success) {
         // Append answers to current result
         const currentOutput = this.elements.outputBox.innerHTML;
-        this.elements.outputBox.innerHTML = currentOutput + '\n\n' + this.formatText(response.result);
+        const formattedResult = this.convertMarkdownToHtml(response.result);
+        this.elements.outputBox.innerHTML = currentOutput + '\n\n' + formattedResult;
         this.showAnswersBtn.style.display = 'none'; // Hide button after showing answers
         this.showMessage('✅ Answer key generated!', 'success');
       } else {
@@ -705,6 +706,16 @@ This video appears to contain educational content that can be valuable for learn
       console.error('Answer generation failed:', error);
       this.showMessage('❌ Answer generation failed. Please try again.', 'error');
     }
+  }
+
+  convertMarkdownToHtml(text) {
+    if (!text) return '';
+    
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>')
+      .replace(/#{1,6}\s?(.*)/g, '<h3>$1</h3>');
   }
 
   async handleTranslate() {
