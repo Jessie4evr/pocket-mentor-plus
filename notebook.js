@@ -1118,7 +1118,10 @@ This video appears to contain educational content that can be valuable for learn
 
 // Initialize notebook when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  new PocketMentorNotebook();
+  const pocketMentorNotebook = new PocketMentorNotebook();
+  
+  // Make globally accessible for inline event handlers
+  window.pocketMentorNotebook = pocketMentorNotebook;
 });
 
 // Add additional styles for the notebook
