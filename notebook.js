@@ -130,6 +130,14 @@ class PocketMentorNotebook {
     this.elements.saveResult.addEventListener('click', () => this.saveCurrentResult());
     this.elements.copyResult.addEventListener('click', () => this.copyResult());
 
+    // Add Show Answers button for quizzes
+    this.showAnswersBtn = document.createElement('button');
+    this.showAnswersBtn.textContent = '🔑 Show Answers';
+    this.showAnswersBtn.className = 'btn btn-secondary';
+    this.showAnswersBtn.style.display = 'none';
+    this.showAnswersBtn.addEventListener('click', () => this.showQuizAnswers());
+    document.querySelector('.output-actions').appendChild(this.showAnswersBtn);
+
     // Notes controls
     this.elements.refreshNotes.addEventListener('click', () => this.loadNotes());
     this.elements.notesFilter.addEventListener('change', () => this.filterNotes());
