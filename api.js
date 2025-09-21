@@ -421,7 +421,35 @@ class PocketMentorAPI {
     }
   }
 
-  // === SPECIALIZED FUNCTIONS ===
+  // === PERFORMANCE OPTIMIZATIONS ===
+  async initializeQuickSession() {
+    // Pre-load a session for faster responses
+    try {
+      if (this.capabilities.promptAPI && !this.promptSessionInstance) {
+        this.promptSessionInstance = await this.createPromptSession({
+          temperature: 0.7,
+          topK: 3
+        });
+        console.log('✅ Quick session pre-loaded');
+      }
+    } catch (error) {
+      console.warn('Quick session pre-load failed:', error);
+    }
+  }
+
+  async getQuickResponse(prompt, type = 'general') {
+    // Use pre-loaded session for faster responses
+    try {
+      if (this.promptSessionInstance && this.promptSessionInstance.prompt) {
+        return await this.promptSessionInstance.prompt(prompt);
+      }
+      // Fallback to regular session creation
+      return await this.promptModel(prompt);
+    } catch (error) {
+      console.error('Quick response failed:', error);
+      return this.getFallbackPromptResponse(prompt);
+    }
+  }
   async generateQuiz(text, questionCount = 5, options = {}) {
     try {
       // Use Prompt API for quiz generation with structured output
