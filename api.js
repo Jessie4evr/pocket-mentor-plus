@@ -518,6 +518,32 @@ Content: ${text}`;
     };
   }
 
+  createFallbackTranslator(sourceLanguage = 'en', targetLanguage = 'es') {
+    return {
+      translate: (text) => this.getFallbackTranslation(text, targetLanguage),
+      inputQuota: 4000,
+      measureInputUsage: (text) => Promise.resolve(Math.min(text.length / 4, this.inputQuota))
+    };
+  }
+
+  createFallbackLanguageDetector() {
+    return {
+      detect: (text) => this.getFallbackLanguageDetection(text),
+      inputQuota: 4000,
+      measureInputUsage: (text) => Promise.resolve(Math.min(text.length / 4, this.inputQuota))
+    };
+  }
+
+  createFallbackPromptSession() {
+    return {
+      prompt: (text, options = {}) => this.getFallbackPromptResponse(text),
+      generateQuiz: (text, count, options = {}) => this.getFallbackQuiz(text, count),
+      generateStudyNotes: (text, options = {}) => this.getFallbackStudyNotes(text),
+      inputQuota: 4000,
+      measureInputUsage: (text) => Promise.resolve(Math.min(text.length / 4, this.inputQuota))
+    };
+  }
+
   // === HELPER FUNCTIONS ===
   extractTopic(text) {
     const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 4);
