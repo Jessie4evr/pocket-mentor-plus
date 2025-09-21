@@ -10,26 +10,20 @@ let geminiConfig = null;
 const chromeAI = {
   async summarizeText(text, options = {}) {
     try {
-      // Check availability first
-      if (typeof window !== 'undefined' && window.ai?.summarizer?.availability) {
-        const availability = await window.ai.summarizer.availability();
-        if (availability === 'unavailable') {
-          throw new Error('Summarizer API not available');
+      // Check Summarizer API availability
+      if ('ai' in self && self.ai?.summarizer) {
+        const availability = await self.ai.summarizer.availability();
+        if (availability !== 'unavailable') {
+          const summarizer = await self.ai.summarizer.create({
+            type: 'key-points',
+            length: 'medium',
+            format: 'markdown'
+          });
+          const result = await summarizer.summarize(text);
+          return `📝 **AI Summary**\n\n${result}`;
         }
       }
-
-      // Create summarizer with proper options
-      let summarizer;
-      if (typeof window !== 'undefined' && window.ai?.summarizer?.create) {
-        summarizer = await window.ai.summarizer.create({
-          type: 'key-points',
-          length: 'medium',
-          format: 'markdown'
-        });
-        return await summarizer.summarize(text);
-      } else {
-        throw new Error('Chrome AI not available');
-      }
+      throw new Error('Summarizer API not available');
     } catch (error) {
       console.warn('Chrome Summarizer failed, using fallback:', error);
       return this.generateFallbackResponse('summarize', text, options);
@@ -38,32 +32,55 @@ const chromeAI = {
 
   async explainText(text, options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
-        const writer = await window.ai.writer.create({
-          tone: 'casual',
-          format: 'markdown'
-        });
-        const prompt = `Please explain the following in simple, easy-to-understand terms:\n\n${text}`;
-        return await writer.write(prompt);
-      } else {
-        throw new Error('Chrome AI not available');
+      // Use Prompt API for explanations
+      if ('LanguageModel' in self) {
+        const availability = await self.LanguageModel.availability();
+        if (availability !== 'unavailable') {
+          const session = await self.LanguageModel.create({
+            initialPrompts: [
+              { role: 'system', content: 'You are a helpful teacher. Explain concepts clearly and simply.' }
+            ]
+          });
+          const prompt = `Please explain the following in simple, easy-to-understand terms:\n\n${text}`;
+          const result = await session.prompt(prompt);
+          return `💡 **Simple Explanation**\n\n${result}`;
+        }
       }
+      
+      // Fallback to Writer API
+      if ('ai' in self && self.ai?.writer) {
+        const availability = await self.ai.writer.availability();
+        if (availability !== 'unavailable') {
+          const writer = await self.ai.writer.create({
+            tone: 'casual',
+            format: 'markdown'
+          });
+          const prompt = `Please explain the following in simple, easy-to-understand terms:\n\n${text}`;
+          const result = await writer.write(prompt);
+          return `💡 **Simple Explanation**\n\n${result}`;
+        }
+      }
+      throw new Error('Writer/Prompt API not available');
     } catch (error) {
-      console.warn('Chrome Writer failed, using fallback:', error);
+      console.warn('Chrome AI explanation failed, using fallback:', error);
       return this.generateFallbackResponse('explain', text, options);
     }
   },
 
   async rewriteText(text, style = 'formal', options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.rewriter?.create) {
-        const rewriter = await window.ai.rewriter.create({
-          tone: style === 'casual' ? 'more-casual' : 'more-formal'
-        });
-        return await rewriter.rewrite(text);
-      } else {
-        throw new Error('Chrome AI not available');
+      // Check Rewriter API availability
+      if ('ai' in self && self.ai?.rewriter) {
+        const availability = await self.ai.rewriter.availability();
+        if (availability !== 'unavailable') {
+          const rewriter = await self.ai.rewriter.create({
+            tone: style === 'casual' ? 'more-casual' : 'more-formal'
+          });
+          const result = await rewriter.rewrite(text);
+          return `✏️ **Enhanced Text**\n\n${result}`;
+        }
       }
+      throw new Error('Rewriter API not available');
     } catch (error) {
       console.warn('Chrome Rewriter failed, using fallback:', error);
       return this.generateFallbackResponse('rewrite', text, options);
@@ -72,16 +89,20 @@ const chromeAI = {
 
   async proofreadText(text, options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.rewriter?.create) {
-        const rewriter = await window.ai.rewriter.create({
-          tone: 'as-is'
-        });
-        return await rewriter.rewrite(text, {
-          context: 'Fix grammar, spelling, and improve clarity'
-        });
-      } else {
-        throw new Error('Chrome AI not available');
+      // Use Rewriter API for proofreading
+      if ('ai' in self && self.ai?.rewriter) {
+        const availability = await self.ai.rewriter.availability();
+        if (availability !== 'unavailable') {
+          const rewriter = await self.ai.rewriter.create({
+            tone: 'as-is'
+          });
+          const result = await rewriter.rewrite(text, {
+            context: 'Fix grammar, spelling, and improve clarity'
+          });
+          return `✓ **Proofread Text**\n\n${result}`;
+        }
       }
+      throw new Error('Rewriter API not available');
     } catch (error) {
       console.warn('Chrome Rewriter failed, using fallback:', error);
       return this.generateFallbackResponse('proofread', text, options);
@@ -90,51 +111,105 @@ const chromeAI = {
 
   async translateText(text, targetLanguage = 'es', options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
-        const writer = await window.ai.writer.create({
-          outputLanguage: targetLanguage
-        });
-        const prompt = `Translate the following text to ${this.getLanguageName(targetLanguage)}:\n\n${text}`;
-        return await writer.write(prompt);
-      } else {
-        throw new Error('Chrome AI not available');
+      // First detect source language
+      let sourceLanguage = 'en';
+      if ('LanguageDetector' in self) {
+        try {
+          const detector = await self.LanguageDetector.create();
+          const results = await detector.detect(text);
+          if (results.length > 0) {
+            sourceLanguage = results[0].detectedLanguage;
+          }
+        } catch (detectionError) {
+          console.warn('Language detection failed, using English as source:', detectionError);
+        }
       }
+
+      // Use Translator API
+      if ('Translator' in self) {
+        const availability = await self.Translator.availability({
+          sourceLanguage,
+          targetLanguage
+        });
+        if (availability !== 'unavailable') {
+          const translator = await self.Translator.create({
+            sourceLanguage,
+            targetLanguage
+          });
+          const result = await translator.translate(text);
+          return `🌐 **Translation to ${this.getLanguageName(targetLanguage)}**\n\n${result}`;
+        }
+      }
+      throw new Error('Translator API not available');
     } catch (error) {
-      console.warn('Chrome Writer failed, using fallback:', error);
+      console.warn('Chrome Translator failed, using fallback:', error);
       return this.generateFallbackResponse('translate', text, { ...options, targetLanguage });
     }
   },
 
   async generateQuiz(text, questionCount = 5, options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
-        const writer = await window.ai.writer.create({
-          tone: 'formal'
-        });
-        const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format with A), B), C), D) options and include an ANSWER KEY:\n\n${text}`;
-        return await writer.write(prompt);
-      } else {
-        throw new Error('Chrome AI not available');
+      // Use Prompt API for quiz generation
+      if ('LanguageModel' in self) {
+        const availability = await self.LanguageModel.availability();
+        if (availability !== 'unavailable') {
+          const session = await self.LanguageModel.create({
+            initialPrompts: [
+              { role: 'system', content: 'You are an expert quiz creator. Generate high-quality multiple-choice questions with clear options and explanations.' }
+            ]
+          });
+          const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format each question as:
+
+**Question [number]:** [Clear question]
+A) [Option A]
+B) [Option B] 
+C) [Option C]
+D) [Option D]
+**Correct Answer:** [Letter]) [Correct option repeated]
+
+After all questions, include:
+**ANSWER KEY:**
+[number]. [Letter]) [Brief explanation]
+
+Text: ${text}`;
+
+          const result = await session.prompt(prompt);
+          return `❓ **QUIZ GENERATED**\n\n${result}`;
+        }
       }
+      throw new Error('Prompt API not available');
     } catch (error) {
-      console.warn('Chrome Writer failed, using fallback:', error);
+      console.warn('Chrome AI quiz generation failed, using fallback:', error);
       return this.generateFallbackResponse('quiz', text, { ...options, questionCount });
     }
   },
 
   async generateStudyNotes(text, options = {}) {
     try {
-      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
-        const writer = await window.ai.writer.create({
-          tone: 'formal'
-        });
-        const prompt = `Create comprehensive study notes for the following content:\n\n${text}`;
-        return await writer.write(prompt);
-      } else {
-        throw new Error('Chrome AI not available');
+      // Use Prompt API for study notes
+      if ('LanguageModel' in self) {
+        const availability = await self.LanguageModel.availability();
+        if (availability !== 'unavailable') {
+          const session = await self.LanguageModel.create({
+            initialPrompts: [
+              { role: 'system', content: 'You are an expert educator. Create comprehensive, well-organized study notes.' }
+            ]
+          });
+          const prompt = `Create comprehensive study notes for the following content. Include:
+- Main topics and key concepts
+- Important details and explanations  
+- Study tips and questions
+- Real-world applications
+
+Content: ${text}`;
+
+          const result = await session.prompt(prompt);
+          return `📚 **STUDY NOTES**\n\n${result}`;
+        }
       }
+      throw new Error('Prompt API not available');
     } catch (error) {
-      console.warn('Chrome Writer failed, using fallback:', error);
+      console.warn('Chrome AI study notes failed, using fallback:', error);
       return this.generateFallbackResponse('studyNotes', text, options);
     }
   },
