@@ -155,7 +155,7 @@ const chromeAI = {
         if (availability !== 'unavailable') {
           const session = await self.LanguageModel.create({
             initialPrompts: [
-              { role: 'system', content: 'You are an expert quiz creator. Generate high-quality multiple-choice questions with clear options and explanations.' }
+              { role: 'system', content: 'You are an expert quiz creator. Generate high-quality multiple-choice questions with clear options.' }
             ]
           });
           const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format each question as:
@@ -165,11 +165,8 @@ A) [Option A]
 B) [Option B] 
 C) [Option C]
 D) [Option D]
-**Correct Answer:** [Letter]) [Correct option repeated]
 
-After all questions, include:
-**ANSWER KEY:**
-[number]. [Letter]) [Brief explanation]
+Only show questions. DO NOT include answers or explanations in your response.
 
 Text: ${text}`;
 
@@ -181,6 +178,39 @@ Text: ${text}`;
     } catch (error) {
       console.warn('Chrome AI quiz generation failed, using fallback:', error);
       return this.generateFallbackResponse('quiz', text, { ...options, questionCount });
+    }
+  },
+
+  async generateQuizAnswers(text, questionCount = 5, options = {}) {
+    try {
+      // Use Prompt API for quiz answer generation
+      if ('LanguageModel' in self) {
+        const availability = await self.LanguageModel.availability();
+        if (availability !== 'unavailable') {
+          const session = await self.LanguageModel.create({
+            initialPrompts: [
+              { role: 'system', content: 'You are an expert quiz creator. Provide answer keys with explanations.' }
+            ]
+          });
+          const prompt = `Based on this text, provide the answer key for ${questionCount} multiple-choice questions with explanations:
+
+**ANSWER KEY:**
+1. [Letter]) [Correct option] - [Brief explanation]
+2. [Letter]) [Correct option] - [Brief explanation]
+3. [Letter]) [Correct option] - [Brief explanation]
+4. [Letter]) [Correct option] - [Brief explanation]
+5. [Letter]) [Correct option] - [Brief explanation]
+
+Text: ${text}`;
+
+          const result = await session.prompt(prompt);
+          return `🔑 **ANSWER KEY**\n\n${result}`;
+        }
+      }
+      throw new Error('Prompt API not available');
+    } catch (error) {
+      console.warn('Chrome AI quiz answers failed, using fallback:', error);
+      return this.generateFallbackResponse('quizAnswers', text, { ...options, questionCount });
     }
   },
 
