@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Mentor+ Optimization Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid #b8860b;
+        }
+        .optimization-list {
+            list-style: none;
+            padding: 0;
+        }
+        .optimization-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .optimization-list li:before {
+            content: "✅ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+        .feature-highlight {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .test-text {
+            background: white;
+            border: 2px dashed #b8860b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            user-select: all;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎓 Pocket Mentor+ Optimization Test</h1>
+        <p>Testing the optimized Chrome extension with improved performance and new quiz answer key feature.</p>
+    </header>
+
+    <div class="test-section">
+        <h2>📈 Performance Improvements Implemented</h2>
+        <ul class="optimization-list">
+            <li>Removed video-analyzer.js completely (eliminated ~400+ lines of code)</li>
+            <li>Optimized API initialization with parallel capability checks</li>
+            <li>Added instance caching to reduce repeated API creations</li>
+            <li>Streamlined content script by removing video detection</li>
+            <li>Removed video summary button from popup interface</li>
+            <li>Eliminated video-related keyboard shortcuts and event listeners</li>
+            <li>Reduced initial loading time with faster async initialization</li>
+            <li>Added waitForInit() method for better API readiness handling</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🆕 New Quiz Answer Key Feature</h2>
+        <div class="feature-highlight">
+            <strong>Enhanced Quiz Experience:</strong>
+            <ul>
+                <li>Questions and answers are now separated</li>
+                <li>Answer key button appears after quiz generation</li>
+                <li>Cleaner quiz interface without spoilers</li>
+                <li>Added generateQuizAnswers() API method</li>
+                <li>Right-click context menu for quiz generation on long text</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Test Instructions</h2>
+        <ol>
+            <li><strong>Load the extension:</strong> Go to chrome://extensions/, enable Developer mode, and load this folder as an unpacked extension</li>
+            <li><strong>Test popup speed:</strong> Click the extension icon - notice faster loading</li>
+            <li><strong>Test text processing:</strong> Select text below and right-click to use Pocket Mentor+ features</li>
+            <li><strong>Test quiz feature:</strong> Select a longer text, generate a quiz, then use the "Show Answer Key" button</li>
+            <li><strong>Test keyboard shortcuts:</strong> Select text and use Alt+S (summarize), Alt+E (explain), Alt+T (translate), Alt+P (proofread), Alt+Q (quiz)</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Sample Text for Testing</h2>
+        <div class="test-text">
+            <strong>Artificial Intelligence and Machine Learning</strong><br><br>
+            Artificial Intelligence (AI) represents one of the most transformative technologies of our time. It encompasses various techniques including machine learning, deep learning, natural language processing, and computer vision. Machine learning algorithms learn patterns from data without being explicitly programmed for every scenario. Deep learning, a subset of machine learning, uses neural networks with multiple layers to process complex data patterns. Natural language processing enables computers to understand and generate human language, while computer vision allows machines to interpret and analyze visual information. These technologies are revolutionizing industries from healthcare and finance to transportation and entertainment, making AI an essential field of study for the future.
+        </div>
+        
+        <p><em>Instructions: Select the text above and test the various AI features using right-click context menu or keyboard shortcuts.</em></p>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Expected Results</h2>
+        <ul>
+            <li><strong>Faster Loading:</strong> Extension popup should appear more quickly</li>
+            <li><strong>Cleaner Interface:</strong> No video-related buttons or features</li>
+            <li><strong>Quiz Separation:</strong> Quiz questions appear first, then answer key button</li>
+            <li><strong>Better Performance:</strong> Less memory usage, smoother interactions</li>
+            <li><strong>All AI Features Working:</strong> Summarize, explain, translate, proofread, quiz generation</li>
+            <li><strong>Enhanced Shortcuts:</strong> Alt+Q now generates quizzes for selected text</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Technical Details</h2>
+        <p><strong>Files Modified:</strong></p>
+        <ul>
+            <li>✅ <code>api.js</code> - Optimized with faster initialization and instance caching</li>
+            <li>✅ <code>popup.html</code> - Removed video button, added answer key section</li>
+            <li>✅ <code>popup.js</code> - Enhanced quiz functionality, removed video code</li>
+            <li>✅ <code>content.js</code> - Removed video analysis, added Alt+Q shortcut</li>
+            <li>✅ <code>background.js</code> - Added generateQuizAnswers method</li>
+            <li>🗑️ <code>video-analyzer.js</code> - Completely removed</li>
+        </ul>
+    </div>
+
+    <footer style="margin-top: 40px; text-align: center; opacity: 0.7; border-top: 1px solid #eee; padding-top: 20px;">
+        <p>Pocket Mentor+ Optimized Version - Built with Chrome's on-device AI</p>
+    </footer>
+</body>
+</html>
