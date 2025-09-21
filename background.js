@@ -332,6 +332,11 @@ async function updateStats() {
   return newStats;
 }
 
+async function getStats() {
+  const { stats } = await chrome.storage.local.get('stats');
+  return stats || { totalNotes: 0, totalSessions: 0, totalProcessed: 0 };
+}
+
 console.log('🎓 Background script loaded successfully');
 
 // --- Initialize Extension ---
