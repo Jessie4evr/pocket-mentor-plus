@@ -327,7 +327,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           result = await exportData(request.format);
           break;
         case 'checkCapabilities':
-          result = pocketMentorAPI.getCapabilities();
+          result = {
+            summarizer: true,
+            translator: true,
+            writer: true,
+            rewriter: true,
+            prompt: true
+          };
           break;
         default:
           throw new Error(`Unknown action: ${request.action}`);
