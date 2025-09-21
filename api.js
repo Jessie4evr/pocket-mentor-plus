@@ -635,39 +635,63 @@ Content: ${text}`;
 *Explained using Chrome Built-in AI with fallback processing*`;
   }
 
-  getFallbackQuiz(text, questionCount = 5) {
+  getFallbackQuiz(text, questionCount = 5, showAnswers = true) {
     const topic = this.extractTopic(text);
     const topics = topic.split(', ');
     
-    return `❓ **QUIZ: ${topics[0] || 'Content'} Assessment**
+    let quiz = `❓ **QUIZ: ${topics[0] || 'Content'} Assessment**
 
 **Question 1:** What is the main topic discussed in the text?
 A) General background information
 B) Specific details about ${topics[0] || 'the primary subject'}
 C) Unrelated concepts
-D) Basic definitions only
-**Correct Answer:** B) Specific details about ${topics[0] || 'the primary subject'}
+D) Basic definitions only`;
+
+    if (showAnswers) {
+      quiz += `
+**Correct Answer:** B) Specific details about ${topics[0] || 'the primary subject'}`;
+    }
+
+    quiz += `
 
 **Question 2:** Which key concept is emphasized?
 A) ${topics[1] || 'Important concept'}
 B) Random information
 C) General overview
-D) Background details  
-**Correct Answer:** A) ${topics[1] || 'Important concept'}
+D) Background details`;
+
+    if (showAnswers) {
+      quiz += `  
+**Correct Answer:** A) ${topics[1] || 'Important concept'}`;
+    }
+
+    quiz += `
 
 **Question 3:** What supporting information is provided?
 A) Basic facts only
 B) Detailed examples
 C) Information about ${topics[2] || 'supporting topics'}
-D) Minimal details
+D) Minimal details`;
+
+    if (showAnswers) {
+      quiz += `
 **Correct Answer:** C) Information about ${topics[2] || 'supporting topics'}
 
 **ANSWER KEY:**
 1. B) The text specifically focuses on ${topics[0] || 'the main topic'}
 2. A) ${topics[1] || 'This concept'} is clearly discussed in the content
-3. C) Supporting details about ${topics[2] || 'related topics'} are included
+3. C) Supporting details about ${topics[2] || 'related topics'} are included`;
+    } else {
+      quiz += `
+
+*Complete the quiz, then click "Show Answers" to see the answer key*`;
+    }
+
+    quiz += `
 
 *${questionCount} question quiz generated using Chrome Built-in AI with enhanced fallback*`;
+
+    return quiz;
   }
 
   getFallbackStudyNotes(text) {
