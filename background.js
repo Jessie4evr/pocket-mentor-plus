@@ -2,7 +2,9 @@
    Handles context menus, AI processing, and inter-component communication
 ============================================================= */
 
-import pocketMentorAPI from './api.js';
+// Import without using dynamic imports (service worker compatible)
+importScripts('./gemini-config.js');
+importScripts('./api.js');
 
 // Global state
 let isInitialized = false;
