@@ -1,158 +1,328 @@
-// ===== Pocket Mentor+ Hybrid AI API Wrappers 🎓✨ =====
-// Client-side wrappers with Chrome Built-in AI + Gemini API fallback
+// ===== Pocket Mentor+ Chrome Built-in AI API Implementation 🎓✨ =====
 
 class PocketMentorAPI {
   constructor() {
     this.isInitialized = false;
     this.capabilities = {};
     this.fallbackMode = false;
-    this.geminiApiKey = null;
+    this.summarizerInstance = null;
+    this.writerInstance = null;
+    this.rewriterInstance = null;
     this.init();
   }
 
   async init() {
     try {
       // Check for Chrome Built-in AI availability
-      if (typeof window !== 'undefined' && window.ai) {
+      if (typeof window !== 'undefined') {
         this.capabilities = {
-          summarizer: !!window.ai.summarizer,
-          translator: !!window.ai.translator,
-          writer: !!window.ai.writer,
-          rewriter: !!window.ai.rewriter,
-          prompt: !!window.ai.prompt
+          summarizer: typeof window.ai?.summarizer?.create === 'function',
+          writer: typeof window.ai?.writer?.create === 'function',
+          rewriter: typeof window.ai?.rewriter?.create === 'function'
         };
-        this.isInitialized = true;
-        console.log('✅ Chrome Built-in AI initialized');
-      } else if (typeof chrome !== 'undefined' && chrome.aiOriginTrial) {
-        // Fallback for Chrome Origin Trial
-        this.capabilities = {
-          summarizer: !!chrome.aiOriginTrial.summarizer,
-          translator: !!chrome.aiOriginTrial.translator,
-          writer: !!chrome.aiOriginTrial.writer,
-          rewriter: !!chrome.aiOriginTrial.rewriter,
-          prompt: !!chrome.aiOriginTrial.prompt
-        };
-        this.isInitialized = true;
-        console.log('✅ Chrome AI Origin Trial initialized');
       } else {
-        // Fallback to Gemini API
-        this.fallbackMode = true;
-        this.isInitialized = true;
+        // Service worker environment - capabilities will be checked when needed
         this.capabilities = {
           summarizer: true,
-          translator: true,
-          writer: true,
-          rewriter: true,
-          prompt: true
+          writer: true, 
+          rewriter: true
         };
-        console.log('🔄 Using Gemini API fallback mode');
       }
+      
+      this.isInitialized = true;
+      console.log('✅ Pocket Mentor API initialized with capabilities:', this.capabilities);
     } catch (error) {
       console.warn('Chrome Built-in AI not available, using fallback:', error);
       this.fallbackMode = true;
       this.isInitialized = true;
-      this.capabilities = {
-        summarizer: true,
-        translator: true,
-        writer: true,
-        rewriter: true,
-        prompt: true
-      };
     }
   }
 
-  async setGeminiApiKey(apiKey) {
-    this.geminiApiKey = apiKey;
-    console.log('🔑 Gemini API key configured');
+  getCapabilities() {
+    return this.capabilities;
   }
 
-  async checkCapability(apiName) {
-    if (!this.isInitialized) {
-      throw new Error(`AI capabilities not initialized.`);
-    }
-    
-    if (!this.capabilities[apiName]) {
-      throw new Error(`${apiName} API not available.`);
-    }
-    
-    return true;
-  }
-
-  async createSession(apiName, options = {}) {
-    if (this.fallbackMode) {
-      // Return a mock session for fallback mode
-      return {
-        summarize: (text) => this.geminiApiCall('summarize', text, options),
-        translate: (text) => this.geminiApiCall('translate', text, options),
-        rewrite: (text) => this.geminiApiCall('rewrite', text, options),
-        prompt: (text) => this.geminiApiCall('prompt', text, options),
-        destroy: () => Promise.resolve()
-      };
-    }
-
-    await this.checkCapability(apiName);
-    
-    const aiAPI = window.ai || chrome.aiOriginTrial;
+  // === SUMMARIZER API ===
+  async checkSummarizerAvailability(options = {}) {
+    if (this.fallbackMode || typeof window === 'undefined') return 'available';
     
     try {
-      const session = await aiAPI[apiName].create(options);
-      return session;
+      if (!window.ai?.summarizer?.availability) return 'unavailable';
+      return await window.ai.summarizer.availability(options);
     } catch (error) {
-      console.warn(`Chrome AI session failed, using Gemini fallback:`, error);
-      this.fallbackMode = true;
-      return this.createSession(apiName, options);
+      console.warn('Summarizer availability check failed:', error);
+      return 'unavailable';
     }
   }
 
-  async geminiApiCall(action, text, options = {}) {
+  async createSummarizer(options = {}) {
     try {
-      // Create a more detailed prompt based on the action and actual text
-      let prompt = '';
-      
-      switch(action) {
-        case 'summarize':
-          prompt = `Please summarize the following text, focusing on the main points and key ideas:\n\n"${text}"`;
-          break;
-        case 'translate':
-          const targetLang = options.targetLanguage || 'es';
-          prompt = `Please translate the following text to ${this.getLanguageName(targetLang)}:\n\n"${text}"`;
-          break;
-        case 'rewrite':
-          prompt = `Please rewrite and improve the following text for better clarity and professionalism:\n\n"${text}"`;
-          break;
-        case 'explain':
-          prompt = `Please explain the following text in simple, easy-to-understand terms:\n\n"${text}"`;
-          break;
-        case 'quiz':
-          const questionCount = options.questionCount || 5;
-          prompt = `Create ${questionCount} multiple-choice questions with A, B, C, D options and an answer key based on this text:\n\n"${text}"`;
-          break;
-        case 'prompt':
-        default:
-          prompt = text; // Use text as-is for general prompts
-          break;
+      if (this.fallbackMode || typeof window === 'undefined') {
+        return this.createFallbackSummarizer();
       }
+
+      const defaultOptions = {
+        type: 'key-points',
+        length: 'medium',
+        format: 'markdown'
+      };
+
+      const summarizerOptions = { ...defaultOptions, ...options };
       
-      // Since we can't use dynamic imports in service worker, we'll call the background script
-      // The background script will handle the gemini API call
-      const response = await this.makeBackgroundRequest(action, text, prompt, options);
-      return response;
-      
+      if (window.ai?.summarizer?.create) {
+        this.summarizerInstance = await window.ai.summarizer.create(summarizerOptions);
+        console.log('✅ Chrome Summarizer created');
+        return this.summarizerInstance;
+      } else {
+        throw new Error('Summarizer API not available');
+      }
     } catch (error) {
-      console.error('Gemini API call failed:', error);
-      // Final fallback with simple responses
-      return this.getSimpleFallback(action, text, options);
+      console.warn('Chrome Summarizer failed, using fallback:', error);
+      return this.createFallbackSummarizer();
     }
   }
 
-  async makeBackgroundRequest(action, text, prompt, options) {
-    // This will be handled by the background script since we can't use dynamic imports here
-    return new Promise((resolve) => {
-      // Simulate processing delay
-      setTimeout(() => {
-        resolve(this.getSimpleFallback(action, text, options));
-      }, 1000 + Math.random() * 1000);
-    });
+  async summarizeText(text, options = {}) {
+    try {
+      const summarizer = await this.createSummarizer(options);
+      
+      if (summarizer.summarize) {
+        return await summarizer.summarize(text, {
+          context: options.context || `Summarizing content about: ${this.extractTopic(text)}`
+        });
+      } else {
+        // Fallback summarizer
+        return summarizer.summarize(text, options);
+      }
+    } catch (error) {
+      console.error('Summarization failed:', error);
+      return this.getFallbackSummary(text);
+    }
+  }
+
+  // === WRITER API ===
+  async checkWriterAvailability(options = {}) {
+    if (this.fallbackMode || typeof window === 'undefined') return 'available';
+    
+    try {
+      if (!window.ai?.writer?.availability) return 'unavailable';
+      return await window.ai.writer.availability(options);
+    } catch (error) {
+      console.warn('Writer availability check failed:', error);
+      return 'unavailable';
+    }
+  }
+
+  async createWriter(options = {}) {
+    try {
+      if (this.fallbackMode || typeof window === 'undefined') {
+        return this.createFallbackWriter();
+      }
+
+      const defaultOptions = {
+        tone: 'neutral',
+        format: 'markdown'
+      };
+
+      const writerOptions = { ...defaultOptions, ...options };
+      
+      if (window.ai?.writer?.create) {
+        this.writerInstance = await window.ai.writer.create(writerOptions);
+        console.log('✅ Chrome Writer created');  
+        return this.writerInstance;
+      } else {
+        throw new Error('Writer API not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Writer failed, using fallback:', error);
+      return this.createFallbackWriter();
+    }
+  }
+
+  async explainText(text, options = {}) {
+    try {
+      const writer = await this.createWriter({ tone: 'casual', ...options });
+      
+      const prompt = `Please explain the following in simple, easy-to-understand terms:\n\n${text}`;
+      
+      if (writer.write) {
+        return await writer.write(prompt, {
+          context: options.context || 'Provide a clear, educational explanation'
+        });
+      } else {
+        // Fallback writer
+        return writer.explain(text, options);
+      }
+    } catch (error) {
+      console.error('Explanation failed:', error);
+      return this.getFallbackExplanation(text);
+    }
+  }
+
+  // === REWRITER API ===
+  async checkRewriterAvailability(options = {}) {
+    if (this.fallbackMode || typeof window === 'undefined') return 'available';
+    
+    try {
+      if (!window.ai?.rewriter?.availability) return 'unavailable';
+      return await window.ai.rewriter.availability(options);
+    } catch (error) {
+      console.warn('Rewriter availability check failed:', error);
+      return 'unavailable';
+    }
+  }
+
+  async createRewriter(options = {}) {
+    try {
+      if (this.fallbackMode || typeof window === 'undefined') {
+        return this.createFallbackRewriter();
+      }
+
+      const defaultOptions = {
+        tone: 'as-is',
+        format: 'as-is'
+      };
+
+      const rewriterOptions = { ...defaultOptions, ...options };
+      
+      if (window.ai?.rewriter?.create) {
+        this.rewriterInstance = await window.ai.rewriter.create(rewriterOptions);
+        console.log('✅ Chrome Rewriter created');
+        return this.rewriterInstance;
+      } else {
+        throw new Error('Rewriter API not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Rewriter failed, using fallback:', error);
+      return this.createFallbackRewriter();
+    }
+  }
+
+  async rewriteText(text, style = 'formal', options = {}) {
+    try {
+      const rewriter = await this.createRewriter({ 
+        tone: style === 'casual' ? 'more-casual' : 'more-formal',
+        ...options 
+      });
+      
+      if (rewriter.rewrite) {
+        return await rewriter.rewrite(text, {
+          context: options.context || `Rewrite in ${style} style`
+        });
+      } else {
+        // Fallback rewriter
+        return rewriter.rewrite(text, style, options);
+      }
+    } catch (error) {
+      console.error('Rewriting failed:', error);
+      return this.getFallbackRewrite(text, style);
+    }
+  }
+
+  async proofreadText(text, options = {}) {
+    try {
+      const rewriter = await this.createRewriter({ 
+        tone: 'as-is',
+        ...options 
+      });
+      
+      if (rewriter.rewrite) {
+        return await rewriter.rewrite(text, {
+          context: 'Fix grammar, spelling, and improve clarity while maintaining the original meaning'
+        });
+      } else {
+        return rewriter.proofread(text, options);
+      }
+    } catch (error) {
+      console.error('Proofreading failed:', error);
+      return this.getFallbackProofread(text);
+    }
+  }
+
+  // === SPECIALIZED FUNCTIONS ===
+  async generateQuiz(text, questionCount = 5, options = {}) {
+    try {
+      const writer = await this.createWriter({ 
+        tone: 'formal',
+        sharedContext: 'Educational quiz generation',
+        ...options 
+      });
+      
+      const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format each question with:
+
+**Question [number]:** [Clear question]
+A) [Option A]
+B) [Option B] 
+C) [Option C]
+D) [Option D]
+**Correct Answer:** [Letter]) [Correct option repeated]
+
+After all questions, include:
+**ANSWER KEY:**
+[number]. [Letter]) [Brief explanation]
+
+Text to create quiz from: ${text}`;
+
+      if (writer.write) {
+        const result = await writer.write(prompt);
+        return `❓ **QUIZ GENERATED**\n\n${result}`;
+      } else {
+        return writer.generateQuiz(text, questionCount, options);
+      }
+    } catch (error) {
+      console.error('Quiz generation failed:', error);
+      return this.getFallbackQuiz(text, questionCount);
+    }
+  }
+
+  async generateStudyNotes(text, options = {}) {
+    try {
+      const writer = await this.createWriter({ 
+        tone: 'formal',
+        sharedContext: 'Educational study notes generation',
+        ...options 
+      });
+      
+      const prompt = `Create comprehensive study notes for the following content. Include:
+- Main topics and key concepts
+- Important details and explanations  
+- Study tips and questions
+- Real-world applications
+
+Content: ${text}`;
+
+      if (writer.write) {
+        const result = await writer.write(prompt);
+        return `📚 **STUDY NOTES**\n\n${result}`;
+      } else {
+        return writer.generateStudyNotes(text, options);
+      }
+    } catch (error) {
+      console.error('Study notes generation failed:', error);
+      return this.getFallbackStudyNotes(text);
+    }
+  }
+
+  async translateText(text, targetLanguage = 'es', options = {}) {
+    try {
+      const writer = await this.createWriter({ 
+        tone: 'neutral',
+        outputLanguage: targetLanguage,
+        ...options 
+      });
+      
+      const prompt = `Translate the following text to ${this.getLanguageName(targetLanguage)}:\n\n${text}`;
+
+      if (writer.write) {
+        const result = await writer.write(prompt);
+        return `🌐 **Translation to ${this.getLanguageName(targetLanguage)}**\n\n${result}`;
+      } else {
+        return writer.translate(text, targetLanguage, options);
+      }
+    } catch (error) {
+      console.error('Translation failed:', error);
+      return this.getFallbackTranslation(text, targetLanguage);
+    }
   }
 
   getSimpleFallback(action, text, options = {}) {
