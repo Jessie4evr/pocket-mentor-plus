@@ -184,7 +184,37 @@ Text: ${text}`;
     }
   },
 
-  async generateStudyNotes(text, options = {}) {
+  async generateQuizAnswers(text, questionCount = 5, options = {}) {
+    try {
+      // Use Prompt API for quiz answers
+      if ('LanguageModel' in self) {
+        const availability = await self.LanguageModel.availability();
+        if (availability !== 'unavailable') {
+          const session = await self.LanguageModel.create({
+            initialPrompts: [
+              { role: 'system', content: 'You are an expert quiz creator. Provide accurate answer keys with explanations.' }
+            ]
+          });
+          const prompt = `For the ${questionCount} questions about this text, provide the answer key with explanations:
+
+Format as:
+**ANSWER KEY:**
+1. [Letter]) [Brief explanation why this is correct]
+2. [Letter]) [Brief explanation why this is correct]
+3. [Letter]) [Brief explanation why this is correct]
+
+Text: ${text}`;
+
+          const result = await session.prompt(prompt);
+          return `🔑 **QUIZ ANSWERS & EXPLANATIONS**\n\n${result}`;
+        }
+      }
+      throw new Error('Prompt API not available');
+    } catch (error) {
+      console.warn('Chrome AI quiz answers failed, using fallback:', error);
+      return this.generateFallbackResponse('quizAnswers', text, { ...options, questionCount });
+    }
+  },
     try {
       // Use Prompt API for study notes
       if ('LanguageModel' in self) {
