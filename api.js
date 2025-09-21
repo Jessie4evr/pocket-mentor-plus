@@ -540,4 +540,9 @@ export async function generateStudyNotes(text, options) {
   return await pocketMentorAPI.generateStudyNotes(text, options);
 }
 
+// Export for CommonJS (service worker compatibility)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = pocketMentorAPI;
+}
+
 export default pocketMentorAPI;
