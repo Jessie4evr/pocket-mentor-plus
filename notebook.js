@@ -25,6 +25,21 @@ class PocketMentorNotebook {
     await this.loadApiKey();
     this.setupCharCounter();
     this.setupThemes();
+    
+    // Initialize quick AI session for faster responses
+    this.initializeQuickAI();
+  }
+
+  async initializeQuickAI() {
+    // Pre-load AI session for faster response times
+    try {
+      if (typeof pocketMentorAPI !== 'undefined' && pocketMentorAPI.initializeQuickSession) {
+        await pocketMentorAPI.initializeQuickSession();
+        console.log('✅ Quick AI session initialized');
+      }
+    } catch (error) {
+      console.warn('Quick AI initialization failed:', error);
+    }
   }
 
   bindElements() {
