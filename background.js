@@ -20,8 +20,11 @@ chrome.runtime.onInstalled.addListener(async () => {
   
   // Check AI capabilities
   try {
-    const capabilities = pocketMentorAPI.getCapabilities();
-    console.log('✅ AI Capabilities:', capabilities);
+    // Use global pocketMentorAPI instead of import
+    if (typeof pocketMentorAPI !== 'undefined') {
+      const capabilities = pocketMentorAPI.getCapabilities ? pocketMentorAPI.getCapabilities() : {};
+      console.log('✅ AI Capabilities:', capabilities);
+    }
   } catch (error) {
     console.warn('⚠️ AI capabilities check failed:', error);
   }
