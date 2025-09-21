@@ -145,16 +145,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   
   isInitialized = true;
   
-  // Check AI capabilities
-  try {
-    // Use global pocketMentorAPI instead of import
-    if (typeof pocketMentorAPI !== 'undefined') {
-      const capabilities = pocketMentorAPI.getCapabilities ? pocketMentorAPI.getCapabilities() : {};
-      console.log('✅ AI Capabilities:', capabilities);
-    }
-  } catch (error) {
-    console.warn('⚠️ AI capabilities check failed:', error);
-  }
+  // Log AI capabilities
+  console.log('✅ Simple AI processor ready');
 });
 
 // --- Create Context Menu Items ---
