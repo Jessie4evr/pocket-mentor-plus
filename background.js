@@ -6,37 +6,149 @@
 let isInitialized = false;
 let geminiConfig = null;
 
-// Simple AI API implementation to avoid import issues
-const simpleAI = {
+// === CHROME BUILT-IN AI IMPLEMENTATIONS ===
+const chromeAI = {
   async summarizeText(text, options = {}) {
-    return this.generateResponse('summarize', text, options);
+    try {
+      // Check availability first
+      if (typeof window !== 'undefined' && window.ai?.summarizer?.availability) {
+        const availability = await window.ai.summarizer.availability();
+        if (availability === 'unavailable') {
+          throw new Error('Summarizer API not available');
+        }
+      }
+
+      // Create summarizer with proper options
+      let summarizer;
+      if (typeof window !== 'undefined' && window.ai?.summarizer?.create) {
+        summarizer = await window.ai.summarizer.create({
+          type: 'key-points',
+          length: 'medium',
+          format: 'markdown'
+        });
+        return await summarizer.summarize(text);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Summarizer failed, using fallback:', error);
+      return this.generateFallbackResponse('summarize', text, options);
+    }
   },
 
   async explainText(text, options = {}) {
-    return this.generateResponse('explain', text, options);
+    try {
+      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
+        const writer = await window.ai.writer.create({
+          tone: 'casual',
+          format: 'markdown'
+        });
+        const prompt = `Please explain the following in simple, easy-to-understand terms:\n\n${text}`;
+        return await writer.write(prompt);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Writer failed, using fallback:', error);
+      return this.generateFallbackResponse('explain', text, options);
+    }
   },
 
   async rewriteText(text, style = 'formal', options = {}) {
-    return this.generateResponse('rewrite', text, options);
-  },
-
-  async translateText(text, targetLang = 'es', options = {}) {
-    return this.generateResponse('translate', text, { ...options, targetLanguage: targetLang });
+    try {
+      if (typeof window !== 'undefined' && window.ai?.rewriter?.create) {
+        const rewriter = await window.ai.rewriter.create({
+          tone: style === 'casual' ? 'more-casual' : 'more-formal'
+        });
+        return await rewriter.rewrite(text);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Rewriter failed, using fallback:', error);
+      return this.generateFallbackResponse('rewrite', text, options);
+    }
   },
 
   async proofreadText(text, options = {}) {
-    return this.generateResponse('proofread', text, options);
+    try {
+      if (typeof window !== 'undefined' && window.ai?.rewriter?.create) {
+        const rewriter = await window.ai.rewriter.create({
+          tone: 'as-is'
+        });
+        return await rewriter.rewrite(text, {
+          context: 'Fix grammar, spelling, and improve clarity'
+        });
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Rewriter failed, using fallback:', error);
+      return this.generateFallbackResponse('proofread', text, options);
+    }
+  },
+
+  async translateText(text, targetLanguage = 'es', options = {}) {
+    try {
+      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
+        const writer = await window.ai.writer.create({
+          outputLanguage: targetLanguage
+        });
+        const prompt = `Translate the following text to ${this.getLanguageName(targetLanguage)}:\n\n${text}`;
+        return await writer.write(prompt);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Writer failed, using fallback:', error);
+      return this.generateFallbackResponse('translate', text, { ...options, targetLanguage });
+    }
   },
 
   async generateQuiz(text, questionCount = 5, options = {}) {
-    return this.generateResponse('quiz', text, { ...options, questionCount });
+    try {
+      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
+        const writer = await window.ai.writer.create({
+          tone: 'formal'
+        });
+        const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format with A), B), C), D) options and include an ANSWER KEY:\n\n${text}`;
+        return await writer.write(prompt);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Writer failed, using fallback:', error);
+      return this.generateFallbackResponse('quiz', text, { ...options, questionCount });
+    }
   },
 
   async generateStudyNotes(text, options = {}) {
-    return this.generateResponse('studyNotes', text, options);
+    try {
+      if (typeof window !== 'undefined' && window.ai?.writer?.create) {
+        const writer = await window.ai.writer.create({
+          tone: 'formal'
+        });
+        const prompt = `Create comprehensive study notes for the following content:\n\n${text}`;
+        return await writer.write(prompt);
+      } else {
+        throw new Error('Chrome AI not available');
+      }
+    } catch (error) {
+      console.warn('Chrome Writer failed, using fallback:', error);
+      return this.generateFallbackResponse('studyNotes', text, options);
+    }
   },
 
-  generateResponse(action, text, options = {}) {
+  getLanguageName(code) {
+    const languages = {
+      es: 'Spanish', fr: 'French', de: 'German', zh: 'Chinese',
+      ja: 'Japanese', hi: 'Hindi', it: 'Italian', pt: 'Portuguese',
+      ru: 'Russian', ar: 'Arabic', ko: 'Korean'
+    };
+    return languages[code] || code.toUpperCase();
+  },
+
+  generateFallbackResponse(action, text, options = {}) {
     // Extract meaningful words for topic relevance
     const words = text.toLowerCase().split(/\W+/).filter(word => word.length > 4);
     const meaningfulWords = words.filter(word => 
