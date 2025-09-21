@@ -167,16 +167,27 @@ class PocketMentorNotebook {
         
         if (availableCount > 0) {
           this.elements.aiStatusBanner.className = 'status-message status-success';
-          this.elements.aiStatusBanner.textContent = `✅ ${availableCount} Chrome AI capabilities available and ready!`;
+          let statusText = `✅ Chrome Built-in AI ready! Available: `;
+          const availableAPIs = [];
           
-          // Hide banner after 3 seconds
+          if (capabilities.summarizer) availableAPIs.push('Summarizer');
+          if (capabilities.writer) availableAPIs.push('Writer');
+          if (capabilities.rewriter) availableAPIs.push('Rewriter');
+          if (capabilities.translator) availableAPIs.push('Translator');
+          if (capabilities.languageDetector) availableAPIs.push('Language Detector');
+          if (capabilities.promptAPI) availableAPIs.push('Prompt API (Gemini Nano)');
+          
+          statusText += availableAPIs.join(', ');
+          this.elements.aiStatusBanner.textContent = statusText;
+          
+          // Hide banner after 5 seconds
           setTimeout(() => {
             this.elements.aiStatusBanner.style.display = 'none';
-          }, 3000);
+          }, 5000);
         } else {
           this.elements.aiStatusBanner.className = 'status-message status-warning';
           this.elements.aiStatusBanner.innerHTML = `
-            ⚠️ Chrome Built-in AI not available. Using fallback Gemini API. 
+            ⚠️ Chrome Built-in AI not available. Enable at chrome://flags/#optimization-guide-on-device-model and chrome://flags/#prompt-api-for-gemini-nano
             <button onclick="this.parentElement.style.display='none'" style="background: none; border: none; color: inherit; cursor: pointer; margin-left: 10px;">×</button>
           `;
           
