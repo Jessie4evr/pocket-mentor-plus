@@ -220,21 +220,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     switch (info.menuItemId) {
       case "summarize":
-        result = await pocketMentorAPI.summarizeText(text);
+        result = await simpleAI.summarizeText(text);
         break;
       case "explain":
-        result = await pocketMentorAPI.explainText(text);
+        result = await simpleAI.explainText(text);
         break;
       case "simplify":
-        result = await pocketMentorAPI.rewriteText(text, 'casual');
+        result = await simpleAI.rewriteText(text, 'casual');
         break;
       case "translate":
         const prefs = await chrome.storage.local.get('preferences');
         const targetLang = prefs.preferences?.defaultLanguage || 'es';
-        result = await pocketMentorAPI.translateText(text, targetLang);
+        result = await simpleAI.translateText(text, targetLang);
         break;
       case "quiz":
-        result = await pocketMentorAPI.generateQuiz(text, 3);
+        result = await simpleAI.generateQuiz(text, 3);
         break;
       case "saveNote":
         result = text; // Save original text as note
