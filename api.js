@@ -781,24 +781,25 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Export individual functions for backward compatibility
+// Convenience functions for direct use
 export async function summarizeText(text, options) {
   return await pocketMentorAPI.summarizeText(text, options);
 }
 
-export async function translateText(text, targetLang, options) {
-  return await pocketMentorAPI.translateText(text, targetLang, options);
-}
-
-export async function proofreadText(text, options) {
-  return await pocketMentorAPI.proofreadText(text, options);
+export async function explainText(text, options) {
+  return await pocketMentorAPI.explainText(text, options);
 }
 
 export async function rewriteText(text, style, options) {
   return await pocketMentorAPI.rewriteText(text, style, options);
 }
 
-export async function explainText(text, options) {
-  return await pocketMentorAPI.explainText(text, options);
+export async function proofreadText(text, options) {
+  return await pocketMentorAPI.proofreadText(text, options);
+}
+
+export async function translateText(text, targetLanguage, options) {
+  return await pocketMentorAPI.translateText(text, targetLanguage, options);
 }
 
 export async function generateQuiz(text, questionCount, options) {
