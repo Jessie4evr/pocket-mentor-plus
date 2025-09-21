@@ -288,28 +288,29 @@ A) General background information
 B) Specific details about ${meaningfulWords[0] || 'the main subject'}
 C) Unrelated concepts
 D) Basic definitions only
-**Correct Answer:** B) Specific details about ${meaningfulWords[0] || 'the main subject'}
 
 **Question 2:** Which concept is emphasized in the content?
 A) ${meaningfulWords[1] || 'Key concept'}
 B) Random information
 C) General overview
 D) Background details
-**Correct Answer:** A) ${meaningfulWords[1] || 'Key concept'}
 
 **Question 3:** What supporting information is provided?
 A) Basic facts only
 B) Detailed examples
 C) Information about ${meaningfulWords[2] || 'supporting topics'}
 D) Minimal details
-**Correct Answer:** C) Information about ${meaningfulWords[2] || 'supporting topics'}
 
-**ANSWER KEY:**
+*${questionCount} question quiz generated - Configure API for enhanced quiz creation*`;
+
+      case 'quizAnswers':
+        return `🔑 **ANSWER KEY**
+
 1. B) The text specifically focuses on ${meaningfulWords[0] || 'the main topic'}
 2. A) ${meaningfulWords[1] || 'This concept'} is clearly discussed in your content
 3. C) Supporting details about ${meaningfulWords[2] || 'related topics'} are included
 
-*${questionCount} question quiz generated - Configure API for enhanced quiz creation*`;
+*Answer key generated - Configure API for enhanced explanations*`;
 
       case 'explain':
         return `💡 **Simple Explanation**
