@@ -4,7 +4,6 @@
 
 // Global state
 let isInitialized = false;
-let geminiConfig = null;
 
 // === CHROME BUILT-IN AI IMPLEMENTATIONS ===
 const chromeAI = {
