@@ -515,11 +515,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           break;
         case 'checkCapabilities':
           result = {
-            summarizer: true,
-            translator: true,
-            writer: true,
-            rewriter: true,
-            prompt: true
+            summarizer: 'ai' in self && !!self.ai?.summarizer,
+            writer: 'ai' in self && !!self.ai?.writer,
+            rewriter: 'ai' in self && !!self.ai?.rewriter,
+            translator: 'Translator' in self,
+            languageDetector: 'LanguageDetector' in self,
+            promptAPI: 'LanguageModel' in self
           };
           break;
         default:
