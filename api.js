@@ -873,6 +873,10 @@ export async function generateQuiz(text, questionCount, options) {
   return await pocketMentorAPI.generateQuiz(text, questionCount, options);
 }
 
+export async function generateQuizAnswers(text, questionCount, options) {
+  return await pocketMentorAPI.generateQuizAnswers(text, questionCount, options);
+}
+
 export async function generateStudyNotes(text, options) {
   return await pocketMentorAPI.generateStudyNotes(text, options);
 }
