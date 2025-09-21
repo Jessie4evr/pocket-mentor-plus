@@ -245,6 +245,8 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       result = await deleteNote(request.noteId);
     } else if (request.action === 'updateStats') {
       result = await updateStats();
+    } else if (request.action === 'getStats') {
+      result = await getStats();
     } else {
       throw new Error(`Unknown action: ${request.action}`);
     }
