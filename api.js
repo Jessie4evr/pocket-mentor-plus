@@ -452,38 +452,44 @@ class PocketMentorAPI {
   }
   async generateQuiz(text, questionCount = 5, options = {}) {
     try {
-      // Use Prompt API for quiz generation with structured output
-      const session = await this.createPromptSession({
-        initialPrompts: [
-          { role: 'system', content: 'You are an expert quiz creator. Generate high-quality multiple-choice questions with clear options and explanations.' }
-        ],
-        ...options
-      });
-      
-      const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. Format each question as:
+      // Use quick session for faster response
+      const prompt = `Create exactly ${questionCount} multiple-choice questions based on this text. 
+IMPORTANT: Only show the questions and options, do NOT include answers or answer key.
 
+Format each question as:
 **Question [number]:** [Clear question]
 A) [Option A]
 B) [Option B] 
 C) [Option C]
 D) [Option D]
-**Correct Answer:** [Letter]) [Correct option repeated]
-
-After all questions, include:
-**ANSWER KEY:**
-[number]. [Letter]) [Brief explanation]
 
 Text: ${text}`;
 
-      if (session.prompt) {
-        const result = await session.prompt(prompt);
-        return `❓ **QUIZ GENERATED**\n\n${result}`;
-      } else {
-        return session.generateQuiz(text, questionCount, options);
-      }
+      const result = await this.getQuickResponse(prompt, 'quiz');
+      return `❓ **QUIZ: Take the Quiz First**\n\n${result}\n\n*Complete the quiz, then click "Show Answers" to see the answer key*`;
     } catch (error) {
       console.error('Quiz generation failed:', error);
-      return this.getFallbackQuiz(text, questionCount);
+      return this.getFallbackQuiz(text, questionCount, false); // false = no answers initially
+    }
+  }
+
+  async generateQuizAnswers(text, questionCount = 5, options = {}) {
+    try {
+      const prompt = `For the ${questionCount} questions about this text, provide the answer key with explanations:
+
+Format as:
+**ANSWER KEY:**
+1. [Letter]) [Brief explanation why this is correct]
+2. [Letter]) [Brief explanation why this is correct]
+3. [Letter]) [Brief explanation why this is correct]
+
+Text: ${text}`;
+
+      const result = await this.getQuickResponse(prompt, 'answers');
+      return `🔑 **QUIZ ANSWERS & EXPLANATIONS**\n\n${result}`;
+    } catch (error) {
+      console.error('Quiz answers generation failed:', error);
+      return this.getFallbackQuizAnswers(text, questionCount);
     }
   }
 
