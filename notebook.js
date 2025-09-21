@@ -338,7 +338,7 @@ class PocketMentorNotebook {
       // First try to get current tab
       const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
-      if (!activeTab) {
+      if (!activeTab || !activeTab.url) {
         throw new Error('No active tab found');
       }
 
