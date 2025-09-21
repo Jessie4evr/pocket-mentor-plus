@@ -1,4 +1,5 @@
 // ===== Pocket Mentor+ Popup Script 🎓✨ =====
+// Optimized for faster loading and better performance
 
 import pocketMentorAPI from './api.js';
 import themeManager from './theme-manager.js';
@@ -7,6 +8,8 @@ class PocketMentorPopup {
   constructor() {
     this.elements = {};
     this.isLoading = false;
+    this.currentQuizText = '';
+    this.currentQuizCount = 5;
     this.init();
   }
 
@@ -17,6 +20,7 @@ class PocketMentorPopup {
     this.loadRecentNotes();
     this.checkAIStatus();
     this.setupThemes();
+    this.loadInputState();
   }
 
   bindElements() {
@@ -29,14 +33,15 @@ class PocketMentorPopup {
       quickOutput: document.getElementById('quickOutput'),
       openNotebook: document.getElementById('openNotebook'),
       checkCapabilities: document.getElementById('checkCapabilities'),
-      summarizeVideo: document.getElementById('summarizeVideo'),
       quickNotes: document.getElementById('quickNotes'),
       quickSummarize: document.getElementById('quickSummarize'),
       quickExplain: document.getElementById('quickExplain'),
       quickTranslate: document.getElementById('quickTranslate'),
       quickProofread: document.getElementById('quickProofread'),
       recentNotesList: document.getElementById('recentNotesList'),
-      clearNotes: document.getElementById('clearNotes')
+      clearNotes: document.getElementById('clearNotes'),
+      answerKeySection: document.getElementById('answerKeySection'),
+      showAnswerKey: document.getElementById('showAnswerKey')
     };
   }
 
@@ -48,7 +53,6 @@ class PocketMentorPopup {
     // Navigation
     this.elements.openNotebook.addEventListener('click', () => this.openNotebook());
     this.elements.checkCapabilities.addEventListener('click', () => this.checkCapabilities());
-    this.elements.summarizeVideo.addEventListener('click', () => this.summarizeVideo());
     this.elements.quickNotes.addEventListener('click', () => this.showQuickNotes());
 
     // Quick actions
@@ -56,6 +60,9 @@ class PocketMentorPopup {
     this.elements.quickExplain.addEventListener('click', () => this.handleQuickAction('explain'));
     this.elements.quickTranslate.addEventListener('click', () => this.handleQuickAction('translate'));
     this.elements.quickProofread.addEventListener('click', () => this.handleQuickAction('proofread'));
+
+    // Answer key functionality
+    this.elements.showAnswerKey.addEventListener('click', () => this.showAnswerKey());
 
     // Notes management
     this.elements.clearNotes.addEventListener('click', () => this.clearNotes());
@@ -69,6 +76,82 @@ class PocketMentorPopup {
     document.addEventListener('themeChanged', (e) => {
       this.updateThemeToggleText(e.detail.theme);
     });
+
+    // Add context menu for generating quiz
+    this.elements.quickInput.addEventListener('contextmenu', (e) => {
+      if (this.elements.quickInput.value.trim().length > 50) {
+        this.showQuizContextMenu(e);
+      }
+    });
+  }
+
+  showQuizContextMenu(e) {
+    e.preventDefault();
+    
+    // Remove existing context menu
+    const existing = document.querySelector('.quiz-context-menu');
+    if (existing) existing.remove();
+    
+    const menu = document.createElement('div');
+    menu.className = 'quiz-context-menu';
+    menu.innerHTML = `
+      <div class="context-menu-item" data-action="generateQuiz">❓ Generate Quiz</div>
+    `;
+    
+    menu.style.cssText = `
+      position: fixed;
+      top: ${e.clientY}px;
+      left: ${e.clientX}px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10000;
+      font-size: 14px;
+    `;
+    
+    document.body.appendChild(menu);
+    
+    menu.addEventListener('click', (e) => {
+      if (e.target.dataset.action === 'generateQuiz') {
+        this.handleQuickAction('generateQuiz');
+      }
+      menu.remove();
+    });
+    
+    // Remove on outside click
+    setTimeout(() => {
+      document.addEventListener('click', () => menu.remove(), { once: true });
+    }, 10);
+  }
+
+  async showAnswerKey() {
+    if (!this.currentQuizText) {
+      this.showMessage('❌ No quiz found to generate answers for', 'error');
+      return;
+    }
+
+    this.showLoading('🔑 Generating answer key...');
+    
+    try {
+      const response = await chrome.runtime.sendMessage({
+        action: 'generateQuizAnswers',
+        text: this.currentQuizText,
+        questionCount: this.currentQuizCount,
+        options: { format: 'markdown' }
+      });
+
+      if (response.success) {
+        this.showResult(response.result);
+        // Hide the answer key button after showing answers
+        this.elements.answerKeySection.style.display = 'none';
+      } else {
+        this.showMessage(`❌ Answer key generation failed: ${response.error}`, 'error');
+      }
+    } catch (error) {
+      console.error('Answer key generation failed:', error);
+      this.showMessage('❌ Answer key generation failed', 'error');
+    }
   }
 
   setupThemes() {
@@ -106,63 +189,6 @@ class PocketMentorPopup {
     
     if (!isVisible) {
       this.setupThemes(); // Refresh when opening
-    }
-  }
-
-  async summarizeVideo() {
-    this.showLoading('🎥 Looking for videos to summarize...');
-    
-    try {
-      // First try to get current tab
-      const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      
-      if (!activeTab) {
-        throw new Error('No active tab found');
-      }
-
-      // Check if we're on a video site
-      const videoSites = ['youtube.com', 'vimeo.com', 'dailymotion.com'];
-      const isVideoSite = videoSites.some(site => activeTab.url.includes(site));
-      
-      if (!isVideoSite) {
-        this.showMessage('⚠️ Please navigate to a video page (YouTube, Vimeo, etc.) first', 'warning');
-        return;
-      }
-
-      // Try to send message to content script
-      try {
-        const response = await chrome.tabs.sendMessage(activeTab.id, {
-          action: 'analyzeVideo',
-          options: { source: 'popup' }
-        });
-
-        if (response && response.success) {
-          this.showResult(response.result);
-        } else {
-          throw new Error('Content script did not respond');
-        }
-      } catch (contentScriptError) {
-        // Fallback: generate mock video summary based on page URL
-        console.warn('Content script not available, using fallback:', contentScriptError);
-        
-        const videoTitle = activeTab.title || 'Video Content';
-        const mockVideoText = `Video Analysis for: ${videoTitle}\n\nURL: ${activeTab.url}\n\nThis video contains educational content that can be analyzed for key concepts, main topics, and learning points.`;
-        
-        const response = await chrome.runtime.sendMessage({
-          action: 'generateStudyNotes', 
-          text: mockVideoText,
-          options: { context: 'video-analysis' }
-        });
-
-        if (response && response.success) {
-          this.showResult(`🎥 **Video Summary: ${videoTitle}**\n\n${response.result}`);
-        } else {
-          throw new Error('Video analysis failed');
-        }
-      }
-    } catch (error) {
-      console.error('Video summarization failed:', error);
-      this.showMessage('❌ Video summarization failed. Make sure you\'re on a video page and try again.', 'error');
     }
   }
 
@@ -217,7 +243,6 @@ class PocketMentorPopup {
       quiz: '❓',
       generateQuiz: '❓',
       generateStudyNotes: '📚',
-      'video-summary': '🎥',
       saved: '💾'
     };
     return icons[type] || '📄';
@@ -322,14 +347,41 @@ class PocketMentorPopup {
     this.showLoading(`${this.capitalizeFirst(action)}ing...`);
     
     try {
-      const response = await chrome.runtime.sendMessage({
-        action: action,
-        text: text,
-        options: { format: 'markdown' }
-      });
+      let response;
+      
+      if (action === 'generateQuiz') {
+        // Store quiz info for answer key
+        this.currentQuizText = text;
+        this.currentQuizCount = 5; // Default question count
+        
+        response = await chrome.runtime.sendMessage({
+          action: 'generateQuiz',
+          text: text,
+          questionCount: this.currentQuizCount,
+          options: { format: 'markdown' }
+        });
+        
+        if (response.success) {
+          this.showResult(response.result);
+          // Show answer key button after quiz is generated
+          this.elements.answerKeySection.style.display = 'block';
+        }
+      } else {
+        // Hide answer key section for non-quiz actions
+        this.elements.answerKeySection.style.display = 'none';
+        
+        response = await chrome.runtime.sendMessage({
+          action: action,
+          text: text,
+          options: { format: 'markdown' }
+        });
+
+        if (response.success) {
+          this.showResult(response.result);
+        }
+      }
 
       if (response.success) {
-        this.showResult(response.result);
         this.loadRecentNotes(); // Refresh notes list
       } else {
         this.showMessage(`❌ ${this.capitalizeFirst(action)} failed: ${response.error}`, 'error');
@@ -415,6 +467,7 @@ class PocketMentorPopup {
     
     setTimeout(async () => {
       try {
+        await pocketMentorAPI.waitForInit();
         const isReady = pocketMentorAPI.isReady();
         if (isReady) {
           this.showMessage('✅ AI is ready for use', 'success');
@@ -424,7 +477,7 @@ class PocketMentorPopup {
       } catch (error) {
         this.showMessage('❌ AI unavailable. Check Chrome flags', 'error');
       }
-    }, 1000);
+    }, 500); // Reduced delay for faster feedback
   }
 
   showLoading(message) {
@@ -463,26 +516,6 @@ class PocketMentorPopup {
       .replace(/\n/g, '<br>');
   }
 
-  formatDate(dateString) {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    
-    if (diffHours < 1) {
-      return 'Just now';
-    } else if (diffHours < 24) {
-      return `${diffHours}h ago`;
-    } else {
-      return date.toLocaleDateString();
-    }
-  }
-
-  truncateText(text, maxLength) {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  }
-
   capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
@@ -505,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
   new PocketMentorPopup();
 });
 
-// Add some basic styles for the popup-specific elements
+// Add enhanced styles for the popup-specific elements
 const style = document.createElement('style');
 style.textContent = `
   .recent-note {
@@ -515,10 +548,12 @@ style.textContent = `
     padding: 10px;
     margin-bottom: 8px;
     font-size: 0.85rem;
+    transition: all 0.2s ease;
   }
   
   .recent-note:hover {
     background: rgba(184, 134, 11, 0.15);
+    transform: translateY(-1px);
   }
   
   .note-header {
@@ -557,6 +592,42 @@ style.textContent = `
     gap: 8px;
     font-style: italic;
     opacity: 0.8;
+  }
+  
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--primary-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .quiz-context-menu {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .context-menu-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .context-menu-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  #answerKeySection {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 `;
 document.head.appendChild(style);
