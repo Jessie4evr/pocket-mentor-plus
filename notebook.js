@@ -86,7 +86,6 @@ class PocketMentorNotebook {
     this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
     this.elements.themesBtn.addEventListener('click', () => this.toggleThemesPanel());
     this.elements.closeThemesPanel.addEventListener('click', () => this.closeThemesPanel());
-    this.elements.videoSummaryBtn.addEventListener('click', () => this.analyzeVideo());
     this.elements.checkCapabilities.addEventListener('click', () => this.checkCapabilities());
     this.elements.quickNotes.addEventListener('click', () => this.showQuickNotes());
 
