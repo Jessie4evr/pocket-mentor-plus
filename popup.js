@@ -41,7 +41,12 @@ class PocketMentorPopup {
       recentNotesList: document.getElementById('recentNotesList'),
       clearNotes: document.getElementById('clearNotes'),
       answerKeySection: document.getElementById('answerKeySection'),
-      showAnswerKey: document.getElementById('showAnswerKey')
+      showAnswerKey: document.getElementById('showAnswerKey'),
+      // Upload elements
+      fileUpload: document.getElementById('fileUpload'),
+      uploadBtn: document.getElementById('uploadBtn'),
+      uploadStatus: document.getElementById('uploadStatus'),
+      downloadNotes: document.getElementById('downloadNotes')
     };
   }
 
