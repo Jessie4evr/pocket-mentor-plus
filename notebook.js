@@ -8,6 +8,9 @@ class PocketMentorNotebook {
   constructor() {
     this.elements = {};
     this.currentResult = null;
+    this.currentQuizText = '';
+    this.currentQuizCount = 5;
+    this.selectedNoteId = null;
     this.notes = [];
     this.stats = {};
     this.isLoading = false;
