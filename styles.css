@@ -833,6 +833,80 @@ button:disabled {
   animation: pulse 2s infinite;
 }
 
+/* Upload Section Styles */
+.upload-section {
+  margin: 16px 0;
+  padding: 16px;
+  border: 2px dashed var(--border-color, #ddd);
+  border-radius: 12px;
+  text-align: center;
+  background: var(--background-secondary, #f8f9fa);
+  transition: all 0.3s ease;
+}
+
+.upload-section:hover {
+  border-color: var(--primary-gold, #b8860b);
+  background: var(--accent-color, #f0f8ff);
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-upload-btn {
+  background: var(--primary-gold, #b8860b);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.file-upload-btn:hover {
+  background: var(--secondary-gold, #daa520);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+}
+
+.upload-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted, #666);
+  margin: 0;
+}
+
+.upload-status {
+  min-height: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.notes-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.status-info {
+  color: var(--accent-color, #007bff);
+}
+
+.status-success {
+  color: var(--success-color, #28a745);
+}
+
+.status-warning {
+  color: var(--warning-color, #ffc107);
+}
+
+.status-error {
+  color: var(--error-color, #dc3545);
+}
+
 /* Enhanced Footer */
 .app-footer {
   text-align: center;
