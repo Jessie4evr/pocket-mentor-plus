@@ -951,6 +951,63 @@ This video appears to contain educational content that can be valuable for learn
       timeout = setTimeout(later, wait);
     };
   }
+
+  async showAnswerKey() {
+    if (!this.currentQuizText) {
+      this.showMessage('❌ No quiz found to generate answers for', 'error');
+      return;
+    }
+
+    this.showLoading('🔑 Generating answer key...');
+    
+    try {
+      const response = await chrome.runtime.sendMessage({
+        action: 'generateQuizAnswers',
+        text: this.currentQuizText,
+        questionCount: this.currentQuizCount,
+        options: { format: 'markdown' }
+      });
+
+      if (response.success) {
+        this.showResult(response.result);
+        // Hide the answer key button after showing answers
+        this.elements.showAnswerKey.style.display = 'none';
+      } else {
+        this.showMessage(`❌ Answer key generation failed: ${response.error}`, 'error');
+      }
+    } catch (error) {
+      console.error('Answer key generation failed:', error);
+      this.showMessage('❌ Answer key generation failed', 'error');
+    }
+  }
+
+  async loadSelectedNoteToTextbox() {
+    if (!this.selectedNoteId) {
+      this.showMessage('⚠️ Please select a note first by clicking on it', 'warning');
+      return;
+    }
+
+    try {
+      const note = this.notes.find(n => n.id === this.selectedNoteId);
+      if (note) {
+        // Load the original text or processed text into the input box
+        const textToLoad = note.originalText || note.processedText || '';
+        this.elements.inputBox.value = textToLoad;
+        this.updateCharCount();
+        
+        // Scroll to input box
+        this.elements.inputBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        this.elements.inputBox.focus();
+        
+        this.showMessage(`✅ Loaded note "${this.truncateText(textToLoad, 50)}" into textbox`, 'success');
+      } else {
+        this.showMessage('❌ Note not found', 'error');
+      }
+    } catch (error) {
+      console.error('Failed to load note to textbox:', error);
+      this.showMessage('❌ Failed to load note', 'error');
+    }
+  }
 }
 
 // Initialize notebook when DOM is loaded
