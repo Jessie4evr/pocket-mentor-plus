@@ -102,35 +102,35 @@ class ThemeManager {
         }
       },
       neon: {
-        name: '🌟 Neon Dreams',
+        name: '🐰 Alice in Wonderland',
         colors: {
-          primary: '#00ffff',
-          primaryDark: '#00cccc',
-          primaryLight: '#7fffffff',
-          background: '#0a0a0a',
-          surface: '#1a1a2e',
-          text: '#00ffff',
-          textLight: '#ff00ff',
-          accent: '#00ff41',
-          success: '#00ff00',
-          warning: '#ffff00',
-          error: '#ff0080'
+          primary: '#8B4513',
+          primaryDark: '#654321',
+          primaryLight: '#CD853F',
+          background: '#F0F8FF',
+          surface: '#FFFACD',
+          text: '#2F4F4F',
+          textLight: '#696969',
+          accent: '#FF69B4',
+          success: '#32CD32',
+          warning: '#FFD700',
+          error: '#DC143C'
         }
       },
       matrix: {
-        name: '💚 Matrix Code',
+        name: '🔢 Matrix 1010',
         colors: {
-          primary: '#00ff00',
-          primaryDark: '#00cc00',
-          primaryLight: '#39ff14',
+          primary: '#00FF41',
+          primaryDark: '#008F11',
+          primaryLight: '#39FF14',
           background: '#000000',
           surface: '#001100',
-          text: '#00ff00',
-          textLight: '#009900',
-          accent: '#00cc00',
-          success: '#00ff00',
-          warning: '#ffff00',
-          error: '#ff0000'
+          text: '#00FF41',
+          textLight: '#006600',
+          accent: '#00FF00',
+          success: '#00FF00',
+          warning: '#FFFF00',
+          error: '#FF0000'
         }
       }
     };
