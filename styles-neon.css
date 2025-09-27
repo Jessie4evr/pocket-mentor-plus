@@ -1,0 +1,263 @@
+/* ===== Pocket Mentor+ Neon Theme 🌟✨ ===== */
+
+:root.neon-theme {
+  /* Neon Color Palette */
+  --primary-gold: #00ffff;
+  --secondary-gold: #ff00ff;
+  --accent-color: #00ff41;
+  --background-primary: #0a0a0a;
+  --background-secondary: #1a1a2e;
+  --background-tertiary: #16213e;
+  --text-primary: #00ffff;
+  --text-secondary: #ff00ff;
+  --text-muted: #00ff9f;
+  --border-color: #00ffff;
+  --hover-color: #ff00ff;
+  --success-color: #00ff41;
+  --warning-color: #ffff00;
+  --error-color: #ff0080;
+  --shadow-primary: 0 0 20px rgba(0, 255, 255, 0.5);
+  --shadow-secondary: 0 0 15px rgba(255, 0, 255, 0.3);
+  --gradient-primary: linear-gradient(135deg, #00ffff, #ff00ff);
+  --gradient-secondary: linear-gradient(45deg, #00ff41, #00ffff);
+  --glow-primary: 0 0 10px currentColor;
+  --glow-secondary: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.neon-theme {
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+}
+
+.neon-theme .popup-container,
+.neon-theme .notebook-container {
+  background: var(--background-primary);
+  border: 2px solid var(--primary-gold);
+  box-shadow: var(--shadow-primary);
+}
+
+.neon-theme .popup-header {
+  background: var(--gradient-primary);
+  color: #000000;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.neon-theme .app-title {
+  color: #000000;
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.9);
+  font-weight: 900;
+}
+
+.neon-theme .tagline {
+  color: #000000;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+}
+
+/* Buttons */
+.neon-theme .primary-btn {
+  background: var(--gradient-primary);
+  color: #000000;
+  border: 2px solid var(--primary-gold);
+  box-shadow: var(--glow-primary);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.neon-theme .primary-btn:hover {
+  box-shadow: var(--glow-secondary);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.neon-theme .secondary-btn {
+  background: transparent;
+  color: var(--secondary-gold);
+  border: 2px solid var(--secondary-gold);
+  box-shadow: 0 0 5px rgba(255, 0, 255, 0.5);
+}
+
+.neon-theme .secondary-btn:hover {
+  background: var(--secondary-gold);
+  color: #000000;
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+}
+
+.neon-theme .theme-btn {
+  background: var(--background-tertiary);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+}
+
+.neon-theme .theme-btn:hover {
+  background: var(--accent-color);
+  color: #000000;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.6);
+}
+
+/* Input Elements */
+.neon-theme textarea,
+.neon-theme input[type="text"],
+.neon-theme input[type="file"] {
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+  border: 2px solid var(--primary-gold);
+  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.neon-theme textarea:focus,
+.neon-theme input:focus {
+  border-color: var(--secondary-gold);
+  box-shadow: var(--glow-secondary);
+  outline: none;
+}
+
+.neon-theme textarea::placeholder,
+.neon-theme input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* Output and Results */
+.neon-theme .output-panel {
+  background: var(--background-secondary);
+  border: 2px solid var(--accent-color);
+  box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+.neon-theme .result-content {
+  color: var(--text-primary);
+  text-shadow: 0 0 2px rgba(0, 255, 255, 0.5);
+}
+
+.neon-theme .status-message {
+  border-left: 4px solid var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.neon-theme .status-success {
+  border-left-color: var(--success-color);
+  background: rgba(0, 255, 65, 0.1);
+  color: var(--success-color);
+}
+
+.neon-theme .status-warning {
+  border-left-color: var(--warning-color);
+  background: rgba(255, 255, 0, 0.1);
+  color: var(--warning-color);
+}
+
+.neon-theme .status-error {
+  border-left-color: var(--error-color);
+  background: rgba(255, 0, 128, 0.1);
+  color: var(--error-color);
+}
+
+/* Notes */
+.neon-theme .recent-note {
+  background: var(--background-tertiary);
+  border: 1px solid var(--primary-gold);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+}
+
+.neon-theme .recent-note:hover {
+  border-color: var(--secondary-gold);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.neon-theme .note-type {
+  background: var(--gradient-secondary);
+  color: #000000;
+  text-shadow: 0 0 3px rgba(0, 255, 255, 0.8);
+  font-weight: bold;
+}
+
+.neon-theme .note-preview {
+  color: var(--text-secondary);
+}
+
+/* Upload Section */
+.neon-theme .upload-section {
+  background: var(--background-secondary);
+  border: 2px dashed var(--accent-color);
+  box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1);
+}
+
+.neon-theme .upload-section:hover {
+  border-color: var(--primary-gold);
+  box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.neon-theme .file-upload-btn {
+  background: var(--gradient-secondary);
+  color: #000000;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  font-weight: bold;
+}
+
+.neon-theme .file-upload-btn:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+  transform: scale(1.05);
+}
+
+/* Loading Animation */
+.neon-theme .spinner {
+  border-top-color: var(--primary-gold);
+  filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.8));
+}
+
+/* Scrollbar */
+.neon-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.neon-theme ::-webkit-scrollbar-track {
+  background: var(--background-tertiary);
+}
+
+.neon-theme ::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.neon-theme ::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+}
+
+/* Special Effects */
+.neon-theme h1, .neon-theme h2, .neon-theme h3 {
+  text-shadow: 0 0 10px currentColor;
+}
+
+.neon-theme .glow-effect {
+  animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+  from {
+    text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+  }
+  to {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+}
+
+.neon-theme .pulse-border {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  }
+  50% {
+    border-color: var(--secondary-gold);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+  }
+}

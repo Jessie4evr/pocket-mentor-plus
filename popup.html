@@ -46,6 +46,19 @@
       </div>
     </section>
 
+    <!-- Upload Section -->
+    <section class="upload-section fade-in-up" aria-label="Upload Notes">
+      <h3>📤 Upload Notes</h3>
+      <div class="upload-area">
+        <input type="file" id="fileUpload" accept=".txt,.json,.md,.csv" multiple style="display: none;">
+        <button id="uploadBtn" class="file-upload-btn">
+          📁 Upload Text Files
+        </button>
+        <p class="upload-hint">Upload .txt, .json, .md, or .csv files to import as notes</p>
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+    </section>
+
     <!-- Text Input -->
     <section class="input-section fade-in-up" aria-label="Text Input">
       <label for="quickInput" class="sr-only">Enter text for quick processing</label>
@@ -95,7 +108,10 @@
     <section class="recent-notes fade-in-up" aria-label="Recent Notes">
       <div class="notes-header">
         <h3>📚 Recent Notes</h3>
-        <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
+        <div class="notes-controls">
+          <button id="downloadNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px; margin-right: 4px;">📥 Download</button>
+          <button id="clearNotes" class="theme-btn" style="font-size: 0.8rem; padding: 4px 8px;">Clear All</button>
+        </div>
       </div>
       <div id="recentNotesList" class="recent-notes-list">
         <p>No recent notes. Start by processing some text!</p>
