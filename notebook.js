@@ -114,10 +114,12 @@ class PocketMentorNotebook {
     // Output controls
     this.elements.saveResult.addEventListener('click', () => this.saveCurrentResult());
     this.elements.copyResult.addEventListener('click', () => this.copyResult());
+    this.elements.showAnswerKey.addEventListener('click', () => this.showAnswerKey());
 
     // Notes controls
     this.elements.refreshNotes.addEventListener('click', () => this.loadNotes());
     this.elements.notesFilter.addEventListener('change', () => this.filterNotes());
+    this.elements.loadNoteToTextbox.addEventListener('click', () => this.loadSelectedNoteToTextbox());
     this.elements.exportNotes.addEventListener('click', () => this.exportNotes());
     this.elements.clearAllNotes.addEventListener('click', () => this.clearAllNotes());
 
