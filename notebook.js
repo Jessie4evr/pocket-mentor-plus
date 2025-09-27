@@ -758,11 +758,32 @@ This video appears to contain educational content that can be valuable for learn
     
     this.elements.notesContainer.innerHTML = notesHTML;
     
-    // Attach delete handlers
+    // Attach delete handlers and click handlers
     this.elements.notesContainer.querySelectorAll('.delete-note').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.deleteNote(btn.dataset.noteId);
+      });
+    });
+    
+    // Add click handlers to select notes
+    this.elements.notesContainer.querySelectorAll('.note-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // Don't select if clicking delete button
+        if (e.target.classList.contains('delete-note')) return;
+        
+        // Remove previous selection
+        this.elements.notesContainer.querySelectorAll('.note-card').forEach(c => {
+          c.style.borderColor = '';
+          c.style.backgroundColor = '';
+        });
+        
+        // Select current note
+        card.style.borderColor = 'var(--primary-gold, #b8860b)';
+        card.style.backgroundColor = 'rgba(184, 134, 11, 0.1)';
+        this.selectedNoteId = card.dataset.noteId;
+        
+        this.showMessage(`📋 Note selected. Click "Load Selected to Textbox" to edit it.`, 'info');
       });
     });
   }
