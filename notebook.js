@@ -35,7 +35,6 @@ class PocketMentorNotebook {
       themesPanel: document.getElementById('themesPanel'),
       themeGrid: document.getElementById('themeGrid'),
       closeThemesPanel: document.getElementById('closeThemesPanel'),
-      videoSummaryBtn: document.getElementById('videoSummaryBtn'),
       checkCapabilities: document.getElementById('checkCapabilities'),
       quickNotes: document.getElementById('quickNotes'),
       aiStatusBanner: document.getElementById('aiStatusBanner'),
