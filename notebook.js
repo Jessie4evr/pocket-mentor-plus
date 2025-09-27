@@ -518,6 +518,18 @@ This video appears to contain educational content that can be valuable for learn
           timestamp: new Date().toISOString()
         };
         
+        // Track quiz info for answer key
+        if (action === 'generateQuiz') {
+          this.currentQuizText = text;
+          this.currentQuizCount = questionCount;
+          // Show answer key button
+          this.elements.showAnswerKey.style.display = 'inline-block';
+          this.elements.showAnswerKey.disabled = false;
+        } else {
+          // Hide answer key button for non-quiz actions
+          this.elements.showAnswerKey.style.display = 'none';
+        }
+        
         this.showResult(response.result);
         this.enableResultActions();
         await this.loadNotes(); // Refresh notes
