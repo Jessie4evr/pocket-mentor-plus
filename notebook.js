@@ -64,11 +64,13 @@ class PocketMentorNotebook {
       outputBox: document.getElementById('outputBox'),
       saveResult: document.getElementById('saveResult'),
       copyResult: document.getElementById('copyResult'),
+      showAnswerKey: document.getElementById('showAnswerKey'),
       
       // Notes elements
       notesContainer: document.getElementById('notesContainer'),
       notesFilter: document.getElementById('notesFilter'),
       refreshNotes: document.getElementById('refreshNotes'),
+      loadNoteToTextbox: document.getElementById('loadNoteToTextbox'),
       exportNotes: document.getElementById('exportNotes'),
       clearAllNotes: document.getElementById('clearAllNotes'),
       
