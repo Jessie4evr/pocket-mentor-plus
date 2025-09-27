@@ -219,6 +219,14 @@ class ThemeManager {
       case 'rose':
         styleElement.textContent = this.getRoseStyles();
         break;
+      case 'neon':
+        // Alice in Wonderland theme - load external CSS
+        this.loadExternalThemeCSS('styles-alice.css');
+        return;
+      case 'matrix':
+        // Matrix 1010 theme - load external CSS  
+        this.loadExternalThemeCSS('styles-matrix1010.css');
+        return;
       default:
         styleElement.textContent = this.getDefaultStyles();
     }
