@@ -178,11 +178,16 @@ class ThemeManager {
     // Remove existing theme classes
     document.body.classList.remove(
       'light-theme', 'dark-theme', 'cyberpunk-theme', 
-      'forest-theme', 'ocean-theme', 'rose-theme'
+      'forest-theme', 'ocean-theme', 'rose-theme',
+      'neon-theme', 'matrix-theme', 'alice-theme', 'matrix1010-theme'
     );
 
-    // Add new theme class
-    document.body.classList.add(`${themeName}-theme`);
+    // Add new theme class  
+    const themeClass = themeName === 'neon' ? 'alice-theme' : 
+                      themeName === 'matrix' ? 'matrix1010-theme' : 
+                      `${themeName}-theme`;
+    
+    document.body.classList.add(themeClass);
 
     // Apply CSS custom properties
     Object.entries(theme.colors).forEach(([key, value]) => {
