@@ -450,6 +450,194 @@ class PocketMentorPopup {
     }
   }
 
+  async downloadNotes() {
+    try {
+      const response = await chrome.runtime.sendMessage({ action: 'getNotes' });
+      
+      if (response.success && response.result.length > 0) {
+        const notes = response.result;
+        const exportData = {
+          exportDate: new Date().toISOString(),
+          totalNotes: notes.length,
+          notes: notes.map(note => ({
+            id: note.id,
+            type: note.type,
+            originalText: note.originalText,
+            processedText: note.processedText,
+            createdAt: note.createdAt,
+            url: note.url,
+            title: note.title
+          }))
+        };
+
+        // Create and download file
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pocket-mentor-notes-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.showMessage(`✅ Downloaded ${notes.length} notes`, 'success');
+      } else {
+        this.showMessage('📝 No notes to download', 'info');
+      }
+    } catch (error) {
+      console.error('Failed to download notes:', error);
+      this.showMessage('❌ Failed to download notes', 'error');
+    }
+  }
+
+  async handleFileUpload(event) {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    this.elements.uploadStatus.innerHTML = `<span class="status-info">📤 Processing ${files.length} file(s)...</span>`;
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const file of files) {
+      try {
+        const content = await this.readFileContent(file);
+        const notes = await this.parseFileContent(content, file.name);
+        
+        for (const note of notes) {
+          await chrome.runtime.sendMessage({
+            action: 'saveNote',
+            note: {
+              type: 'uploaded',
+              originalText: note.content,
+              processedText: `📁 Uploaded from: ${file.name}\n\n${note.content}`,
+              title: note.title || file.name,
+              url: 'local-upload',
+              uploadInfo: {
+                fileName: file.name,
+                fileSize: file.size,
+                uploadDate: new Date().toISOString()
+              }
+            }
+          });
+          successCount++;
+        }
+      } catch (error) {
+        console.error(`Failed to process file ${file.name}:`, error);
+        errorCount++;
+      }
+    }
+
+    // Update status
+    if (successCount > 0 && errorCount === 0) {
+      this.elements.uploadStatus.innerHTML = `<span class="status-success">✅ Successfully uploaded ${successCount} note(s)</span>`;
+    } else if (successCount > 0 && errorCount > 0) {
+      this.elements.uploadStatus.innerHTML = `<span class="status-warning">⚠️ Uploaded ${successCount} note(s), ${errorCount} failed</span>`;
+    } else {
+      this.elements.uploadStatus.innerHTML = `<span class="status-error">❌ Failed to upload files</span>`;
+    }
+
+    // Clear status after 5 seconds
+    setTimeout(() => {
+      this.elements.uploadStatus.innerHTML = '';
+    }, 5000);
+
+    // Refresh notes list
+    this.loadRecentNotes();
+    
+    // Clear file input
+    event.target.value = '';
+  }
+
+  async readFileContent(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(new Error(`Failed to read file: ${e.target.error}`));
+      reader.readAsText(file);
+    });
+  }
+
+  async parseFileContent(content, fileName) {
+    const extension = fileName.toLowerCase().split('.').pop();
+    const notes = [];
+
+    try {
+      switch (extension) {
+        case 'json':
+          const jsonData = JSON.parse(content);
+          if (Array.isArray(jsonData)) {
+            // Array of notes
+            jsonData.forEach((item, index) => {
+              notes.push({
+                title: `${fileName} - Item ${index + 1}`,
+                content: typeof item === 'string' ? item : JSON.stringify(item, null, 2)
+              });
+            });
+          } else if (jsonData.notes && Array.isArray(jsonData.notes)) {
+            // Exported notes format
+            jsonData.notes.forEach((note, index) => {
+              notes.push({
+                title: note.title || `${fileName} - Note ${index + 1}`,
+                content: note.originalText || note.processedText || JSON.stringify(note, null, 2)
+              });
+            });
+          } else {
+            // Single JSON object
+            notes.push({
+              title: fileName,
+              content: JSON.stringify(jsonData, null, 2)
+            });
+          }
+          break;
+
+        case 'csv':
+          const lines = content.split('\n').filter(line => line.trim());
+          lines.forEach((line, index) => {
+            if (line.trim()) {
+              notes.push({
+                title: `${fileName} - Line ${index + 1}`,
+                content: line
+              });
+            }
+          });
+          break;
+
+        case 'md':
+        case 'txt':
+        default:
+          // Split by double newlines to create separate notes
+          const sections = content.split(/\n\s*\n/).filter(section => section.trim());
+          if (sections.length > 1) {
+            sections.forEach((section, index) => {
+              if (section.trim()) {
+                notes.push({
+                  title: `${fileName} - Section ${index + 1}`,
+                  content: section.trim()
+                });
+              }
+            });
+          } else {
+            // Single note
+            notes.push({
+              title: fileName,
+              content: content.trim()
+            });
+          }
+          break;
+      }
+    } catch (error) {
+      // If parsing fails, treat as plain text
+      notes.push({
+        title: fileName,
+        content: content
+      });
+    }
+
+    return notes.filter(note => note.content.length > 0);
+  }
+
   async saveInputState() {
     try {
       await chrome.storage.local.set({ 
