@@ -234,6 +234,21 @@ class ThemeManager {
     document.head.appendChild(styleElement);
   }
 
+  loadExternalThemeCSS(filename) {
+    // Remove existing external theme CSS
+    const existingExternalCSS = document.querySelector('.external-theme-css');
+    if (existingExternalCSS) {
+      existingExternalCSS.remove();
+    }
+
+    // Load new external CSS
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = filename;
+    link.className = 'external-theme-css';
+    document.head.appendChild(link);
+  }
+
   getCyberpunkStyles() {
     return `
       .cyberpunk-theme {
