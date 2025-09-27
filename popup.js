@@ -71,6 +71,11 @@ class PocketMentorPopup {
 
     // Notes management
     this.elements.clearNotes.addEventListener('click', () => this.clearNotes());
+    this.elements.downloadNotes.addEventListener('click', () => this.downloadNotes());
+
+    // File upload functionality
+    this.elements.uploadBtn.addEventListener('click', () => this.elements.fileUpload.click());
+    this.elements.fileUpload.addEventListener('change', (e) => this.handleFileUpload(e));
 
     // Auto-save input
     this.elements.quickInput.addEventListener('input', this.debounce(() => {
