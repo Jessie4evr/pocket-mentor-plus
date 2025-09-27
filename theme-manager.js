@@ -100,6 +100,38 @@ class ThemeManager {
           warning: '#f59e0b',
           error: '#ef4444'
         }
+      },
+      neon: {
+        name: '🌟 Neon Dreams',
+        colors: {
+          primary: '#00ffff',
+          primaryDark: '#00cccc',
+          primaryLight: '#7fffffff',
+          background: '#0a0a0a',
+          surface: '#1a1a2e',
+          text: '#00ffff',
+          textLight: '#ff00ff',
+          accent: '#00ff41',
+          success: '#00ff00',
+          warning: '#ffff00',
+          error: '#ff0080'
+        }
+      },
+      matrix: {
+        name: '💚 Matrix Code',
+        colors: {
+          primary: '#00ff00',
+          primaryDark: '#00cc00',
+          primaryLight: '#39ff14',
+          background: '#000000',
+          surface: '#001100',
+          text: '#00ff00',
+          textLight: '#009900',
+          accent: '#00cc00',
+          success: '#00ff00',
+          warning: '#ffff00',
+          error: '#ff0000'
+        }
       }
     };
     
